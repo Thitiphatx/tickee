@@ -45,7 +45,7 @@ export const Navbar = () => {
 
             <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
                 <NavbarItem className="hidden md:flex">
-                    <Button isExternal as={Link} className="text-sm font-normal text-default-600 bg-default-100" href={siteConfig.links.sponsor} variant="flat">
+                    <Button as={Link} className="text-sm font-normal text-default-600 bg-default-100" href={""} variant="flat">
                         Signin
                     </Button>
                 </NavbarItem>
