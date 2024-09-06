@@ -8,20 +8,21 @@ import { ThemeProviderProps } from "next-themes/dist/types";
 import { AnimatePresence } from "framer-motion";
 
 export interface ProvidersProps {
-  children: React.ReactNode;
-  themeProps?: ThemeProviderProps;
+    children: React.ReactNode;
+    themeProps?: ThemeProviderProps;
 }
 
 export function Providers({ children, themeProps }: ProvidersProps) {
-  const router = useRouter();
+    const router = useRouter();
 
-  return (
-    <NextUIProvider navigate={router.push}>
-      <NextThemesProvider {...themeProps}>
-        <AnimatePresence>
-          {children}
-        </AnimatePresence>
-      </NextThemesProvider>
-    </NextUIProvider>
-  );
+    return (
+            <NextUIProvider navigate={router.push}>
+                <NextThemesProvider {...themeProps}>
+                    <AnimatePresence>
+                        {children}
+                    </AnimatePresence>
+                </NextThemesProvider>
+            </NextUIProvider>
+
+    );
 }

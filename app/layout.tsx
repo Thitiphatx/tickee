@@ -8,6 +8,7 @@ import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
+import SessionWrapper from "@/components/SessionWrapper";
 
 export const metadata: Metadata = {
     title: {
@@ -36,6 +37,7 @@ export default function RootLayout({
         <html suppressHydrationWarning lang="en">
             <head />
             <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable,)}>
+                <SessionWrapper>
                 <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
                     <div className="relative flex flex-col h-screen">
                         <Navbar />
@@ -50,6 +52,8 @@ export default function RootLayout({
                         </footer>
                     </div>
                 </Providers>
+                </SessionWrapper>
+                
             </body>
         </html>
     );
