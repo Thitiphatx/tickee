@@ -13,92 +13,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  user_id      Int      @id @default(autoincrement())
-  user_email   String   @unique
-  user_password String
-  user_name    String
-  user_IdCard  String
-  user_birthdate DateTime
-  user_phone   String
-  role_id      Int?
-  role         Role?    @relation(fields: [role_id], references: [role_id])
-  Receipts     Receipt[]
-  Events       Event[]
-}
-
-model Role {
-  role_id   Int    @id @default(autoincrement())
-  role_name String
-  Users     User[]
-}
-
-model Receipt {
-  rec_id        Int      @id @default(autoincrement())
-  rec_date      DateTime
-  seat_quantity Int
-  user_id       Int
-  event_id      Int
-  User          User     @relation(fields: [user_id], references: [user_id])
-  Event         Event    @relation(fields: [event_id], references: [event_id])
-}
-
-model Event {
-  event_id           Int       @id @default(autoincrement())
-  event_name         String
-  event_description  String
-  event_images       String
-  event_create_date  DateTime
-  event_due_date     DateTime
-  event_location     String
-  event_seat_per_order Int
-  et_id              Int
-  seat_id            Int?
-  EventType          EventType @relation(fields: [et_id], references: [et_id])
-  Receipts           Receipt[]
-  SeatType           SeatType? @relation(fields: [seat_id], references: [seat_id])
-
-  User User[]
-}
-
-model EventType {
-  et_id   Int    @id @default(autoincrement())
-  et_name String
-  Events  Event[]
-}
-
-model SeatType {
-  seat_id         Int      @id @default(autoincrement())
-  seat_name       String
-  seat_price      Float
-  seat_create_date DateTime
-  seat_due_date   DateTime
-  Events          Event[]
-  Promotions      Promotion[]
-  SeatDispatches  SeatDispatch[]
-}
-
-model Promotion {
-  seat_id         Int      @id
-  pro_description String
-  pro_discount    Float
-  pro_create_date DateTime
-  pro_due_date    DateTime
-  SeatType        SeatType @relation(fields: [seat_id], references: [seat_id])
-  PromotionType   PromotionType @relation(fields: [pt_id], references: [pt_id])
-  pt_id           Int
-}
-
-model PromotionType {
-  pt_id   Int    @id @default(autoincrement())
-  pt_name String
-  Promotions Promotion[]
-}
-
-model SeatDispatch {
-  sd_id      Int    @id @default(autoincrement())
-  seat_max   Int
-  seat_current Int
-  seat_id    Int
-  SeatType   SeatType @relation(fields: [seat_id], references: [seat_id])
+model User{
+  id Int      @id @default(autoincrement())
+  email       String @unique
+  name        String?
+  password    String
 }
