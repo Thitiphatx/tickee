@@ -96,3 +96,17 @@ model Promotion_Type {
   pt_name   String
   Promotion Promotion[]
 }
+
+
+model Event{
+  event_id          Int      @id @default(autoincrement())
+  event_name       String @unique
+  event_discription        String?
+  event_image    String
+  event_create_date String
+  
+
+
+
+}
+
