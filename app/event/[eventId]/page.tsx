@@ -7,13 +7,19 @@ import { Image } from "@nextui-org/image";
 import { Input } from "@nextui-org/input";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import TicketInformation from "./TicketInformation";
 
 export default function EventLanding() {
     const [currentTab, setCurrentTab] = useState(0);
     const router = useRouter();
+    const [showTicketInfo, setShowTicketInfo] = useState(false);
+
+    const handlePaymentClick = () => {
+        setShowTicketInfo(true); // Show the ticket information
+    };
     return (
         <div className="space-y-5">
-            <Button onClick={()=> router.back()}>Back</Button>
+            <Button onClick={() => router.back()}>Back</Button>
             <Card className="grid grid-cols-1 lg:grid-cols-2">
                 <CardHeader className="w-full flex justify-center items-center">
                     <Image className="" width={"100%"} src="https://res.theconcert.com/w_600,h_800,c_thumb/8b3805c8dd6a7d58d099fd855a5d0ae82/mmf2024_banner_poster_450x600px.jpg" />
@@ -38,9 +44,6 @@ export default function EventLanding() {
                                     <div>
                                         <p>฿ 1500</p>
                                     </div>
-                                    <div>
-                                        <Input type="number" value="0" min="1" max="5" />
-                                    </div>
                                 </CardBody>
                             </Card>
                             <Card className="w-full">
@@ -51,9 +54,6 @@ export default function EventLanding() {
                                     <div>
                                         <p>฿ 1500</p>
                                     </div>
-                                    <div>
-                                        <Input type="number" value="0" min="1" max="5" />
-                                    </div>
                                 </CardBody>
                             </Card>
                             <Card className="w-full">
@@ -63,17 +63,24 @@ export default function EventLanding() {
                                 <CardBody className="flex flex-row justify-between items-center">
                                     <div>
                                         <p>฿ 1500</p>
-                                    </div>
-                                    <div>
-                                        <Input type="number" value="0" min="1" max="5" />
                                     </div>
                                 </CardBody>
                             </Card>
                         </Selector>
-                        <Button color="primary" size="lg" className="w-full">Payment</Button>
+                        <Button color="primary" size="lg" className="w-full" onClick={handlePaymentClick} >Payment</Button>
+
+                        
                     </div>
+                    
                 </CardBody>
             </Card>
+            
+
+                    <div className="mt-8">
+                            {showTicketInfo && (
+                                <TicketInformation />
+                            )}
+                        </div>
             <Card className="leading-10">
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
                 <Image src={"https://atkmedia.allticket.com/images/up/21174/BMMF14_06092024_PosterSoldOut_CW.jpg"} />

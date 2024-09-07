@@ -13,8 +13,8 @@ export const siteConfig = {
       href: "/Concerts",
     },
     {
-      label: "Events",
-      href: "/Events",
+      label: "Entertainment",
+      href: "/Entertainment",
     },
     {
       label: "Sports",
