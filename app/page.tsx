@@ -4,7 +4,7 @@ import { Card, CardBody } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import ImageSlider, {Slider} from '../components/slider'
+import ImageSlider from '../components/slider'
 
 
 export default function Home() {
