@@ -13,9 +13,86 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id Int      @id @default(autoincrement())
-  email       String @unique
-  name        String?
-  password    String
+model Role {
+  role_id   Int    @id @default(autoincrement())
+  role_name String
+  User      User[]
+}
+
+model User {
+  user_id        Int       @id @default(autoincrement())
+  user_email     String    @unique
+  user_name      String?
+  user_password  String
+  user_IDcard    String
+  user_birthdate DateTime
+  user_phone     String
+  user_role      Role      @relation(fields: [user_role_id], references: [role_id])
+  user_role_id   Int
+  Receipt        Receipt[]
+  Event          Event[]
+}
+
+model Receipt {
+  rec_id          Int       @id @default(autoincrement())
+  rec_date        DateTime  @default(now())
+  rec_quantity    Int
+  rec_customer    User      @relation(fields: [rec_customer_id], references: [user_id])
+  rec_customer_id Int
+  rec_seat        Seat_Type @relation(fields: [rec_seat_id], references: [seat_id])
+  rec_seat_id     Int
+}
+
+model Seat_Type {
+  seat_id          Int            @id @default(autoincrement())
+  seat_name        String
+  seat_price       Float
+  seat_create_date DateTime
+  seat_due_date    DateTime
+  Receipt          Receipt[]
+  Seat_Dispatch    Seat_Dispatch?
+}
+
+model Seat_Dispatch {
+  seat_type    Seat_Type @relation(fields: [seat_type_id], references: [seat_id])
+  seat_type_id Int       @unique
+  sd_max       Int
+  sd_current   Int       @default(0)
+}
+
+model Event {
+  event_id             Int        @id @default(autoincrement())
+  event_name           String
+  event_description    String
+  event_images         Json
+  event_start_date     DateTime
+  event_last_date      DateTime
+  event_location       String
+  event_seat_per_order Int
+  producer             User       @relation(fields: [producer_id], references: [user_id])
+  producer_id          Int
+  event_type           Event_Type @relation(fields: [event_type_id], references: [et_id])
+  event_type_id        Int
+}
+
+model Event_Type {
+  et_id   Int     @id @default(autoincrement())
+  et_name String
+  Event   Event[]
+}
+
+model Promotion {
+  pro_id          Int            @id @default(autoincrement())
+  pro_description String
+  pro_discount    Float
+  pro_start_date  DateTime
+  pro_last_date   DateTime
+  pro_type        Promotion_Type @relation(fields: [pro_type_id], references: [pt_id])
+  pro_type_id     Int
+}
+
+model Promotion_Type {
+  pt_id     Int         @id @default(autoincrement())
+  pt_name   String
+  Promotion Promotion[]
 }
