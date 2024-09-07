@@ -1,4 +1,5 @@
 "use client"
+
 import { Card, CardBody } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { motion } from "framer-motion";
@@ -66,6 +67,7 @@ export default function Home() {
         }
     ]
     return (
+        
         <div>
             <ImageSlider/>
             <h4 className="font-bold mt-4">Recommend</h4>

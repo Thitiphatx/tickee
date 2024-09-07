@@ -2,7 +2,7 @@
 
 import { Button } from "@nextui-org/button"
 import { Card, CardBody, CardHeader } from "@nextui-org/card"
-import { DatePicker } from "@nextui-org/date-picker"
+// import { DatePicker } from "@nextui-org/date-picker"
 import { Input } from "@nextui-org/input"
 
 export default function AccountProfileCard() {
@@ -16,7 +16,7 @@ export default function AccountProfileCard() {
                 <Input label="First name" />
                 <Input label="Last name" />
                 <Input label="Phone" />
-                <DatePicker label="Birthday" />
+                {/* <DatePicker label="Birthday" /> */}
                 <Button radius="full" color="primary">Save</Button>
             </CardBody>
         </Card>
