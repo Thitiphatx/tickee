@@ -49,6 +49,8 @@ model Seat_Type {
   seat_price       Float
   seat_create_date DateTime
   seat_due_date    DateTime
+  event_seat       Event          @relation(fields: [event_seat_id], references: [event_id])
+  event_seat_id    Int
   Receipt          Receipt[]
   Seat_Dispatch    Seat_Dispatch?
 }
@@ -61,7 +63,7 @@ model Seat_Dispatch {
 }
 
 model Event {
-  event_id             Int        @id @default(autoincrement())
+  event_id             Int         @id @default(autoincrement())
   event_name           String
   event_description    String
   event_images         Json
@@ -69,10 +71,11 @@ model Event {
   event_last_date      DateTime
   event_location       String
   event_seat_per_order Int
-  producer             User       @relation(fields: [producer_id], references: [user_id])
+  producer             User        @relation(fields: [producer_id], references: [user_id])
   producer_id          Int
-  event_type           Event_Type @relation(fields: [event_type_id], references: [et_id])
+  event_type           Event_Type  @relation(fields: [event_type_id], references: [et_id])
   event_type_id        Int
+  Seat_Type            Seat_Type[]
 }
 
 model Event_Type {
@@ -97,3 +100,8 @@ model Promotion_Type {
   Promotion Promotion[]
 }
 
+model Admin_Data {
+  ad_id         Int      @id @default(autoincrement())
+  fee           Float
+  banner_images String[]
+}

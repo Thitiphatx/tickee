@@ -9,16 +9,20 @@ export const siteConfig = {
             href: "/",
         },
         {
-            label: "Concerts",
-            href: "/Concerts",
+            label: "Concert",
+            href: "/concert",
         },
         {
-            label: "Events",
-            href: "/Events",
+            label: "Entertainment",
+            href: "/entertainment",
         },
         {
-            label: "Sports",
-            href: "/Sports",
+            label: "Sport",
+            href: "/sport",
+        },
+        {
+            label: "E-Sport",
+            href: "/e-sport",
         }
     ],
     navMenuItems: [
@@ -27,16 +31,20 @@ export const siteConfig = {
             href: "/",
         },
         {
-            label: "Concerts",
-            href: "/Concerts",
+            label: "Concert",
+            href: "/concert",
         },
         {
-            label: "Events",
-            href: "/Events",
+            label: "Entertainment",
+            href: "/entertainment",
         },
         {
-            label: "Sports",
-            href: "/Sports",
+            label: "Sport",
+            href: "/sport",
+        },
+        {
+            label: "E-Sport",
+            href: "/e-sport",
         }
     ],
     links: {
