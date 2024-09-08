@@ -5,9 +5,26 @@ export interface Event_img {
 };
 
 export interface Address {
-    street: String
-    sub_district: String
-    district: String
-    province: String
-    country: String
+    street: string
+    sub_district: string
+    district: string
+    province: string
+    country: string
+}
+
+export interface SignInData {
+    email: string
+    password: string
+}
+
+export interface SignUpData {
+    email: string
+    password: string
+    name:{
+        name:string,
+        surname:string
+    }
+    idcard:string
+    birthdate:Date
+    phone:string
 }
