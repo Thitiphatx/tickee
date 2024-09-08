@@ -43,3 +43,41 @@ export async function searchEventwithName(input:string) {
     }
     return output
 }
+
+export async function getBannerImages() {
+    let output;
+    try {
+        output = await prisma.admin_Data.findFirst({
+            select:{
+                banner_images:true
+            }
+        })
+    } catch (error) {
+        console.log("getBannerImages Error")
+        return null
+    }
+    return output
+}
+
+export async function updateBannerImages(data:string[]) {
+    let output;
+    try {
+        output = getBannerImages()
+    } catch (error) {
+        console.log("updateBannerImages Error")
+        return null
+    }
+    try {
+        const updateData = await prisma.admin_Data.update({
+            where: {
+                ad_id:1
+            },
+            data: {
+                banner_images: data
+            }
+        })
+    } catch (error) {
+        
+    }
+    return output
+}

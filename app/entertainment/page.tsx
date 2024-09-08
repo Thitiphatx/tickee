@@ -1,4 +1,5 @@
 "use client"
+import { eventItems } from "@/config/site";
 import { getEntertainmentEvent } from "./fetch";
 import { Card, CardBody } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
@@ -12,63 +13,7 @@ export default async function Entertainment() {
     // }
     // const EntertainmentEvent = res;
     const router = useRouter()
-    const EntertainmentEvent = [
-        {
-            cover: "https://s3-ap-southeast-1.amazonaws.com/tm-img-poster-event/8a6607c038a011ef911101117567899b.png?opt=mild&resize=w200,h290",
-            name: "MIND DAY ภูมิคุ้มใจ",
-            date: {
-                start: "29 SEP",
-                end: "",
-            },
-            location: "SPHERE HALL 5M FLOOR"
-        },
-        {
-            cover: "https://s3-ap-southeast-1.amazonaws.com/tm-img-poster-event/8a6607c038a011ef911101117567899b.png?opt=mild&resize=w200,h290",
-            name: "MIND DAY ภูมิคุ้มใจ",
-            date: {
-                start: "29 SEP",
-                end: "",
-            },
-            location: "SPHERE HALL 5M FLOOR"
-        },
-        {
-            cover: "https://s3-ap-southeast-1.amazonaws.com/tm-img-poster-event/8a6607c038a011ef911101117567899b.png?opt=mild&resize=w200,h290",
-            name: "MIND DAY ภูมิคุ้มใจ",
-            date: {
-                start: "29 SEP",
-                end: "",
-            },
-            location: "SPHERE HALL 5M FLOOR"
-        },
-        {
-            cover: "https://s3-ap-southeast-1.amazonaws.com/tm-img-poster-event/8a6607c038a011ef911101117567899b.png?opt=mild&resize=w200,h290",
-            name: "MIND DAY ภูมิคุ้มใจ",
-            date: {
-                start: "29 SEP",
-                end: "",
-            },
-            location: "SPHERE HALL 5M FLOOR"
-        },
-        {
-            cover: "https://s3-ap-southeast-1.amazonaws.com/tm-img-poster-event/8a6607c038a011ef911101117567899b.png?opt=mild&resize=w200,h290",
-            name: "MIND DAY ภูมิคุ้มใจ",
-            date: {
-                start: "29 SEP",
-                end: "",
-            },
-            location: "SPHERE HALL 5M FLOOR"
-        }
-        ,
-        {
-            cover: "https://s3-ap-southeast-1.amazonaws.com/tm-img-poster-event/8a6607c038a011ef911101117567899b.png?opt=mild&resize=w200,h290",
-            name: "MIND DAY ภูมิคุ้มใจ",
-            date: {
-                start: "29 SEP",
-                end: "",
-            },
-            location: "SPHERE HALL 5M FLOOR"
-        }
-    ]
+    const EntertainmentEvent = eventItems
 
     return (
         <div>
