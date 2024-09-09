@@ -21,15 +21,18 @@ model User{
 }
 
 
-model Event{
-  event_id          Int      @id @default(autoincrement())
-  event_name       String @unique
-  event_discription        String?
-  event_image    String
-  event_create_date String
-  
-
-
-
+model Event {
+  event_id               Int      @id @default(autoincrement())
+  event_name             String
+  event_thumnails        String
+  event_intro_discription String
+  event_discription      String
+  event_image            String
+  event_details_image    String[]
+  event_create_date      DateTime
+  event_due_date         DateTime
+  event_location         String
+  event_seat_per_order   Int
+  event_type             String
 }
 
