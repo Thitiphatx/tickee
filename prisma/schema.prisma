@@ -69,7 +69,7 @@ model Event {
   event_images         Json
   event_start_date     DateTime
   event_last_date      DateTime
-  event_location       String
+  event_location       Json
   event_seat_per_order Int
   producer             User        @relation(fields: [producer_id], references: [user_id])
   producer_id          Int
