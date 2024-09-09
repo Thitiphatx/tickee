@@ -1,45 +1,23 @@
-/*
-  Warnings:
-
-  - The primary key for the `User` table will be changed. If it partially fails, the table could be left without primary key constraint.
-  - You are about to drop the column `email` on the `User` table. All the data in the column will be lost.
-  - You are about to drop the column `id` on the `User` table. All the data in the column will be lost.
-  - You are about to drop the column `name` on the `User` table. All the data in the column will be lost.
-  - You are about to drop the column `password` on the `User` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[user_email]` on the table `User` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `user_IDcard` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `user_birthdate` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `user_email` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `user_password` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `user_phone` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `user_role_id` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
--- DropIndex
-DROP INDEX "User_email_key";
-
--- AlterTable
-ALTER TABLE "User" DROP CONSTRAINT "User_pkey",
-DROP COLUMN "email",
-DROP COLUMN "id",
-DROP COLUMN "name",
-DROP COLUMN "password",
-ADD COLUMN     "user_IDcard" TEXT NOT NULL,
-ADD COLUMN     "user_birthdate" TIMESTAMP(3) NOT NULL,
-ADD COLUMN     "user_email" TEXT NOT NULL,
-ADD COLUMN     "user_id" SERIAL NOT NULL,
-ADD COLUMN     "user_name" TEXT,
-ADD COLUMN     "user_password" TEXT NOT NULL,
-ADD COLUMN     "user_phone" TEXT NOT NULL,
-ADD COLUMN     "user_role_id" INTEGER NOT NULL,
-ADD CONSTRAINT "User_pkey" PRIMARY KEY ("user_id");
-
 -- CreateTable
 CREATE TABLE "Role" (
     "role_id" SERIAL NOT NULL,
     "role_name" TEXT NOT NULL,
 
     CONSTRAINT "Role_pkey" PRIMARY KEY ("role_id")
+);
+
+-- CreateTable
+CREATE TABLE "User" (
+    "user_id" SERIAL NOT NULL,
+    "user_email" TEXT NOT NULL,
+    "user_name" JSONB NOT NULL,
+    "user_password" TEXT NOT NULL,
+    "user_IDcard" TEXT NOT NULL,
+    "user_birthdate" TIMESTAMP(3) NOT NULL,
+    "user_phone" TEXT NOT NULL,
+    "user_role_id" INTEGER NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("user_id")
 );
 
 -- CreateTable
@@ -60,6 +38,7 @@ CREATE TABLE "Seat_Type" (
     "seat_price" DOUBLE PRECISION NOT NULL,
     "seat_create_date" TIMESTAMP(3) NOT NULL,
     "seat_due_date" TIMESTAMP(3) NOT NULL,
+    "event_seat_id" INTEGER NOT NULL,
 
     CONSTRAINT "Seat_Type_pkey" PRIMARY KEY ("seat_id")
 );
@@ -75,7 +54,7 @@ CREATE TABLE "Seat_Dispatch" (
 CREATE TABLE "Event" (
     "event_id" SERIAL NOT NULL,
     "event_name" TEXT NOT NULL,
-    "event_description" TEXT NOT NULL,
+    "event_description" JSONB NOT NULL,
     "event_images" JSONB NOT NULL,
     "event_start_date" TIMESTAMP(3) NOT NULL,
     "event_last_date" TIMESTAMP(3) NOT NULL,
@@ -115,11 +94,20 @@ CREATE TABLE "Promotion_Type" (
     CONSTRAINT "Promotion_Type_pkey" PRIMARY KEY ("pt_id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "Seat_Dispatch_seat_type_id_key" ON "Seat_Dispatch"("seat_type_id");
+-- CreateTable
+CREATE TABLE "Admin_Data" (
+    "ad_id" SERIAL NOT NULL,
+    "fee" DOUBLE PRECISION NOT NULL,
+    "banner_images" TEXT[],
+
+    CONSTRAINT "Admin_Data_pkey" PRIMARY KEY ("ad_id")
+);
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_user_email_key" ON "User"("user_email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Seat_Dispatch_seat_type_id_key" ON "Seat_Dispatch"("seat_type_id");
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_user_role_id_fkey" FOREIGN KEY ("user_role_id") REFERENCES "Role"("role_id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -129,6 +117,9 @@ ALTER TABLE "Receipt" ADD CONSTRAINT "Receipt_rec_customer_id_fkey" FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE "Receipt" ADD CONSTRAINT "Receipt_rec_seat_id_fkey" FOREIGN KEY ("rec_seat_id") REFERENCES "Seat_Type"("seat_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Seat_Type" ADD CONSTRAINT "Seat_Type_event_seat_id_fkey" FOREIGN KEY ("event_seat_id") REFERENCES "Event"("event_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Seat_Dispatch" ADD CONSTRAINT "Seat_Dispatch_seat_type_id_fkey" FOREIGN KEY ("seat_type_id") REFERENCES "Seat_Type"("seat_id") ON DELETE RESTRICT ON UPDATE CASCADE;
