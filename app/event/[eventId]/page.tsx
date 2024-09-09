@@ -8,6 +8,7 @@ import { Input } from "@nextui-org/input";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import TicketInformation from "./TicketInformation";
+import { Link } from "@nextui-org/link";
 
 export default function EventLanding() {
     const [currentTab, setCurrentTab] = useState(0);
@@ -19,7 +20,7 @@ export default function EventLanding() {
     };
     return (
         <div className="space-y-5">
-            <Button onClick={() => router.back()}>Back</Button>
+            <Link className="cursor-pointer" color="foreground" isBlock onClick={() => router.back()}>Back</Link>
             <Card className="grid grid-cols-1 lg:grid-cols-2">
                 <CardHeader className="w-full flex justify-center items-center">
                     <Image className="" width={"100%"} src="https://res.theconcert.com/w_600,h_800,c_thumb/8b3805c8dd6a7d58d099fd855a5d0ae82/mmf2024_banner_poster_450x600px.jpg" />
