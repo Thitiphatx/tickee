@@ -35,7 +35,7 @@ async function main(){
 
     const event = await prisma.event.create({
         data: {
-            event_name: "Sample Event",
+            event_name: "Pepsi Presents Big Mountain Music Festival 14",
             event_description: "This is a sample event description.",
             event_images: {name:"https://www.efinancethai.com/news/picture/2024/6/27/T/7248597.jpg"},
             event_start_date: new Date('2024-10-10T10:00:00Z'),

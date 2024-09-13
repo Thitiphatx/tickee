@@ -18,7 +18,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: any }) {
     const router = useRouter();
     const [showTicketInfo, setShowTicketInfo] = useState(false);
 
-    console.log(items)
+    console.log(eventDetails)
     const handlePaymentClick = () => {
         setShowTicketInfo(true);
     };
@@ -27,15 +27,15 @@ export default function Eventpage({ eventDetails }: { eventDetails: any }) {
             <Button onClick={() => router.back()}>Back</Button>
             <Card className="grid grid-cols-1 lg:grid-cols-2">
                 <CardHeader className="w-full flex justify-center items-center">
-                    <Image className="" width={"100%"} src={items.event_images?.name} />
+                    <Image className="" width={"100%"} src={eventDetails.event_images?.name} />
                 </CardHeader>
                 <CardBody className="flex flex-col justify-between">
                     <div className="space-y-3">
-                        <h1 className="text-xl font-bold">{items.event_name}</h1>
+                        <h1 className="text-xl font-bold">{eventDetails.event_name}</h1>
                         <div className="flex flex-row">
-                            <Chip size="sm" className="">{items.event_type_id}</Chip>
+                            <Chip size="sm" className="">{eventDetails.event_type_id}</Chip>
                         </div>
-                        <p>{items.event_description.slice(0, 1003)}</p>
+                        <p>{eventDetails.event_description.slice(0, 1003)}</p>
                     </div>
 
                     <div>
@@ -87,7 +87,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: any }) {
                             )}
                         </div>
             <Card className="leading-10">
-               {items.event_description}
+               {eventDetails.event_description}
                <Image src={"https://atkmedia.allticket.com/images/up/21174/BMMF14_06092024_PosterSoldOut_CW.jpg"} />
                 <Image src={"https://atkmedia.allticket.com/images/up/21174/BMMF14_16082024_Info_Lineup.jpg"} />
             </Card>
