@@ -12,3 +12,22 @@
     display: flex;
     justify-content: center;
 }
+
+.page-heading {
+    @apply text-lg font-bold uppercase;
+}
+.event-card-box {
+    @apply w-full grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5;
+}
+.event-card {
+    @apply w-full;
+    p {
+        @apply text-tiny uppercase font-bold;
+    }
+    small {
+        @apply text-default-500 truncate;
+    }
+    Image {
+        @apply rounded-xl;
+    }
+}

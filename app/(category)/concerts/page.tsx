@@ -11,7 +11,8 @@ export default async function page() {
     // console.log(concerts)
     return (
         <div>
-            <CardSwiper items={concerts} />
+            <h1 className="page-heading">Concerts</h1>
+            <CardSwiper items={eventItems} />
         </div>
     )
 }
