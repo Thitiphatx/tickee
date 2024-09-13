@@ -19,8 +19,10 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { Avatar } from "@nextui-org/avatar";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export const Navbar = () => {
+    const router = useRouter()
     return (
         <NextUINavbar maxWidth="xl" position="sticky">
             <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -57,6 +59,7 @@ export const Navbar = () => {
                         <DropdownMenu aria-label="Profile Actions" variant="flat">
                             <DropdownItem key="name">name</DropdownItem>
                             <DropdownItem key="profile" href="/account/profile">Profile</DropdownItem>
+                            <DropdownItem key="add_hotel" onClick={() => router.push('/event/new')}>Add Event</DropdownItem>
                             <DropdownItem key="settings" href="/account/myticket" >My Ticket</DropdownItem>
                             <DropdownItem key="logout" color="danger" onClick={()=> signOut()}>Log Out</DropdownItem>
                         </DropdownMenu>

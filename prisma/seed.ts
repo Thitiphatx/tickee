@@ -1,36 +1,66 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
-async function main(){
+async function main() {
+    // Create a role
     const role = await prisma.role.create({
         data: {
-          role_name: "Admin",
+            role_name: "Admin",
         },
-      });
+    });
+
+    // Upsert a user
     const user = await prisma.user.upsert({
-        where: {user_email: 'test@test.com'},
+        where: { user_email: 'test@test.com' },
         update: {},
         create: {
             user_email: 'test@test.com',
             user_name: {
                 firstName: 'Test',
-                lastName: 'User'
+                lastName: 'User',
             },
             user_password: '12345',
             user_IDcard: 'A1234567',
             user_birthdate: new Date('1990-01-01'),
             user_phone: '123-456-7890',
-            user_role_id: role.role_id // Assuming role_id 1 exists in your Role table
-        }
-    })
-    console.log({user})
+            user_role_id: role.role_id,
+        },
+    });
+
+    // Create an event type
+    const eventType = await prisma.event_Type.create({
+        data: {
+            et_name: "Conference", // Use the correct field name
+        },
+    });
+
+    // Create an event
+    const event = await prisma.event.create({
+        data: {
+            event_name: "Sample Event",
+            event_description: "This is a sample event description.",
+            event_images: JSON.stringify(["https://www.efinancethai.com/news/picture/2024/6/27/T/7248597.jpg"]),
+            event_start_date: new Date('2024-10-10T10:00:00Z'),
+            event_last_date: new Date('2024-10-12T18:00:00Z'),
+            event_location: JSON.stringify({
+                address: "123 Main St",
+                city: "Sample City",
+                country: "Country",
+            }),
+            event_seat_per_order: 5,
+            producer_id: user.user_id, // Assuming this user is the producer
+            event_type_id: eventType.et_id, // Use the correct event type ID
+        },
+    });
+
+    console.log({ user, event });
 }
 
 main()
     .then(() => prisma.$disconnect())
     .catch(async (e) => {
-        console.error(e)
-        await prisma.$disconnect()
-        process.exit(1)
-    })
+        console.error(e);
+        await prisma.$disconnect();
+        process.exit(1);
+    });
