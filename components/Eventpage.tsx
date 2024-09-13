@@ -13,15 +13,14 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Event } from '@prisma/client';
 
-
-export default function Eventpage({ items }: { items: Event }) {
+export default function Eventpage({ eventDetails }: { eventDetails: any }) {
     const [currentTab, setCurrentTab] = useState(0);
     const router = useRouter();
     const [showTicketInfo, setShowTicketInfo] = useState(false);
 
     console.log(items)
     const handlePaymentClick = () => {
-        setShowTicketInfo(true); // Show the ticket information
+        setShowTicketInfo(true);
     };
     return (
         <div className="space-y-5">
