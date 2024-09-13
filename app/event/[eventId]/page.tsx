@@ -14,7 +14,7 @@ export default async function EventLanding({ params }: { params: { eventId: stri
         <div>
             <Eventpage eventDetails={details}/>
              <h1 className="page-heading">Concerts</h1>
-            <Eventpage items={details}/>
+            <Eventpage eventDetails={details}/>
         </div>
     )
 }
