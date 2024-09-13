@@ -4,21 +4,49 @@ import { eventItems } from '@/config/site'
 import { Card, CardBody } from '@nextui-org/card'
 import { Image } from '@nextui-org/image'
 import { useRouter } from 'next/navigation'
+import { Event } from '@prisma/client';
 
-export default function CardSwiper ({ items }: { items: typeof eventItems}) {
+export default function CardSwiper({ items }: { items: typeof eventItems }) {
     const router = useRouter();
     return (
-        <div className="event-card-box">
-            {items.map((event, index)=> (
-                <Card className="event-card" key={index} isPressable onPress={()=> router.push(`/event/${index}`)}>
-                    <Image src={event.cover} width={"100%"} />
-                    <CardBody>
-                        <p>{event.date.start} {event.date.end}</p>
-                        <p>{event.name}</p>
-                        <small>{event.location}</small>
-                    </CardBody>
-                </Card>
-            ))}
-        </div>
-    )
+        <>
+            <motion.div
+                initial={{ y: 200 }}
+                animate={{ y: 0 }}
+            >
+                <Swiper
+                    slidesPerView={5}
+                    spaceBetween={10}
+                    draggable={true}
+                    breakpoints={{
+                        0: {
+                            slidesPerView: 2,
+                        },
+                        768: {
+                            slidesPerView: 3,
+                        },
+                        1024: {
+                            slidesPerView: 4,
+                        },
+                    }}
+                    grabCursor={true}
+                >
+                    {items.map((event, index) => (
+                        <SwiperSlide key={index}>
+                            <Card className="min-w-52 flex-shrink-0" key={index} isPressable onPress={() => router.push(`/event/${index}`)}>
+                                <Image alt="Card background" className="object-cover rounded-xl" src={event.cover} width={270} />
+                                <CardBody className="overflow-visible py-2">
+                                    <p className="text-tiny uppercase font-bold">{event.date.start} {event.date.end}</p>
+                                    <p className="text-tiny uppercase font-bold">{event.name}</p>
+                                    <small className="text-default-500 truncate">{event.location}</small>
+                                </CardBody>
+                            </Card>
+                        </SwiperSlide>
+                    ))}
+
+                </Swiper>
+            </motion.div>
+
+        </>
+    );
 }
