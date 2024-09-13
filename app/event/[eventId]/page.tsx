@@ -15,7 +15,7 @@ export default async function EventLanding({params}) {
     // console.log("testtt",details)
     return(
         <div>
-            
+             <h1 className="page-heading">Concerts</h1>
             <Eventpage items={details}/>
         </div>
     )

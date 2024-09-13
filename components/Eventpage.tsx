@@ -13,6 +13,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Event } from '@prisma/client';
 
+
 export default function Eventpage({ items }: { items: Event }) {
     const [currentTab, setCurrentTab] = useState(0);
     const router = useRouter();
@@ -26,11 +27,11 @@ export default function Eventpage({ items }: { items: Event }) {
             <Button onClick={() => router.back()}>Back</Button>
             <Card className="grid grid-cols-1 lg:grid-cols-2">
                 <CardHeader className="w-full flex justify-center items-center">
-                    <Image className="" width={"100%"} src={items.event_image} />
+                    <Image className="" width={"100%"} src={items.image} />
                 </CardHeader>
                 <CardBody className="flex flex-col justify-between">
                     <div className="space-y-3">
-                        <h1 className="text-xl font-bold">{items.event_name}</h1>
+                        <h1 className="text-xl font-bold">{items.name}</h1>
                         <div className="flex flex-row">
                             <Chip size="sm" className="">{items.event_type}</Chip>
                         </div>

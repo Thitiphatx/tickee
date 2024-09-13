@@ -65,7 +65,6 @@ model Seat_Dispatch {
 model Event {
   event_id             Int         @id @default(autoincrement())
   event_name           String
-  event_intro_description    String 
   event_description    String 
   event_images         Json //{thumnails:'',detail_image:''}
   event_start_date     DateTime
