@@ -58,7 +58,7 @@ model Seat_Type {
 }
 
 model Seat_Dispatch {
-  seat_dispatch_id          Int            @id @default(autoincrement())
+  st_id        Int       @id @default(autoincrement())
   seat_type    Seat_Type @relation(fields: [seat_type_id], references: [seat_id])
   seat_type_id Int       @unique
   sd_max       Int
