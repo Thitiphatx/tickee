@@ -5,14 +5,19 @@ import { Card, CardBody } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import { motion } from "framer-motion";
 import { useRouter, notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 
 export default async function Concert() {
+    
+
     // const res = await getConcertEvent();
     // if (!res) {
     //     notFound()
     // }
     // const concertEvent = res;
     const router = useRouter()
+
+    
     const concertEvent = eventItems
 
     return (
