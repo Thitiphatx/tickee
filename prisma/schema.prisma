@@ -22,7 +22,7 @@ model Role {
 model User {
   user_id        Int       @id @default(autoincrement())
   user_email     String    @unique
-  user_name      Json
+  user_name      String
   user_password  String
   user_IDcard    String
   user_birthdate DateTime
