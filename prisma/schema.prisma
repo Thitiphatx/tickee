@@ -23,12 +23,13 @@ model User {
   user_id        Int       @id @default(autoincrement())
   user_email     String    @unique
   user_name      String
+  user_surname   String
   user_password  String
   user_IDcard    String
   user_birthdate DateTime
   user_phone     String
-  user_role      Role?      @relation(fields: [user_role_id], references: [role_id])
-  user_role_id   Int?
+  user_role      Role      @relation(fields: [user_role_id], references: [role_id])
+  user_role_id   Int
   Receipt        Receipt[]
   Event          Event[]
 }
@@ -53,6 +54,7 @@ model Seat_Type {
   event_seat_id    Int
   Receipt          Receipt[]
   Seat_Dispatch    Seat_Dispatch?
+  Promotion        Promotion?
 }
 
 model Seat_Dispatch {
@@ -65,8 +67,9 @@ model Seat_Dispatch {
 model Event {
   event_id             Int         @id @default(autoincrement())
   event_name           String
+  event_intro          String
   event_description    String
-  event_images         Json
+  event_images         String
   event_start_date     DateTime
   event_last_date      DateTime
   event_location       Json
@@ -86,6 +89,8 @@ model Event_Type {
 
 model Promotion {
   pro_id          Int            @id @default(autoincrement())
+  seat_type       Seat_Type      @relation(fields: [seat_type_id], references: [seat_id])
+  seat_type_id    Int            @unique
   pro_description String
   pro_discount    Float
   pro_start_date  DateTime

@@ -19,7 +19,7 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { Avatar } from "@nextui-org/avatar";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import Searchbar from "./searchbar";
 
 export const Navbar = () => {
     const router = useRouter()
@@ -28,7 +28,7 @@ export const Navbar = () => {
             <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
                 <NavbarBrand as="li" className="gap-3 max-w-fit">
                     <NextLink className="flex justify-start items-center gap-1" href="/">
-                        <p className="font-bold text-inherit uppercase first-letter:text-primary-500">Tickee</p>
+                        <p className="font-bold text-inherit uppercase first-letter:text-primary-500 text-2xl">Tickee</p>
                     </NextLink>
                 </NavbarBrand>
                 <ul className="hidden lg:flex gap-4 justify-start ml-2">
@@ -50,9 +50,10 @@ export const Navbar = () => {
             </NavbarContent>
 
             <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
+                <Searchbar />
                 <NavbarItem className="hidden md:flex space-x-5">
-                    
-                        <Dropdown placement="bottom-end" backdrop="blur">
+
+                    <Dropdown placement="bottom-end" backdrop="blur">
                         <DropdownTrigger>
                             <Avatar isBordered as="button" className="transition-transform" color="primary" name="" size="sm" src="" />
                         </DropdownTrigger>
@@ -61,13 +62,13 @@ export const Navbar = () => {
                             <DropdownItem key="profile" href="/account/profile">Profile</DropdownItem>
                             <DropdownItem key="add_hotel" onClick={() => router.push('/event/new')}>Add Event</DropdownItem>
                             <DropdownItem key="settings" href="/account/myticket" >My Ticket</DropdownItem>
-                            <DropdownItem key="logout" color="danger" onClick={()=> signOut()}>Log Out</DropdownItem>
+                            <DropdownItem key="logout" color="danger" onClick={() => signOut()}>Log Out</DropdownItem>
                         </DropdownMenu>
-                        </Dropdown>
-                        <Button as={Link} className="text-sm font-normal text-default-600 bg-default-100" href={"/signin"} variant="flat">
-                            Signin
-                        </Button>
-                    
+                    </Dropdown>
+                    <Button as={Link} className="text-sm font-normal text-default-600 bg-default-100" href={"/signin"} variant="flat">
+                        Signin
+                    </Button>
+
 
                 </NavbarItem>
             </NavbarContent>
