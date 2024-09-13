@@ -1,9 +1,3 @@
-export interface Event_img {
-    main_pic: string;
-    map: string;
-    image: string;
-};
-
 export interface Address {
     street: string
     sub_district: string
