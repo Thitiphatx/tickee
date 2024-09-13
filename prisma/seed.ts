@@ -15,11 +15,9 @@ async function main() {
         where: { user_email: 'test@test.com' },
         update: {},
         create: {
-            user_email: 'test@test.com',
-            user_name: {
-                firstName: 'Test',
-                lastName: 'User',
-            },
+            user_email: 'test2@test.com',
+            user_name:"DDD",
+            user_surname: "EEE",
             user_password: '12345',
             user_IDcard: 'A1234567',
             user_birthdate: new Date('1990-01-01'),
@@ -40,7 +38,8 @@ async function main() {
         data: {
             event_name: "Sample Event",
             event_description: "This is a sample event description.",
-            event_images: JSON.stringify(["https://www.efinancethai.com/news/picture/2024/6/27/T/7248597.jpg"]),
+            event_intro: "This is a sample event description.",
+            event_images: "https://www.efinancethai.com/news/picture/2024/6/27/T/7248597.jpg",
             event_start_date: new Date('2024-10-10T10:00:00Z'),
             event_last_date: new Date('2024-10-12T18:00:00Z'),
             event_location: JSON.stringify({
