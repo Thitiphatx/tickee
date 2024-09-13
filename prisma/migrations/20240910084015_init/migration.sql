@@ -54,7 +54,8 @@ CREATE TABLE "Seat_Dispatch" (
 CREATE TABLE "Event" (
     "event_id" SERIAL NOT NULL,
     "event_name" TEXT NOT NULL,
-    "event_description" JSONB NOT NULL,
+    "event_intro_description" TEXT NOT NULL,
+    "event_description" TEXT NOT NULL,
     "event_images" JSONB NOT NULL,
     "event_start_date" TIMESTAMP(3) NOT NULL,
     "event_last_date" TIMESTAMP(3) NOT NULL,

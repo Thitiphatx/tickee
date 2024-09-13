@@ -13,28 +13,28 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Event } from '@prisma/client';
 
-export default function Eventpage({ items }: { items: Event }) {
+export default function Eventpage({ eventDetails }: { eventDetails: any }) {
     const [currentTab, setCurrentTab] = useState(0);
     const router = useRouter();
     const [showTicketInfo, setShowTicketInfo] = useState(false);
 
     const handlePaymentClick = () => {
-        setShowTicketInfo(true); // Show the ticket information
+        setShowTicketInfo(true);
     };
     return (
         <div className="space-y-5">
             <Button onClick={() => router.back()}>Back</Button>
             <Card className="grid grid-cols-1 lg:grid-cols-2">
                 <CardHeader className="w-full flex justify-center items-center">
-                    <Image className="" width={"100%"} src={items.event_image} />
+                    <Image className="" width={"100%"} src={""} />
                 </CardHeader>
                 <CardBody className="flex flex-col justify-between">
                     <div className="space-y-3">
-                        <h1 className="text-xl font-bold">{items.event_name}</h1>
+                        <h1 className="text-xl font-bold">{eventDetails.event_name}</h1>
                         <div className="flex flex-row">
-                            <Chip size="sm" className="">{items.event_type}</Chip>
+                            <Chip size="sm" className="">{eventDetails.event_type_id}</Chip>
                         </div>
-                        <p>{items.event_discription.slice(0, 1003)}</p>
+                        <p>{eventDetails.event_description.slice(0, 1003)}</p>
                     </div>
 
                     <div>
@@ -86,7 +86,7 @@ export default function Eventpage({ items }: { items: Event }) {
                             )}
                         </div>
             <Card className="leading-10">
-               {items.event_discription}
+               {eventDetails.event_description}
                <Image src={"https://atkmedia.allticket.com/images/up/21174/BMMF14_06092024_PosterSoldOut_CW.jpg"} />
                 <Image src={"https://atkmedia.allticket.com/images/up/21174/BMMF14_16082024_Info_Lineup.jpg"} />
             </Card>
