@@ -13,23 +13,15 @@ import Payment from './payment/paymentpage';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Event } from '@prisma/client';
+import { EventLandingData } from '@/types/data_type';
 
-
-
-
-
-export default function Eventpage({ eventDetails }: { eventDetails: Event }) {
-
+export default function Eventpage({ eventDetails }: { eventDetails: EventLandingData }) {
     const [currentTab, setCurrentTab] = useState(0);
     const router = useRouter();
     const [showTicketInfo, setShowTicketInfo] = useState(false);
     const [showPaymentPage, setShowPaymentPage] = useState(false);
     const [totalPrice, setTotalPrice] = useState(0);
-
-    console.log(eventDetails)
     const handlePaymentClick = () => {
-        
         setShowTicketInfo(true);
     };
 
@@ -54,34 +46,15 @@ export default function Eventpage({ eventDetails }: { eventDetails: Event }) {
                     <div className="space-y-3">
                         <h1 className="text-xl font-bold">{eventDetails.event_name}</h1>
                         <div className="flex flex-row">
-                            <Chip size="sm" className="">{eventDetails.event_type_id}</Chip>
+                            <Chip size="sm" className="">{eventDetails.event_type.et_name}</Chip>
                         </div>
-                        <p>{eventDetails.event_intro}</p>
+                        <p>{""}</p>
                     </div>
 
                     <div>
                         <h2 className="uppercase font-bold">Select Ticket</h2>
                         <Selector setCurrentTab={setCurrentTab} currentTab={currentTab}>
-                            <Card className="w-full">
-                                <CardHeader>
-                                    <h4 className="font-bold">Seat 1 Seat 1 Seat 1 Seat 1</h4>
-                                </CardHeader>
-                                <CardBody className="flex flex-row justify-between items-center">
-                                    <div>
-                                        <p>฿ 1500</p>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                            <Card className="w-full">
-                                <CardHeader>
-                                    <h4 className="font-bold">Seat 1 Seat 1 Seat 1 Seat 1</h4>
-                                </CardHeader>
-                                <CardBody className="flex flex-row justify-between items-center">
-                                    <div>
-                                        <p>฿ 1500</p>
-                                    </div>
-                                </CardBody>
-                            </Card>
+                            
                             <Card className="w-full">
                                 <CardHeader>
                                     <h4 className="font-bold">Seat 1 Seat 1 Seat 1 Seat 1</h4>
@@ -93,7 +66,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: Event }) {
                                 </CardBody>
                             </Card>
                         </Selector>
-                        <Button color="primary" size="lg" className="w-full" onClick={handlePaymentClick} >Buy</Button>
+                        <Button radius="full" color="primary" size="lg" className="w-full" onClick={handlePaymentClick} >Buy</Button>
 
                         
                     </div>

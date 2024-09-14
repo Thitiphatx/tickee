@@ -1,3 +1,5 @@
+import { Event_Type, Event, Seat_Type } from "@prisma/client"
+
 export interface Address {
     street: string
     sub_district: string
@@ -21,4 +23,10 @@ export interface SignUpData {
     idcard:string
     birthdate:Date
     phone:string
+}
+
+export interface EventLandingData extends Event {
+    event_type: Event_Type
+    Seat_Type: Seat_Type
+
 }

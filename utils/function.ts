@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { SignInData, SignUpData } from "./data_type";
+import { SignInData, SignUpData } from "../types/data_type";
 
 export async function searchEventwithTag(input:string) {
     let output;

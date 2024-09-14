@@ -6,10 +6,11 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import ImageSlider from '../components/slider'
 import { eventItems } from "@/config/site";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
     const router = useRouter();
-    
+    const { data: session } = useSession();
     return (
         
         <div>
@@ -20,6 +21,7 @@ export default function Home() {
                 initial={{ y: 100 }}
                 animate={{ y: 0 }}
             >
+                {session?.user?.name}
                 {eventItems.map((event, index)=> (
                     <Card className="min-w-52 flex-shrink-0" key={index} isPressable onPress={()=> router.push(`/event/${index}`)}>
                         <Image alt="Card background" className="object-cover rounded-xl" src={event.cover} width={270} />
