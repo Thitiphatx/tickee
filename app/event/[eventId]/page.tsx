@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import Eventpage from "@/components/Eventpage";
 
 export default async function EventLanding({ params }: { params: { eventId: string }}) {
@@ -7,7 +7,9 @@ export default async function EventLanding({ params }: { params: { eventId: stri
         include: {
             event_type: true,
             Seat_Type: {
-                Seat_Dispatch: true
+                include: {
+                    Seat_Dispatch: true
+                }
             }
         },
         where:  {

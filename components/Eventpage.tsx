@@ -1,5 +1,5 @@
 "use client"
-import React, { useRef, useState } from 'react';
+import React, {  useState } from 'react';
 
 import Selector from "@/components/selector";
 import { Button } from "@nextui-org/button";
@@ -52,19 +52,21 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                     </div>
 
                     <div>
+                        {eventDetails.Seat_Type[0].Seat_Dispatch?.sd_max}
                         <h2 className="uppercase font-bold">Select Ticket</h2>
                         <Selector setCurrentTab={setCurrentTab} currentTab={currentTab}>
-                            
-                            <Card className="w-full">
-                                <CardHeader>
-                                    <h4 className="font-bold">Seat 1 Seat 1 Seat 1 Seat 1</h4>
-                                </CardHeader>
-                                <CardBody className="flex flex-row justify-between items-center">
-                                    <div>
-                                        <p>฿ 1500</p>
-                                    </div>
-                                </CardBody>
-                            </Card>
+                            {eventDetails.Seat_Type.map((seat)=> (
+                                <Card key={seat.seat_id} className="w-full">
+                                    <CardHeader>
+                                        <h4 className="font-bold">{seat.seat_name}</h4>
+                                    </CardHeader>
+                                    <CardBody className="flex flex-row justify-between items-center">
+                                        <div>
+                                            <p>฿ {seat.seat_price}</p>
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            ))}
                         </Selector>
                         <Button radius="full" color="primary" size="lg" className="w-full" onClick={handlePaymentClick} >Buy</Button>
 
