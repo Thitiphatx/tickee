@@ -14,11 +14,9 @@ export interface SignInData {
 export interface SignUpData {
     email: string
     password: string
-    name:{
-        name:string,
-        surname:string
-    }
-    idcard:string
-    birthdate:Date
-    phone:string
+    name: string,
+    surname: string
+    idcard: string
+    birthdate: Date
+    phone: string
 }
