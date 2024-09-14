@@ -9,25 +9,46 @@ import { Image } from "@nextui-org/image";
 import { useRouter } from "next/navigation";
 import TicketInformation from "../app/event/[eventId]/TicketInformation";
 
+import Payment from './payment/paymentpage';
+
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Event } from '@prisma/client';
 
-export default function Eventpage({ eventDetails }: { eventDetails: any }) {
+
+
+
+
+export default function Eventpage({ eventDetails }: { eventDetails: Event }) {
+
     const [currentTab, setCurrentTab] = useState(0);
     const router = useRouter();
     const [showTicketInfo, setShowTicketInfo] = useState(false);
+    const [showPaymentPage, setShowPaymentPage] = useState(false);
+    const [totalPrice, setTotalPrice] = useState(0);
 
     console.log(eventDetails)
     const handlePaymentClick = () => {
+        
         setShowTicketInfo(true);
     };
+
+    const handleBookingClick = (price: number) => {
+        console.log("ราคา :",price)
+        setTotalPrice(price);
+        
+        setShowPaymentPage(true); // Show PaymentPage
+      };
+
+    if (showPaymentPage) {
+        return <Payment totalPrice={totalPrice}  />;
+    }  
     return (
         <div className="space-y-5">
             <Button onClick={() => router.back()}>Back</Button>
             <Card className="grid grid-cols-1 lg:grid-cols-2">
                 <CardHeader className="w-full flex justify-center items-center">
-                    <Image className="" width={"100%"} src={eventDetails.event_images?.name} />
+                    <Image className="" width={"100%"} src={eventDetails.event_images} />
                 </CardHeader>
                 <CardBody className="flex flex-col justify-between">
                     <div className="space-y-3">
@@ -35,7 +56,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: any }) {
                         <div className="flex flex-row">
                             <Chip size="sm" className="">{eventDetails.event_type_id}</Chip>
                         </div>
-                        <p>{eventDetails.event_description.slice(0, 1003)}</p>
+                        <p>{eventDetails.event_intro}</p>
                     </div>
 
                     <div>
@@ -72,7 +93,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: any }) {
                                 </CardBody>
                             </Card>
                         </Selector>
-                        <Button color="primary" size="lg" className="w-full" onClick={handlePaymentClick} >Payment</Button>
+                        <Button color="primary" size="lg" className="w-full" onClick={handlePaymentClick} >Buy</Button>
 
                         
                     </div>
@@ -83,7 +104,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: any }) {
 
                     <div className="mt-8">
                             {showTicketInfo && (
-                                <TicketInformation />
+                                <TicketInformation onBookingClick={handleBookingClick} />
                             )}
                         </div>
             <Card className="leading-10">

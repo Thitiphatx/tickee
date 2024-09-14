@@ -35,6 +35,8 @@
 		"@prisma/client": "^5.19.1",
 		"@react-aria/ssr": "3.9.4",
 		"@react-aria/visually-hidden": "3.8.12",
+		"@stripe/react-stripe-js": "^2.8.0",
+		"@stripe/stripe-js": "^4.4.0",
 		"clsx": "2.1.1",
 		"framer-motion": "^11.5.4",
 		"intl-messageformat": "^10.5.0",
@@ -44,6 +46,7 @@
 		"pg": "^8.12.0",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",
+		"stripe": "^16.11.0",
 		"swiper": "^11.1.12"
 	},
 	"devDependencies": {
