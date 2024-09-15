@@ -1,3 +1,5 @@
+import { Event_Type, Event, Seat_Type, Seat_Dispatch, Prisma } from "@prisma/client"
+
 export interface Address {
     street: string
     sub_district: string
@@ -22,3 +24,12 @@ export interface SignUpData {
     birthdate:Date
     phone:string
 }
+
+export type EventLandingData = Prisma.EventGetPayload<{include: {
+    event_type: true,
+    Seat_Type: {
+        include: {
+            Seat_Dispatch: true
+        }
+    }
+}}>

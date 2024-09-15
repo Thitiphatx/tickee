@@ -22,7 +22,7 @@ import { signOut, useSession } from "next-auth/react";
 import Searchbar from "./searchbar";
 
 export const Navbar = () => {
-    const router = useRouter()
+    const { data: session } = useSession();
     return (
         <NextUINavbar maxWidth="xl" position="sticky">
             <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -60,7 +60,6 @@ export const Navbar = () => {
                         <DropdownMenu aria-label="Profile Actions" variant="flat">
                             <DropdownItem key="name">name</DropdownItem>
                             <DropdownItem key="profile" href="/account/profile">Profile</DropdownItem>
-                            <DropdownItem key="add_hotel" onClick={() => router.push('/event/new')}>Add Event</DropdownItem>
                             <DropdownItem key="settings" href="/account/myticket" >My Ticket</DropdownItem>
                             <DropdownItem key="logout" color="danger" onClick={() => signOut()}>Log Out</DropdownItem>
                         </DropdownMenu>
@@ -68,6 +67,8 @@ export const Navbar = () => {
                     <Button as={Link} className="text-sm font-normal text-default-600 bg-default-100" href={"/signin"} variant="flat">
                         Signin
                     </Button>
+                    }
+                    
 
 
                 </NavbarItem>
