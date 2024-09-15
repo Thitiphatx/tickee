@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
     Navbar as NextUINavbar,
     NavbarContent,
@@ -20,9 +20,18 @@ import { Avatar } from "@nextui-org/avatar";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { signOut, useSession } from "next-auth/react";
 import Searchbar from "./searchbar";
+import { useState, useEffect } from "react";
 
 export const Navbar = () => {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (status !== "loading") {
+            setLoading(false); // Session data is loaded
+        }
+    }, [status]);
+
     return (
         <NextUINavbar maxWidth="xl" position="sticky">
             <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -52,26 +61,41 @@ export const Navbar = () => {
             <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
                 <Searchbar />
                 <NavbarItem className="hidden md:flex space-x-5">
-                    {session ? (
+                    {loading ? (
+                        // Loading indicator while session is being fetched
+                        <div className="animate-pulse">
+                            <div className="w-10 h-10 bg-gray-200 rounded-full" />
+                        </div>
+                    ) : session ? (
                         <Dropdown placement="bottom-end" backdrop="blur">
                             <DropdownTrigger>
-                                <Avatar isBordered as="button" className="transition-transform" color="primary" name={session?.user?.name ?? ""} size="sm" src={session?.user?.image ?? ""} />
+                                <Avatar
+                                    isBordered
+                                    as="button"
+                                    className="transition-transform"
+                                    color="primary"
+                                    name={session?.user?.name ?? ""}
+                                    size="sm"
+                                    src={session?.user?.image ?? ""}
+                                />
                             </DropdownTrigger>
                             <DropdownMenu aria-label="Profile Actions" variant="flat">
                                 <DropdownItem key="name">{session?.user?.name}</DropdownItem>
                                 <DropdownItem key="profile" href="/account/profile">Profile</DropdownItem>
-                                <DropdownItem key="settings" href="/account/myticket" >My Ticket</DropdownItem>
+                                <DropdownItem key="settings" href="/account/myticket">My Ticket</DropdownItem>
                                 <DropdownItem key="logout" color="danger" onClick={() => signOut()}>Log Out</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
-                    ) :
-                    <Button as={Link} className="text-sm font-normal text-default-600 bg-default-100" href={"/signin"} variant="flat">
-                        Signin
-                    </Button>
-                    }
-                    
-
-
+                    ) : (
+                        <Button
+                            as={Link}
+                            className="text-sm font-normal text-default-600 bg-default-100"
+                            href={"/signin"}
+                            variant="flat"
+                        >
+                            Sign In
+                        </Button>
+                    )}
                 </NavbarItem>
             </NavbarContent>
 
