@@ -55,7 +55,7 @@ export const Navbar = () => {
                     {session ? (
                         <Dropdown placement="bottom-end" backdrop="blur">
                             <DropdownTrigger>
-                                <Avatar isBordered as="button" className="transition-transform" color="primary" name={session?.user?.name} size="sm" src={session?.user?.image ?? ""} />
+                                <Avatar isBordered as="button" className="transition-transform" color="primary" name={session?.user?.name ?? ""} size="sm" src={session?.user?.image ?? ""} />
                             </DropdownTrigger>
                             <DropdownMenu aria-label="Profile Actions" variant="flat">
                                 <DropdownItem key="name">{session?.user?.name}</DropdownItem>
