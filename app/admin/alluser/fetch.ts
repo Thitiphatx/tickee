@@ -49,3 +49,14 @@ export async function getSelectedUser(input: string) {
     }
     return output
 }
+
+export async function getRole() {
+    let output;
+        try {
+            output = await prisma.role.findMany({})
+        } catch (error) {
+            console.log("getRole Error")
+            return null
+        }
+    return output
+}

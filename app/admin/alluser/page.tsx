@@ -1,22 +1,25 @@
 import Searchbar from "@/components/searchbar";
 import { notFound } from "next/navigation";
-import { getSelectedUser } from "./fetch";
+import { getRole, getSelectedUser } from "./fetch";
 import UserTable from "@/components/userTable";
 
 
 export default async function AllUser() {
     let input = ""
-    const res = await getSelectedUser(input);
-    if (!res) {
+    const resUser = await getSelectedUser(input);
+    const resRole = await getRole();
+    if (!resUser || !resRole) {
         notFound()
     }
-    const selectedUser = res;
+    const selectedUser = resUser;
+    const allRole = resRole;
+
     return (
         <div className="h-2/3">
             <div className="w-full">
                 <Searchbar />
             </div>
-            <UserTable data={selectedUser}></UserTable>
+            <UserTable data={selectedUser} role={allRole}></UserTable>
  
         </div>
     )
