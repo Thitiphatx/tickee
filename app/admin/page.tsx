@@ -5,15 +5,14 @@ import { Receipt, Seat_Type } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
 
-
 export default function Admin() {
     const router = useRouter();
     return (
-        <div className="h-2/3">
+        <div className="h-fit">
             <Graph />            
-            <div className="flex justify-around">
-                <Button color="primary" size="lg" className="w-1/5" onClick={()=> router.push(`/admin/alluser`)}>get users</Button>
-                <Button color="primary" size="lg" className="w-1/5" onClick={()=> router.push(`/admin/allevent`)}>get event</Button>
+            <div className="flex w-1/2 justify-around">
+                <Button color="primary" size="lg" className="w-1/3" onClick={()=> router.push(`/admin/alluser`)}>get users</Button>
+                <Button color="primary" size="lg" className="w-1/3" onClick={()=> router.push(`/admin/allevent`)}>get event</Button>
                 {/* <Button color="primary" size="lg" className="w-full" >verification form</Button> */}
             </div>
         </div>

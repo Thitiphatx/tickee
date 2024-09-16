@@ -14,7 +14,7 @@ export default async function AllEvent() {
     const foundedEvent = res
 
     return (
-        <div className="flex h-2/3">
+        <div className="flex flex-wrap h-2/3">
             {foundedEvent.map((event) => (
                 <Card className="w-72 flex-shrink-0 overflow-hidden" key={event.event_id}>
                     <span className="absolute right-5 bottom-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50">
