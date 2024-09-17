@@ -22,6 +22,7 @@ import { signOut, useSession } from "next-auth/react";
 import Searchbar from "./searchbar";
 
 export const Navbar = () => {
+    const { data: session } = useSession();
     return (
         <NextUINavbar maxWidth="xl" position="sticky">
             <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -51,21 +52,24 @@ export const Navbar = () => {
             <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
                 <Searchbar />
                 <NavbarItem className="hidden md:flex space-x-5">
-
-                    <Dropdown placement="bottom-end" backdrop="blur">
-                        <DropdownTrigger>
-                            <Avatar isBordered as="button" className="transition-transform" color="primary" name="" size="sm" src="" />
-                        </DropdownTrigger>
-                        <DropdownMenu aria-label="Profile Actions" variant="flat">
-                            <DropdownItem key="name">name</DropdownItem>
-                            <DropdownItem key="profile" href="/account/profile">Profile</DropdownItem>
-                            <DropdownItem key="settings" href="/account/myticket" >My Ticket</DropdownItem>
-                            <DropdownItem key="logout" color="danger" onClick={() => signOut()}>Log Out</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
+                    {session ? (
+                        <Dropdown placement="bottom-end" backdrop="blur">
+                            <DropdownTrigger>
+                                <Avatar isBordered as="button" className="transition-transform" color="primary" name={session?.user?.name ?? ""} size="sm" src={session?.user?.image ?? ""} />
+                            </DropdownTrigger>
+                            <DropdownMenu aria-label="Profile Actions" variant="flat">
+                                <DropdownItem key="name">{session?.user?.name}</DropdownItem>
+                                <DropdownItem key="profile" href="/account/profile">Profile</DropdownItem>
+                                <DropdownItem key="settings" href="/account/myticket" >My Ticket</DropdownItem>
+                                <DropdownItem key="logout" color="danger" onClick={() => signOut()}>Log Out</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    ) :
                     <Button as={Link} className="text-sm font-normal text-default-600 bg-default-100" href={"/signin"} variant="flat">
                         Signin
                     </Button>
+                    }
+                    
 
 
                 </NavbarItem>

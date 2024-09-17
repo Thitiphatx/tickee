@@ -1,5 +1,5 @@
 "use client"
-import React, { useRef, useState } from 'react';
+import React, {  useState } from 'react';
 
 import Selector from "@/components/selector";
 import { Button } from "@nextui-org/button";
@@ -13,23 +13,15 @@ import Payment from './payment/paymentpage';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Event } from '@prisma/client';
+import { EventLandingData } from '@/types/data_type';
 
-
-
-
-
-export default function Eventpage({ eventDetails }: { eventDetails: Event }) {
-
+export default function Eventpage({ eventDetails }: { eventDetails: EventLandingData }) {
     const [currentTab, setCurrentTab] = useState(0);
     const router = useRouter();
     const [showTicketInfo, setShowTicketInfo] = useState(false);
     const [showPaymentPage, setShowPaymentPage] = useState(false);
     const [totalPrice, setTotalPrice] = useState(0);
-
-    console.log(eventDetails)
     const handlePaymentClick = () => {
-        
         setShowTicketInfo(true);
     };
 
@@ -54,46 +46,29 @@ export default function Eventpage({ eventDetails }: { eventDetails: Event }) {
                     <div className="space-y-3">
                         <h1 className="text-xl font-bold">{eventDetails.event_name}</h1>
                         <div className="flex flex-row">
-                            <Chip size="sm" className="">{eventDetails.event_type_id}</Chip>
+                            <Chip size="sm" className="">{eventDetails.event_type.et_name}</Chip>
                         </div>
-                        <p>{eventDetails.event_intro}</p>
+                        <p>{""}</p>
                     </div>
 
                     <div>
+                        {eventDetails.Seat_Type[0].Seat_Dispatch?.sd_max}
                         <h2 className="uppercase font-bold">Select Ticket</h2>
                         <Selector setCurrentTab={setCurrentTab} currentTab={currentTab}>
-                            <Card className="w-full">
-                                <CardHeader>
-                                    <h4 className="font-bold">Seat 1 Seat 1 Seat 1 Seat 1</h4>
-                                </CardHeader>
-                                <CardBody className="flex flex-row justify-between items-center">
-                                    <div>
-                                        <p>฿ 1500</p>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                            <Card className="w-full">
-                                <CardHeader>
-                                    <h4 className="font-bold">Seat 1 Seat 1 Seat 1 Seat 1</h4>
-                                </CardHeader>
-                                <CardBody className="flex flex-row justify-between items-center">
-                                    <div>
-                                        <p>฿ 1500</p>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                            <Card className="w-full">
-                                <CardHeader>
-                                    <h4 className="font-bold">Seat 1 Seat 1 Seat 1 Seat 1</h4>
-                                </CardHeader>
-                                <CardBody className="flex flex-row justify-between items-center">
-                                    <div>
-                                        <p>฿ 1500</p>
-                                    </div>
-                                </CardBody>
-                            </Card>
+                            {eventDetails.Seat_Type.map((seat)=> (
+                                <Card key={seat.seat_id} className="w-full">
+                                    <CardHeader>
+                                        <h4 className="font-bold">{seat.seat_name}</h4>
+                                    </CardHeader>
+                                    <CardBody className="flex flex-row justify-between items-center">
+                                        <div>
+                                            <p>฿ {seat.seat_price}</p>
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            ))}
                         </Selector>
-                        <Button color="primary" size="lg" className="w-full" onClick={handlePaymentClick} >Buy</Button>
+                        <Button radius="full" color="primary" size="lg" className="w-full" onClick={handlePaymentClick} >Buy</Button>
 
                         
                     </div>
