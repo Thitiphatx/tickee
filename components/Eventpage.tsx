@@ -48,17 +48,16 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                         <div className="flex flex-row">
                             <Chip size="sm" className="">{eventDetails.event_type.et_name}</Chip>
                         </div>
-                        <p>{""}</p>
+                        <p>{eventDetails.event_intro}</p>
                     </div>
 
                     <div>
-                        {eventDetails.Seat_Type[0].Seat_Dispatch?.sd_max}
                         <h2 className="uppercase font-bold">Select Ticket</h2>
                         <Selector setCurrentTab={setCurrentTab} currentTab={currentTab}>
                             {eventDetails.Seat_Type.map((seat)=> (
                                 <Card key={seat.seat_id} className="w-full">
                                     <CardHeader>
-                                        <h4 className="font-bold">{seat.seat_name}</h4>
+                                        <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง ({seat.Seat_Dispatch?.sd_max}/{seat.Seat_Dispatch?.sd_current})</h4>
                                     </CardHeader>
                                     <CardBody className="flex flex-row justify-between items-center">
                                         <div>

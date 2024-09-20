@@ -1,27 +1,25 @@
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
+ 
+export const prisma = globalForPrisma.prisma || new PrismaClient()
+ 
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
 
 async function main(){
-    const role = await prisma.role.create({
-        data: {
-            role_name: "Admin",
-        },
-    });
+    // const role = await prisma.role.create({
+    //     data: {
+    //         role_name: "Admin",
+    //     },
+    // });
 
-    // Upsert a user
     const user = await prisma.user.upsert({
-        where: { user_email: 'test@test.com' },
+        where: { email: 'test@test.com' },
         update: {},
         create: {
-            user_email: 'test@test.com',
-            user_name: "Paradorn",
-            user_surname: "Chancharoen",
-            user_password: '12345',
-            user_IDcard: 'A1234567',
-            user_birthdate: new Date('1990-01-01'),
-            user_phone: '123-456-7890',
-            user_role_id: role.role_id,
+            email: 'test@test.com',
+            name: "testUser",
+            password: '123',
         },
     });
 
@@ -45,12 +43,10 @@ async function main(){
                 country: "thailand",
             }),
             event_seat_per_order: 5,
-            producer_id: user.user_id, // Assuming this user is the producer
+            producer_id: user.id, // Assuming this user is the producer
             event_type_id: eventType.et_id, // Use the correct event type ID
         },
     });
-
-    console.log({ user, event });
 }
 main()
     .then(() => prisma.$disconnect())

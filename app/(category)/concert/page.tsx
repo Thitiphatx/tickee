@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { useRouter, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
-export default async function Concert() {
+export default function Concert() {
     
 
     // const res = await getConcertEvent();
