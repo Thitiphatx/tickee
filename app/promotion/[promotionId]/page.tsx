@@ -1,8 +1,12 @@
+import EditPromotion from '@/components/EditPromotion'
 import React from 'react'
 
 function promotion() {
   return (
-    <div>promotion</div>
+    <div>promotion
+        <EditPromotion />
+    </div>
+    
   )
 }
 
