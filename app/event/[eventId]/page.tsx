@@ -1,8 +1,7 @@
-import { Prisma, PrismaClient } from '@prisma/client';
 import Eventpage from "@/components/Eventpage";
+import { prisma } from '@/lib/prisma';
 
 export default async function EventLanding({ params }: { params: { eventId: string }}) {
-    const prisma = new PrismaClient();
     const details = await prisma.event.findFirst( {
         include: {
             event_type: true,
