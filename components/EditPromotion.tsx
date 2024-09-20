@@ -1,9 +1,21 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input, Textarea, Button, DatePicker, DateValue } from '@nextui-org/react';
 
+interface SeatType {
+  seat_id: number;
+  seat_name: string;
+  seat_price: number;
+}
+
+interface Event {
+  event_id: number;
+  event_name: string;
+  seat_types: SeatType[]; // Include seat types associated with the event
+}
+
 interface PromotionFormProps {
-  events: { event_id: number; event_name: string; }[]; // Update this type as needed
+  events: Event[];
 }
 
 const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
@@ -13,8 +25,15 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
     pro_discount: '',
     pro_start_date: null as DateValue | null,
     pro_last_date: null as DateValue | null,
-    event_id: '' // Use event_id instead of pro_type_id
+    event_id: ''
   });
+
+  const [seatTypes, setSeatTypes] = useState<SeatType[]>([]);
+
+  useEffect(() => {
+    // Reset seat types when event changes
+    setSeatTypes([]);
+  }, [formData.event_id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -25,8 +44,19 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({ ...formData, event_id: e.target.value });
+  const handleEventChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const eventId = e.target.value;
+    setFormData({ ...formData, event_id: eventId });
+
+    // Fetch seat types for the selected event
+    const selectedEvent = events.find(event => event.event_id === parseInt(eventId));
+    if (selectedEvent) {
+      setSeatTypes(selectedEvent.seat_types);
+    }
+  };
+
+  const handleSeatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({ ...formData, seat_type_id: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,7 +64,7 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
 
     // Prepare the data for submission
     const promotionData = {
-      seat_type_id: formData.seat_type_id,
+      seat_type_id: parseInt(formData.seat_type_id), // Ensure it's a number
       pro_description: formData.pro_description,
       pro_discount: parseFloat(formData.pro_discount), // Ensure it's a number
       pro_start_date: formData.pro_start_date,
@@ -90,16 +120,17 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
         onChange={handleDateChange('pro_last_date')}
       />
       <select
-        name="event_id"
-        value={formData.event_id}
-        onChange={handleSelectChange}
+        name="seat_type_id"
+        value={formData.seat_type_id}
+        onChange={handleSeatChange}
         required
         className="border border-gray-300 rounded p-2"
       >
-        <option value="" disabled>Select Event</option>
-        {events.map((event) => (
-          <option key={event.event_id} value={event.event_id.toString()}>
-            {event.event_name}
+        <option value="" disabled>Select Seat Type</option>
+        {seatTypes.map((seat) => (
+          <option key={seat.seat_id} value={seat.seat_id}>
+            {seat.seat_name} - ${seat.seat_price}
+            
           </option>
         ))}
       </select>
