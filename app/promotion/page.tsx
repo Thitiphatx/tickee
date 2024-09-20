@@ -1,10 +1,22 @@
-import AddProForm from '@/components/AddProForm'
-import React from 'react'
 
-export default function promotion() {
-    return (
-        <div>
-            <AddProForm />
-        </div>
-    )
+import { PrismaClient } from '@prisma/client';
+import { useState, useEffect } from 'react'
+
+interface Event {
+  event_id: number;
+  event_name: string;
+  event_intro: string;
+}
+
+export default async function AddProForm() {
+  const prisma = new PrismaClient();
+  const detai = await prisma.event.findFirst();
+  console.log(detai)
+
+
+  return (
+    <div>
+      dawd
+    </div>
+  )
 }

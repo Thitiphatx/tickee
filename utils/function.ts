@@ -45,12 +45,9 @@ export async function searchEventwithName(input:string) {
     return output
 }
 export async function fetchEvent() {
-    try {
-      const output = await prisma.event.findMany(); // Fetch all event data
-      return output;
-    } catch (error) {
-      console.error("Failed to fetch events: ", error);
-      return null;
+    const event = await prisma.event.findMany();
+    return {
+        event
     }
   }
 
