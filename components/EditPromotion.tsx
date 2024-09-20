@@ -25,15 +25,10 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
     pro_discount: '',
     pro_start_date: null as DateValue | null,
     pro_last_date: null as DateValue | null,
-    event_id: ''
+    event_id: events[0]?.event_id.toString() || '' // Default to the first event if available
   });
 
-  const [seatTypes, setSeatTypes] = useState<SeatType[]>([]);
-
-  useEffect(() => {
-    // Reset seat types when event changes
-    setSeatTypes([]);
-  }, [formData.event_id]);
+  const seatTypes = events[0]?.seat_types || []; // Get seat types from the first event
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -42,17 +37,6 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
 
   const handleDateChange = (name: 'pro_start_date' | 'pro_last_date') => (value: DateValue) => {
     setFormData({ ...formData, [name]: value });
-  };
-
-  const handleEventChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const eventId = e.target.value;
-    setFormData({ ...formData, event_id: eventId });
-
-    // Fetch seat types for the selected event
-    const selectedEvent = events.find(event => event.event_id === parseInt(eventId));
-    if (selectedEvent) {
-      setSeatTypes(selectedEvent.seat_types);
-    }
   };
 
   const handleSeatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -94,6 +78,8 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4">
+      <h2 className="text-xl font-bold">{events[0]?.event_name}</h2>
+      
       <Textarea
         name="pro_description"
         label="Promotion Description"
@@ -130,7 +116,6 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
         {seatTypes.map((seat) => (
           <option key={seat.seat_id} value={seat.seat_id}>
             {seat.seat_name} - ${seat.seat_price}
-            
           </option>
         ))}
       </select>
