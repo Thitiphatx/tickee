@@ -1,14 +1,26 @@
+import Promotion from '@/components/Promotion';
 import { PrismaClient } from '@prisma/client';
-import Promotion from "@/components/Promotion"; // Adjust path as necessary
 
-export default async function promotion_show() {
+export default async function PromotionPage() {
   const prisma = new PrismaClient();
-  const events = await prisma.event.findMany();  // Fetch all events
-  console.log(events);
+  const events = await prisma.event.findMany();
+
+  console.log(events)
+  // Map the events to match the expected Event interface if necessary
+  const formattedEvents = events.map(event => ({
+    event_id: event.event_id,
+    event_name: event.event_name,
+    event_intro: event.event_intro,
+    event_images: event.event_images,
+    event_start_date: event.event_start_date,
+    event_last_date: event.event_last_date,
+    event_location: event.event_location, // Ensure this matches your type
+  }));
 
   return (
     <div>
-      <Promotion events={events}/> {/* Just render the component to see if it shows */}
+      <h1>Promotion Management</h1>
+      <Promotion events={formattedEvents} />
     </div>
   );
 }

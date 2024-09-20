@@ -1,13 +1,14 @@
-import EditPromotion from '@/components/EditPromotion'
-import React from 'react'
+import EditPromotion from '@/components/EditPromotion';
+import { PrismaClient } from '@prisma/client';
 
-function promotion() {
+export default async function PromotionPage() {
+  const prisma = new PrismaClient();
+  const events = await prisma.event.findMany();  // Fetch all events
+
   return (
-    <div>promotion
-        <EditPromotion />
+    <div>
+      <h1>Promotion Management</h1>
+      <EditPromotion events={events} />
     </div>
-    
-  )
+  );
 }
-
-export default promotion
