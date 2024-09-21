@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Input, Textarea, Button, DatePicker, DateValue } from '@nextui-org/react';
 
 interface SeatType {
@@ -14,23 +14,30 @@ interface Event {
   seat_types: SeatType[]; // Include seat types associated with the event
 }
 
-interface PromotionFormProps {
-  events: Event[];
+interface PromotionType {
+  id: number;
+  name: string;
 }
 
-const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
+interface PromotionFormProps {
+  events: Event[];
+  promotionTypes: PromotionType[]; // Add promotion types to the props
+}
+
+const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes }) => {
   const [formData, setFormData] = useState({
     seat_type_id: '',
     pro_description: '',
     pro_discount: '',
     pro_start_date: null as DateValue | null,
     pro_last_date: null as DateValue | null,
-    event_id: events[0]?.event_id.toString() || '' // Default to the first event if available
+    event_id: events[0]?.event_id.toString() || '',
+    pro_type: promotionTypes[0]?.id.toString() || '', // Default to the first promotion type
   });
 
   const seatTypes = events[0]?.seat_types || []; // Get seat types from the first event
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -39,21 +46,18 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSeatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({ ...formData, seat_type_id: e.target.value });
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Prepare the data for submission
     const promotionData = {
-      seat_type_id: parseInt(formData.seat_type_id), // Ensure it's a number
+      seat_type_id: parseInt(formData.seat_type_id),
       pro_description: formData.pro_description,
-      pro_discount: parseFloat(formData.pro_discount), // Ensure it's a number
+      pro_discount: formData.pro_type !== '3' ? parseFloat(formData.pro_discount) : null, // No discount if promotion type is 'free gift'
       pro_start_date: formData.pro_start_date,
       pro_last_date: formData.pro_last_date,
-      event_id: parseInt(formData.event_id), // Ensure it's a number
+      event_id: parseInt(formData.event_id),
+      pro_type: parseInt(formData.pro_type),
     };
 
     try {
@@ -79,7 +83,8 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4">
       <h2 className="text-xl font-bold">{events[0]?.event_name}</h2>
-      
+
+      {/* Promotion Description */}
       <Textarea
         name="pro_description"
         label="Promotion Description"
@@ -87,14 +92,36 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
         onChange={handleChange}
         required
       />
-      <Input
-        name="pro_discount"
-        label="Promotion Discount"
-        type="number"
-        value={formData.pro_discount}
+
+      {/* Conditional Rendering for Discount Field */}
+      {formData.pro_type !== '3' && ( // Only show if not "free gift"
+        <Input
+          name="pro_discount"
+          label="Promotion Discount"
+          type="number"
+          value={formData.pro_discount}
+          onChange={handleChange}
+          required
+        />
+      )}
+
+      {/* Promotion Type Dropdown */}
+      <select
+        name="pro_type"
+        value={formData.pro_type}
         onChange={handleChange}
         required
-      />
+        className="border border-gray-300 rounded p-2"
+      >
+        <option value="" disabled>Select Promotion Type</option>
+        {promotionTypes.map((type) => (
+          <option key={type.id} value={type.id}>
+            {type.name}
+          </option>
+        ))}
+      </select>
+
+      {/* Date Pickers */}
       <DatePicker
         name="pro_start_date"
         label="Promotion Start Date"
@@ -105,10 +132,12 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
         label="Promotion Last Date"
         onChange={handleDateChange('pro_last_date')}
       />
+
+      {/* Seat Type Dropdown */}
       <select
         name="seat_type_id"
         value={formData.seat_type_id}
-        onChange={handleSeatChange}
+        onChange={handleChange}
         required
         className="border border-gray-300 rounded p-2"
       >
@@ -119,6 +148,7 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events }) => {
           </option>
         ))}
       </select>
+
       <Button type="submit" color="primary">Submit</Button>
     </form>
   );

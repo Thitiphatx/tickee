@@ -93,7 +93,7 @@ model Promotion {
   seat_type       Seat_Type      @relation(fields: [seat_type_id], references: [seat_id])
   seat_type_id    Int            @unique
   pro_description String
-  pro_discount    Float
+  pro_discount    Float?
   pro_start_date  DateTime
   pro_last_date   DateTime
   pro_type        Promotion_Type @relation(fields: [pro_type_id], references: [pt_id])

@@ -8,8 +8,8 @@ interface IParams {
 export default async function PromotionPage({ params }: { params: IParams }) {
   const prisma = new PrismaClient();
   
-  // Fetch the event details
-  const details = await prisma.event.findUnique({
+  // Fetch the event details with seat types
+  const eventDetails = await prisma.event.findUnique({
     include: {
       event_type: true,
       Seat_Type: true, // Include seat types
@@ -19,12 +19,19 @@ export default async function PromotionPage({ params }: { params: IParams }) {
     },
   });
 
-  // Map the details to match the Event interface
-  const eventData = details ? {
-    event_id: details.event_id,
-    event_name: details.event_name,
-    seat_types: details.Seat_Type, // Rename Seat_Type to seat_types
-    // Add other fields as needed
+  // Fetch promotion types
+  const promotionTypes = await prisma.promotion_Type.findMany({
+    select: {
+      pt_id: true,
+      pt_name: true, // Assuming you have pt_name as the type's name
+    },
+  });
+
+  // Map the event details to match the Event interface in your EditPromotion component
+  const eventData = eventDetails ? {
+    event_id: eventDetails.event_id,
+    event_name: eventDetails.event_name,
+    seat_types: eventDetails.Seat_Type, // Rename Seat_Type to seat_types
   } : null;
 
   if (!eventData) {
@@ -35,12 +42,18 @@ export default async function PromotionPage({ params }: { params: IParams }) {
       </div>
     );
   }
-  console.log(eventData)
+
+  // Map promotionTypes for easier usage
+  const promotionTypeOptions = promotionTypes.map((type) => ({
+    id: type.pt_id,
+    name: type.pt_name,
+  }));
+
   return (
     <div>
       <h1>Promotion Management for {eventData.event_name}</h1>
-      {/* Pass the event as an array to match the expected props for EditPromotion */}
-      <EditPromotion events={[eventData]} />
+      {/* Pass both the event data and promotion types to EditPromotion */}
+      <EditPromotion events={[eventData]} promotionTypes={promotionTypeOptions} />
     </div>
   );
 }
