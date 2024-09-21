@@ -14,13 +14,12 @@ import React, { useState } from 'react'
 import { Button } from '@nextui-org/button'
 import { Card, CardBody, CardHeader } from '@nextui-org/card'
 import { DatePicker } from '@nextui-org/date-picker'
-import { Divider } from '@nextui-org/divider'
 import { Input } from '@nextui-org/input'
 import { motion } from 'framer-motion'
 import { DeleteIcon, EditIcon } from "./icons";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 
-interface Selected extends User {
+export interface Selected extends User {
     user_role: Role
 }
 
@@ -28,7 +27,6 @@ export default function UserTable({ data, role }: { data: Selected[], role: Role
     const [deleteAlert, setDeleteAlert] = useState(false);
     const [editForm, setEditForm] = useState(false);
     const [mapData, setMapData] = useState<Selected | null>();
-    const [outputData, setOutputData] = useState<Selected | null>();
     const [outputName, setOutputName] = useState<string>("");
     const [outputEmail, setOutputEmail] = useState<string>("");
     const [outputSurName, setOutputSurName] = useState<string>("");
@@ -54,10 +52,46 @@ export default function UserTable({ data, role }: { data: Selected[], role: Role
         setMapData(null)
         setEditForm(false);
     };
+
+    const handleEdit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        let id:number = mapData?.user_id || 0;
+        try {
+            const res = await fetch('/api/adminbutton/edit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({id,outputName,outputSurName,outputEmail,outputRole}),
+            });
+
+        } catch (error) {
+            console.error('Error creating user:', error);
+        }
+    };
+
+    const handleDelete = async (e: React.FormEvent) => {
+        e.preventDefault();
+        let id:number = mapData?.user_id || 0;
+        try {
+            const res = await fetch('/api/adminbutton/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({id}),
+            });
+            // const data = await res.json();
+            console.log("test end")
+        } catch (error) {
+            console.error('Error creating user:', error);
+        }
+    };
+
     return (
         <>
             {editForm && (
-                <>
+                <form onSubmit={handleEdit}>
                     <button
                         className="absolute z-10 bg-white opacity-30 size-full  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
                         onClick={editClose}
@@ -87,19 +121,18 @@ export default function UserTable({ data, role }: { data: Selected[], role: Role
                                     </RadioGroup>
                                     <p className="text-default-500 text-small">Selected: {outputRole}</p>
                                 </div>
-
-                                <Button color='primary' variant='shadow' className="uppercase w-full" radius="full">confirm</Button>
+                                <Button color='primary' variant='shadow' className="uppercase w-full" radius="full" type="submit">confirm</Button>
 
                             </motion.div>
 
                         </CardBody>
 
                     </Card>
-                </>
+                </form>
             )}
 
             {deleteAlert && (
-                <>
+                <form onSubmit={handleDelete}>
                     <button
                         className="absolute z-10 bg-white opacity-30 size-full  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
                         onClick={deleteClose}
@@ -117,10 +150,10 @@ export default function UserTable({ data, role }: { data: Selected[], role: Role
                                     <span> from User ?</span>
                                 </p>
                             </div>
-                            <Button color='danger' variant='shadow' className="uppercase w-full" radius="full">confirm</Button>
+                            <Button color='primary' variant='shadow' className="uppercase w-full" radius="full" type="submit">confirm</Button>
                         </CardBody>
                     </Card>
-                </>
+                </form>
             )}
             <Table className="p-8" selectionMode="single" color="default" >
                 <TableHeader>
