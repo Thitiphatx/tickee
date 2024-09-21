@@ -45,6 +45,7 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
   const handleDateChange = (name: 'pro_start_date' | 'pro_last_date') => (value: DateValue) => {
     setFormData({ ...formData, [name]: value });
   };
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

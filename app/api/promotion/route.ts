@@ -33,7 +33,7 @@ export async function POST(req: Request) {
         pro_discount: promotionData.pro_discount,
         pro_start_date: startDate,
         pro_last_date: lastDate,
-        pro_type_id: promotionData.event_id, // Adjust if necessary
+        pro_type_id: promotionData.pro_type, // Adjust if necessary
       },
     });
 

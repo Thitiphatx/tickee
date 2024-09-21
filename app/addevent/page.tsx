@@ -31,7 +31,7 @@ export default function Addevent() {
 
 
 
-    const removeSeat = (indexToRemove) => {
+    const removeSeat = (indexToRemove: any) => {
         const updatedSeats = [...seat];
 
         // Remove the item at the specified index
@@ -87,7 +87,7 @@ export default function Addevent() {
             event_last_date: endDateTimeISO,
             event_location: event_location,
             event_seat_per_order:5,
-            producer_id:'cm1avzx4y00004tp2eoe5elo8',
+            producer_id:'cm1br2mq90000sx6uk2ihuaoy',
             event_type_id:1,
         }
 
