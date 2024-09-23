@@ -31,3 +31,7 @@
         @apply rounded-xl;
     }
 }
+
+.auth-error {
+    @apply text-danger-500 text-sm
+}

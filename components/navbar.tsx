@@ -50,11 +50,16 @@ export const Navbar = () => {
                             <DropdownMenu aria-label="Profile Actions" variant="flat">
                                 <DropdownItem key="profile" href="/account/profile">Profile</DropdownItem>
                                 <DropdownItem key="settings" href="/account/myticket" >My Ticket</DropdownItem>
+                                {session.user.role == "admin" ? 
+                                    <DropdownItem key="admin" href="/admin" >Admin</DropdownItem>
+                                    :
+                                    <></>
+                                }
                                 <DropdownItem key="logout" color="danger" onClick={() => signOut()}>Log Out</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     ) :
-                    <Button as={Link} className="text-sm font-normal text-default-600 bg-default-100" href={"/signin"} variant="flat">
+                    <Button as={Link} radius="full" className="text-sm bg-primary-400" href={"/signin"} variant="flat">
                         Signin
                     </Button>
                     }

@@ -1,15 +1,12 @@
 import { prisma } from "@/prisma/seed";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { compare } from "bcrypt";
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
-    session: {
-        strategy: "jwt"
-    },
     pages: {
         signIn: '/signin'
     },
@@ -23,19 +20,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
             async authorize(credentials) {
                 if (!credentials.email || !credentials.password) {
-                    return null
+                    throw new CredentialsSignin()
                 }
 
                 const existedUser = await prisma.user.findFirst({
                     where: { email: credentials.email }
                 });
                 if (!existedUser) {
-                    return null
+                    throw new CredentialsSignin()
                 }
 
                 const passwordMatch = await compare(credentials.password as string, existedUser.password as string);
                 if (!passwordMatch) {
-                    return null
+                    throw new CredentialsSignin()
                 }
                 return {
                     id: existedUser.id,
@@ -46,6 +43,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         })
     ],
     callbacks: {
-
+        jwt({ token, user }) {
+            if (user) {
+                token.id = user.id
+            }
+            return token
+        },
+        session({ session, token }) {
+            return session
+        }
     }
 })

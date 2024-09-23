@@ -41,11 +41,13 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
+  image         String?
+  emailVerified DateTime? @map("email_verified")
   password      String?
   role          String    @default("user")
   idCard        String?
   mobile        String?
-  birthDate     DateTime?
+  birthDate     DateTime? @default(now())
   Receipt       Receipt[]
   Event         Event[]
   accounts      Account[]

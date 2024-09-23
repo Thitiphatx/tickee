@@ -6,7 +6,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, password, repass, name } = body.data;
     if (!email || !password || !repass || !name) {
-        return NextResponse.json({error: 'Please provide all'})
+        return NextResponse.json({error: 'Please fill out all required fields'})
+    }
+
+    if (password !== repass) {
+        return NextResponse.json({error: 'Passwords do not match'})
     }
 
     const exist = await prisma.user.findUnique({
@@ -15,7 +19,7 @@ export async function POST(request: NextRequest) {
         }
     });
     if (exist) {
-        return NextResponse.json({error: 'User already existed'})
+        return NextResponse.json({error: 'This email is already registered'})
     }
 
     const hashedPassword = await hashSync(password, 10);
