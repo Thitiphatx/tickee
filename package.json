@@ -12,8 +12,6 @@
 		"seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
 	},
 	"dependencies": {
-		"@auth/core": "^0.35.0",
-		"@auth/prisma-adapter": "^2.5.0",
 		"@internationalized/date": "^3.5.5",
 		"@nextui-org/avatar": "^2.0.32",
 		"@nextui-org/button": "2.0.37",
@@ -47,7 +45,7 @@
 		"framer-motion": "^11.5.4",
 		"intl-messageformat": "^10.5.0",
 		"next": "14.2.4",
-		"next-auth": "^5.0.0-beta.20",
+		"next-auth": "^4.24.7",
 		"next-themes": "^0.2.1",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",

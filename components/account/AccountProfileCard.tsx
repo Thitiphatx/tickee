@@ -7,9 +7,11 @@ import { DatePicker } from "@nextui-org/date-picker"
 import { Input } from "@nextui-org/input"
 import { Radio, RadioGroup } from "@nextui-org/radio"
 import { User } from "@prisma/client"
+import { useSession } from "next-auth/react"
 import { useState } from "react"
 
 export default function AccountProfileCard({ userData }: { userData: User }) {
+    const {data: session} = useSession();
     const [data, setData] = useState<User>(userData);
     const handleEditProfile = async ()=> {
         const response = await fetch('/api/editprofile', {
@@ -62,17 +64,20 @@ export default function AccountProfileCard({ userData }: { userData: User }) {
                     <Button onClick={handleEditProfile} radius="full" color="primary">Save</Button>
                 </CardBody>
             </Card>
-            <Card>
-                <CardHeader>
-                    <h2 className="font-bold uppercase">change password</h2>
-                </CardHeader>
-                <CardBody className="space-y-2">
-                    <Input label="Current password"/>
-                    <Input label="New password" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setData({...data, email: e.target.value})}/>
-                    <Input label="Re-new password" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setData({...data, name: e.target.value})}/>
-                    <Button onClick={handleChangePassword} radius="full" color="primary">Save</Button>
-                </CardBody>
-            </Card>
+            {userData.provider == "credentials" && (
+                <Card>
+                    <CardHeader>
+                        <h2 className="font-bold uppercase">change password</h2>
+                    </CardHeader>
+                    <CardBody className="space-y-2">
+                        <Input label="Current password"/>
+                        <Input label="New password" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setData({...data, email: e.target.value})}/>
+                        <Input label="Re-new password" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setData({...data, name: e.target.value})}/>
+                        <Button onClick={handleChangePassword} radius="full" color="primary">Save</Button>
+                    </CardBody>
+                </Card>
+            )}
+
         </div>
     )
 }

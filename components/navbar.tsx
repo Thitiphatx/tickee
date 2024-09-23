@@ -14,7 +14,6 @@ import NextLink from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { Avatar } from "@nextui-org/avatar";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { signOut, useSession } from "next-auth/react";
 import Searchbar from "./searchbar";
@@ -50,11 +49,6 @@ export const Navbar = () => {
                             <DropdownMenu aria-label="Profile Actions" variant="flat">
                                 <DropdownItem key="profile" href="/account/profile">Profile</DropdownItem>
                                 <DropdownItem key="settings" href="/account/myticket" >My Ticket</DropdownItem>
-                                {session.user.role == "admin" ? 
-                                    <DropdownItem key="admin" href="/admin" >Admin</DropdownItem>
-                                    :
-                                    <></>
-                                }
                                 <DropdownItem key="logout" color="danger" onClick={() => signOut()}>Log Out</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
@@ -63,8 +57,6 @@ export const Navbar = () => {
                         Signin
                     </Button>
                     }
-                    
-
 
                 </NavbarItem>
             </NavbarContent>

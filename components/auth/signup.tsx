@@ -6,12 +6,10 @@ import { Divider } from "@nextui-org/divider";
 import { Input } from "@nextui-org/input";
 import { motion } from "framer-motion";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignupForm() {
     const [error, setError] = useState<string | null>(null);
-    const router = useRouter();
     const [data, setData] = useState<signUpType>({
         email: "",
         password: "",
