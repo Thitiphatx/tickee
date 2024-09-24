@@ -1,10 +1,7 @@
 "use client"
-import { ChangeEvent, useState } from "react"
+import { useState } from "react"
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { parseZonedDateTime } from "@internationalized/date";
-import { Input } from "@nextui-org/input";
-import { addEvent } from "./add";
-import Texteditor from "@/components/texteditor";
 import TextEditor from "@/components/texteditor";
 
 
@@ -13,11 +10,25 @@ export default function Addevent() {
     const [event_intro, setevent_intro] = useState('');
     const [event_description, setevent_description] = useState('');
     const [eventimageURL, seteventimageURL] = useState('');
-    const [event_location, setevent_location] = useState('');
+
+
+
     const startDateTime = parseZonedDateTime("2024-04-01T00:45[Asia/Bangkok]");
     const endDateTime = parseZonedDateTime("2024-04-08T11:15[Asia/Bangkok]");
 
 
+
+    interface EventLocation {
+        address: string;
+        city: string;
+        country: string;
+    }
+
+    const [event_location, setevent_location] = useState<EventLocation>({
+        address: '',
+        city: '',
+        country: ''
+    });
 
     interface seatdata {
         seat_name: string;
@@ -70,6 +81,28 @@ export default function Addevent() {
     };
 
 
+    const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setevent_location((prev) => ({
+            ...prev,
+            address: e.target.value,
+        }));
+    };
+
+    const handleChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setevent_location((prev) => ({
+            ...prev,
+            city: e.target.value,
+        }));
+    };
+
+    const handleChangeCountry = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setevent_location((prev) => ({
+            ...prev,
+            country: e.target.value,
+        }));
+    };
+
+
 
 
 
@@ -83,6 +116,7 @@ export default function Addevent() {
         const startDateTimeISO = startDateTime.toDate().toISOString();
         const endDateTimeISO = endDateTime.toDate().toISOString();
 
+
         const data = {
             event_name: event_name,
             event_intro: event_intro,
@@ -90,10 +124,10 @@ export default function Addevent() {
             event_images: eventimageURL,
             event_start_date: startDateTimeISO,
             event_last_date: endDateTimeISO,
-            event_location: event_location,
+            event_location: JSON.stringify(event_location),
             event_seat_per_order: 5,
             producer_id: 'cm1avzx4y00004tp2eoe5elo8',
-            event_type_id: 1,
+            event_type_id: parseInt(selectedeventTypeValue),
         }
 
         try {
@@ -162,20 +196,20 @@ export default function Addevent() {
 
             <div className="flex w-full ">
                 <div className="flex pr-4 items-center ps-4 border border-gray-200 rounded dark:border-gray-700 ">
-                    <input id="bordered-radio-1" onChange={handleChange} type="radio" value="1" name="bordered-radio" className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300  dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label  className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Concert</label>
+                    <input id="bordered-radio-1" onChange={handleChange} type="radio" value="1" name="bordered-radio" className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300  dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600" />
+                    <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Concert</label>
                 </div>
                 <div className="flex pr-4 items-center ml-5 ps-4 border border-gray-200 rounded dark:border-gray-700">
-                    <input  id="bordered-radio-2"   onChange={handleChange} type="radio" value="2" name="bordered-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Entertainment</label>
+                    <input id="bordered-radio-2" onChange={handleChange} type="radio" value="2" name="bordered-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600" />
+                    <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Entertainment</label>
                 </div>
                 <div className="flex pr-4 items-center ml-5 ps-4 border border-gray-200 rounded dark:border-gray-700">
-                    <input  id="bordered-radio-2"  onChange={handleChange} type="radio" value="3" name="bordered-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Sport</label>
+                    <input id="bordered-radio-2" onChange={handleChange} type="radio" value="3" name="bordered-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600" />
+                    <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Sport</label>
                 </div>
                 <div className="flex pr-4 items-center ml-5 ps-4 border border-gray-200 rounded dark:border-gray-700">
-                    <input  id="bordered-radio-2"  onChange={handleChange} type="radio" value="4" name="bordered-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">E-Sport</label>
+                    <input id="bordered-radio-2" onChange={handleChange} type="radio" value="4" name="bordered-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600" />
+                    <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">E-Sport</label>
                 </div>
             </div>
 
@@ -257,13 +291,29 @@ export default function Addevent() {
 
 
             <div className="mt-4 flex flex-row">
-                <label className="block mb-2 text-sm font-medium leading-6 ">Event location</label>
+                <label className="block mb-2 text-sm font-medium leading-6 w-40 ">Event location</label>
                 <input
                     type="text"
                     className="w-2/4 p-2 border ml-5 border-gray-300 rounded"
                     placeholder="สถานที่จัดงาน"
-                    value={event_location}
-                    onChange={(e) => setevent_location(e.target.value)}
+                    value={event_location.address}
+                    onChange={handleChangeAddress}
+                    required
+                />
+                <input
+                    type="text"
+                    className="w-1/4 p-2 border ml-5 border-gray-300 rounded"
+                    placeholder="จังหวัด"
+                    value={event_location.city}
+                    onChange={handleChangeCity}
+                    required
+                />
+                <input
+                    type="text"
+                    className="w-2/4 p-2 border ml-5 border-gray-300 rounded"
+                    placeholder="ประเทศ"
+                    value={event_location.country}
+                    onChange={handleChangeCountry}
                     required
                 />
 
