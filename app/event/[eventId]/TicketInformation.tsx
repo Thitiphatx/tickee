@@ -1,16 +1,67 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
+import { Seat_Type } from '@/types/data_type';
 
 // สร้าง PaymentPage component
 
 
-export default function TicketInformation({ onBookingClick }: { onBookingClick: (totalPrice: number) => void }) {
+export default function TicketInformation({ currentTab, onBookingClick }: { currentTab: number, onBookingClick: (totalPrice: number) => void }) {
+    console.log("แสดงข้อมูลที่นั่ง seat id: ", currentTab)
+
+    const [seatData, setSeatData] = useState<Seat_Type | null>(null);
+
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long', // 'short' สำหรับเดือนแบบย่อ
+        day: 'numeric',
+        weekday: 'long', // Optional: to include the weekday in Thai
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false // Set to false for 24-hour format
+    };
+
+    // Format the date only when seatData is available
+    const formattedstartDate = seatData?.seat_create_date ? new Date(seatData.seat_create_date).toLocaleString('th-TH', options).replace(',', '')
+        : 'ไม่พบข้อมูลวันที่'; // Fallback if date is not available
+
+    const formattedendDate = seatData?.seat_create_date ? new Date(seatData.seat_due_date).toLocaleString('th-TH', options).replace(',', '')
+        : 'ไม่พบข้อมูลวันที่'; // Fallback if date is not available
+
+
+    useEffect(() => {
+        console.log("currentTab changed to:", currentTab);
+        const fetchSeatData = async () => {
+            try {
+                const response = await fetch(`/api/getseatData?seatId=${currentTab}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    console.log("dataที่มาจากการเลือก seat: ", data.data)
+                    setSeatData(data.data)
+                } else {
+                    console.log("Failed to fetch seat data");
+                }
+            } catch (err) {
+                console.log("Error fetching seat data");
+            }
+        };
+
+        if (currentTab) {
+            fetchSeatData();
+        }
+    }, [currentTab]);
+
+
     const [quantity, setQuantity] = useState(1);
-    const unitPrice = 4500;
+    const unitPrice = seatData?.seat_price;
 
     const increaseQuantity = () => {
-        setQuantity((prevQuantity) => prevQuantity + 1);
+
+        if (seatData?.Seat_Dispatch?.sd_max !== undefined && quantity < seatData.Seat_Dispatch.sd_max) {
+            setQuantity((prevQuantity) => prevQuantity + 1);
+        }
+
     };
 
     const decreaseQuantity = () => {
@@ -19,7 +70,7 @@ export default function TicketInformation({ onBookingClick }: { onBookingClick: 
         }
     };
 
-    const totalPrice = quantity * unitPrice;
+    const totalPrice = quantity * (unitPrice ?? 0);
 
     return (
         <div>
@@ -28,23 +79,16 @@ export default function TicketInformation({ onBookingClick }: { onBookingClick: 
                 <h2 className="text-2xl font-bold mb-6">Ticket Information</h2>
 
                 <div className="grid grid-cols-2 gap-y-4 text-lg">
-                    <span>Match</span>
-                    <span className="font-medium">
-                        LIVERPOOL REDS VS MANCHESTER REDS
-                    </span>
 
-                    <span>Round</span>
-                    <span className="font-medium">12 Oct 2024 Time 18:00</span>
 
-                    <span>Stand</span>
-                    <span className="font-medium">LIVERPOOL (West)</span>
+                    <span>วันเริ่มงาน</span>
+                    <span className="font-medium">{formattedstartDate}</span>
+                    <span>วันจบงาน</span>
+                    <span className="font-medium">{formattedendDate}</span>
 
                     <span>Zone</span>
-                    <span className="font-medium">LB1</span>
-
-                    <span>Seat No</span>
-                    <span className="font-medium">Festival Seat</span>
-
+                    <span className="font-medium">{seatData?.seat_name}</span>
+                    
                     <span>Quantity</span>
                     <div className="flex items-center space-x-4">
                         <button
@@ -63,18 +107,18 @@ export default function TicketInformation({ onBookingClick }: { onBookingClick: 
                     </div>
 
                     <span>Unit Price (Baht)</span>
-                    <span className="font-medium">{unitPrice.toLocaleString()}</span>
+                    <span className="font-medium">{unitPrice?.toLocaleString()}</span>
 
                     <span>Total Price (Baht)</span>
                     <span className="font-medium">
-                        {(quantity * unitPrice).toLocaleString()}
+                        {(quantity * (unitPrice ?? 0)).toLocaleString()}
                     </span>
                 </div>
 
                 <div className="flex justify-between mt-8">
                     <Button>Back</Button>
                     {/* คลิก Booking แล้วแสดงหน้า Payment */}
-                    <Button color="primary" onClick={() => onBookingClick(totalPrice)}>Booking</Button>
+                    <Button color="primary" onClick={() => onBookingClick(totalPrice)} >Booking</Button>
                 </div>
             </Card>
         </div>
