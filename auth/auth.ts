@@ -1,51 +1,94 @@
 import { prisma } from "@/prisma/seed";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { compare } from "bcrypt";
-import NextAuth from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
-    adapter: PrismaAdapter(prisma),
-    session: {
-        strategy: "jwt"
-    },
-    pages: {
-        signIn: '/signin'
-    },
+
+export const authOptions: NextAuthOptions = {
     providers: [
-        Google,
+        Google({
+            clientId: process.env.AUTH_GOOGLE_ID!,
+            clientSecret: process.env.AUTH_GOOGLE_SECRET!
+        }),
         Credentials({
-            name: "credentials",
+            name: "Credentials",
             credentials: {
-                email: { label: "Email", type: "email" },
-                password: { label: "Password", type: "password" }
+                email: { label: 'Email', type: 'email'},
+                password: { label: 'Password', type: 'password'}
             },
             async authorize(credentials) {
-                if (!credentials.email || !credentials.password) {
-                    return null
+                const { email, password } = credentials as { email: string; password: string };
+            
+                if (!email || !password) {
+                    return null;
                 }
-
-                const existedUser = await prisma.user.findFirst({
-                    where: { email: credentials.email }
+            
+                const user = await prisma.user.findFirst({
+                    where: { email }
                 });
-                if (!existedUser) {
-                    return null
+            
+                if (!user) {
+                    return null;
                 }
-
-                const passwordMatch = await compare(credentials.password as string, existedUser.password as string);
-                if (!passwordMatch) {
-                    return null
+            
+                const matched = await compare(password, user.password as string);
+            
+                if (!matched) {
+                    return null;
                 }
+            
                 return {
-                    id: existedUser.id,
-                    email: existedUser.email,
-                    name: existedUser.name
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    role: user.role
                 };
             }
         })
     ],
     callbacks: {
+        async jwt({ token, user, account, profile }) {
+            if (account?.provider === "google") {
+                let existedUser = await prisma.user.findFirst({
+                    where: { email: profile?.email }
+                });
 
-    }
-})
+                if (!existedUser) {
+                    existedUser = await prisma.user.create({
+                        data: {
+                            email: profile?.email!,
+                            name: profile?.name!,
+                            provider: "google"
+                        }
+                    });
+                }
+
+                token.id = existedUser.id;
+                token.role = existedUser.role;
+            }
+            if (user) {
+                return {
+                    ...token,
+                    id: user.id,
+                    role: user.role
+                }
+            }
+            return token
+        },
+        async session({ session, token }: { session: any; token: any }) {
+            if (token) {
+                session.user.role = token.role;
+                session.user.email = token.email;
+                session.user.id = token.id;
+                session.user.name = token.name;
+            }
+            
+            return session;
+        }
+    },
+    pages: {
+        signIn: "/signin"
+    },
+    secret: process.env.AUTH_SECRET
+}

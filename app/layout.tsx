@@ -2,13 +2,11 @@ import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
-
 import { Providers } from "./providers";
-
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
-import { SessionProvider } from "next-auth/react";
+import SessionProvider from "@/components/SessionProvider";
 
 export const metadata: Metadata = {
     title: {
@@ -37,8 +35,8 @@ export default function RootLayout({
         <html suppressHydrationWarning lang="en">
             <head />
             <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable,)}>
+                <SessionProvider>
                 <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-                    <SessionProvider>
                     <div className="relative flex flex-col h-screen">
                         <Navbar />
                         <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
@@ -51,9 +49,8 @@ export default function RootLayout({
                             </Link>
                         </footer>
                     </div>
-                    </SessionProvider>
                 </Providers> 
-                
+                </SessionProvider>
             </body>
         </html>
     );

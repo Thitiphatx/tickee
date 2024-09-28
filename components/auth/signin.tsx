@@ -1,25 +1,41 @@
 "use client"
+import { IconGoogle } from "@/styles/icon";
 import { signInType } from "@/types";
 import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 import { Input } from "@nextui-org/input";
 import { motion } from "framer-motion";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 
 export default function SigninForm() {
+    const router = useRouter();
     const [data, setData] = useState<signInType>({
         email: "test@test.com",
         password: "123",
     });
+    const [error, setError] = useState<string | null>(null);
 
     const handleSignIn = async ()=> {
-        const res = await signIn("credentials", {
-            email: data.email,
-            password: data.password,
-            redirect: false
-        })
+        try {
+            const response = await signIn("credentials", {
+                email: data.email,
+                password: data.password,
+                redirect: false,
+                callbackUrl: "/"
+            })
+            console.log(response)
+            if (response?.error) {
+                setError("Invalid email or password");
+            } else {
+                router.push("/")
+            }
+        } catch (e) {
+            setError("Something went wrong!!")
+        }
+        
     }
 
     return (
@@ -30,10 +46,11 @@ export default function SigninForm() {
             >
                 <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, email: e.target.value})} value={data.email} type="email" label="Email" />
                 <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, password: e.target.value})} value={data.password} type="password" label="Password" />
+                <span className="auth-error">{error}</span>
                 <Button onClick={handleSignIn} color='primary' variant='shadow' className="uppercase w-full" radius="full">sign in</Button>
 
                 <Divider className="my-3" />
-                <Button onClick={() => signIn("google")} className="bg-white text-black w-full" radius='full'>Sign in with Google</Button>
+                <Button onClick={() => signIn("google")} className="bg-white text-black w-full" radius='full'><IconGoogle />Sign in with Google</Button>
             </motion.div>
         </div>
     )

@@ -1,14 +1,26 @@
--- AlterTable
-ALTER TABLE "users" ADD COLUMN     "birthDate" TIMESTAMP(3),
-ADD COLUMN     "idCard" TEXT,
-ADD COLUMN     "mobile" TEXT;
+-- CreateTable
+CREATE TABLE "users" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT,
+    "email" TEXT,
+    "password" TEXT,
+    "image" TEXT,
+    "role" TEXT NOT NULL DEFAULT 'user',
+    "idCard" TEXT,
+    "mobile" TEXT,
+    "birthDate" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Receipt" (
     "rec_id" SERIAL NOT NULL,
     "rec_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "rec_quantity" INTEGER NOT NULL,
-    "rec_customer_id" TEXT NOT NULL,
+    "rec_customer_id" INTEGER NOT NULL,
     "rec_seat_id" INTEGER NOT NULL,
 
     CONSTRAINT "Receipt_pkey" PRIMARY KEY ("rec_id")
@@ -47,7 +59,7 @@ CREATE TABLE "Event" (
     "event_last_date" TIMESTAMP(3) NOT NULL,
     "event_location" TEXT NOT NULL,
     "event_seat_per_order" INTEGER NOT NULL,
-    "producer_id" TEXT NOT NULL,
+    "producer_id" INTEGER NOT NULL,
     "event_type_id" INTEGER NOT NULL,
 
     CONSTRAINT "Event_pkey" PRIMARY KEY ("event_id")
@@ -90,6 +102,9 @@ CREATE TABLE "Admin_Data" (
 
     CONSTRAINT "Admin_Data_pkey" PRIMARY KEY ("ad_id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Seat_Dispatch_seat_type_id_key" ON "Seat_Dispatch"("seat_type_id");

@@ -14,7 +14,6 @@ import NextLink from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { Avatar } from "@nextui-org/avatar";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { signOut, useSession } from "next-auth/react";
 import Searchbar from "./searchbar";
@@ -54,12 +53,10 @@ export const Navbar = () => {
                             </DropdownMenu>
                         </Dropdown>
                     ) :
-                    <Button as={Link} className="text-sm font-normal text-default-600 bg-default-100" href={"/signin"} variant="flat">
+                    <Button as={Link} radius="full" className="text-sm bg-primary-400" href={"/signin"} variant="flat">
                         Signin
                     </Button>
                     }
-                    
-
 
                 </NavbarItem>
             </NavbarContent>
