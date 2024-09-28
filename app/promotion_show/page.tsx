@@ -5,6 +5,7 @@ export default async function PromotionPage() {
   const prisma = new PrismaClient();
   const events = await prisma.event.findMany();
 
+
   console.log(events)
   // Map the events to match the expected Event interface if necessary
   const formattedEvents = events.map(event => ({
@@ -19,8 +20,9 @@ export default async function PromotionPage() {
 
   return (
     <div>
-      <h1>Promotion Management</h1>
+      <h1>All Event</h1>
       <Promotion events={formattedEvents} />
+      <h1>All Events that have been promotions</h1>
     </div>
   );
 }
