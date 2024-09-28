@@ -10,9 +10,7 @@ import {
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
-import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
-import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -20,8 +18,10 @@ import { Avatar } from "@nextui-org/avatar";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { signOut, useSession } from "next-auth/react";
 import Searchbar from "./searchbar";
+import { IconAccount } from "@/styles/icon";
 
 export const Navbar = () => {
+    const { data: session } = useSession();
     return (
         <NextUINavbar maxWidth="xl" position="sticky">
             <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -33,16 +33,7 @@ export const Navbar = () => {
                 <ul className="hidden lg:flex gap-4 justify-start ml-2">
                     {siteConfig.navItems.map((item) => (
                         <NavbarItem key={item.href}>
-                            <NextLink
-                                className={clsx(
-                                    linkStyles({ color: "foreground" }),
-                                    "data-[active=true]:text-primary data-[active=true]:font-medium",
-                                )}
-                                color="foreground"
-                                href={item.href}
-                            >
-                                {item.label}
-                            </NextLink>
+                            <NextLink color="foreground" href={item.href}>{item.label}</NextLink>
                         </NavbarItem>
                     ))}
                 </ul>
@@ -51,21 +42,23 @@ export const Navbar = () => {
             <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
                 <Searchbar />
                 <NavbarItem className="hidden md:flex space-x-5">
-
-                    <Dropdown placement="bottom-end" backdrop="blur">
-                        <DropdownTrigger>
-                            <Avatar isBordered as="button" className="transition-transform" color="primary" name="" size="sm" src="" />
-                        </DropdownTrigger>
-                        <DropdownMenu aria-label="Profile Actions" variant="flat">
-                            <DropdownItem key="name">name</DropdownItem>
-                            <DropdownItem key="profile" href="/account/profile">Profile</DropdownItem>
-                            <DropdownItem key="settings" href="/account/myticket" >My Ticket</DropdownItem>
-                            <DropdownItem key="logout" color="danger" onClick={() => signOut()}>Log Out</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
+                    {session ? (
+                        <Dropdown placement="bottom-end" backdrop="blur">
+                            <DropdownTrigger>
+                                <Link isBlock color="foreground" className="cursor-pointer"><IconAccount />{session.user?.name}</Link>
+                            </DropdownTrigger>
+                            <DropdownMenu aria-label="Profile Actions" variant="flat">
+                                <DropdownItem key="profile" href="/account/profile">Profile</DropdownItem>
+                                <DropdownItem key="settings" href="/account/myticket" >My Ticket</DropdownItem>
+                                <DropdownItem key="logout" color="danger" onClick={() => signOut()}>Log Out</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    ) :
                     <Button as={Link} className="text-sm font-normal text-default-600 bg-default-100" href={"/signin"} variant="flat">
                         Signin
                     </Button>
+                    }
+                    
 
 
                 </NavbarItem>

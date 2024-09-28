@@ -6,10 +6,11 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import ImageSlider from '../components/slider'
 import { eventItems } from "@/config/site";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
     const router = useRouter();
-    
+    const { data: session } = useSession();
     return (
         
         <div>

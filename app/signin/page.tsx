@@ -1,14 +1,9 @@
-import AuthForm from "@/components/AuthForm";
-import { getServerSession } from "next-auth";
-import { getSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { auth } from "@/auth/auth";
+import AuthForm from "@/components/auth/AuthForm";
 
 export default async function signInPage() {
-    const session = await getServerSession();
-    if (session) {
-        redirect("/");
-    }
-
+    const session = await auth();
+    console.log(session?.user)
     return (
         <div>
             <AuthForm />

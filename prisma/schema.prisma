@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,33 +7,68 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Role {
-  role_id   Int    @id @default(autoincrement())
-  role_name String
-  User      User[]
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String  @map("user_id")
+  type               String
+  provider           String
+  providerAccountId  String  @map("provider_account_id")
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? @db.Text
+  session_state      String?
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
-
+ 
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@map("sessions")
+}
+ 
 model User {
-  user_id        Int       @id @default(autoincrement())
-  user_email     String    @unique
-  user_name      String
-  user_surname   String
-  user_password  String
-  user_IDcard    String
-  user_birthdate DateTime
-  user_phone     String
-  user_role      Role      @relation(fields: [user_role_id], references: [role_id])
-  user_role_id   Int
-  Receipt        Receipt[]
-  Event          Event[]
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  password      String?
+  role          String    @default("user")
+  idCard        String?
+  mobile        String?
+  birthDate     DateTime?
+  Receipt       Receipt[]
+  Event         Event[]
+  accounts      Account[]
+  sessions      Session[]
+ 
+  @@map("users")
+}
+ 
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@unique([identifier, token])
+  @@map("verificationtokens")
 }
 
 model Receipt {
   rec_id          Int       @id @default(autoincrement())
   rec_date        DateTime  @default(now())
   rec_quantity    Int
-  rec_customer    User      @relation(fields: [rec_customer_id], references: [user_id])
-  rec_customer_id Int
+  rec_customer    User      @relation(fields: [rec_customer_id], references: [id])
+  rec_customer_id String
   rec_seat        Seat_Type @relation(fields: [rec_seat_id], references: [seat_id])
   rec_seat_id     Int
 }
@@ -73,10 +102,10 @@ model Event {
   event_images         String
   event_start_date     DateTime
   event_last_date      DateTime
-  event_location       Json
+  event_location       String
   event_seat_per_order Int
-  producer             User        @relation(fields: [producer_id], references: [user_id])
-  producer_id          Int
+  producer             User        @relation(fields: [producer_id], references: [id])
+  producer_id          String
   event_type           Event_Type  @relation(fields: [event_type_id], references: [et_id])
   event_type_id        Int
   Seat_Type            Seat_Type[]
