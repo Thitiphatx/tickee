@@ -1,17 +1,13 @@
-import { Selected } from "@/components/userTable";
+
 import { prisma } from "@/lib/prisma";
-import { Role, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { utimes } from "fs";
 
 export async function getSelectedUser(input: string) {
     let output;
     if (input == "") {
         try {
-            output = await prisma.user.findMany({
-                include: {
-                    user_role: true
-                }
-            })
+            output = await prisma.user.findMany({})
         } catch (error) {
             console.log("getSelectedUser1 Error")
             return null
@@ -20,26 +16,21 @@ export async function getSelectedUser(input: string) {
     else {
         try {
             output = await prisma.user.findMany({
-                include: {
-                    user_role: true
-                }
-                , where: {
+                where: {
                     OR: [
                         {
-                            user_email: {
+                            email: {
                                 contains: input
                             }
                         },
                         {
-                            user_name: {
+                            name: {
                                 contains: input
                             }
                         },
                         {
-                            user_role: {
-                                role_name: {
-                                    contains: input
-                                }
+                            role: {
+                                contains: input
                             }
                         },
                     ],
@@ -53,22 +44,12 @@ export async function getSelectedUser(input: string) {
     return output
 }
 
-export async function getRole() {
-    let output;
-        try {
-            output = await prisma.role.findMany({})
-        } catch (error) {
-            console.log("getRole Error")
-            return null
-        }
-    return output
-}
 
-export async function deleteUser(uid: number) {
+export async function deleteUser(uid: string) {
     try {
         const output = await prisma.user.delete({
             where: {
-                user_id: uid
+                id: uid
             }
         })
     } catch (error) {
@@ -77,26 +58,16 @@ export async function deleteUser(uid: number) {
     }
 }
 
-export async function editUser(id:number,email:string,name:string,surname:string,role:string) {
+export async function editUser(id: string, email: string, name: string, surname: string, role: string) {
     try {
-        const roleData = await prisma.role.findFirst({
-            where:{
-                role_name:role,
-            }
-        })
-
         const output = await prisma.user.update({
-            include:{
-                user_role:true
-            },
             where: {
-                user_id: id
+                id: id
             },
             data: {
-                user_name: name,
-                user_email:email,
-                user_surname:surname,
-                user_role_id:roleData?.role_id  
+                name: name,
+                email: email,
+                role: role
             }
         })
     } catch (error) {

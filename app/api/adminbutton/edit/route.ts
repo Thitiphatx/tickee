@@ -10,8 +10,8 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       typeof outputName === 'string' &&
       typeof outputSurName === 'string' &&
       typeof outputRole === 'string' &&
-      typeof id === 'number' &&
-      id != 0
+      typeof id === 'string' &&
+      id != ""
     ) {
 
     }

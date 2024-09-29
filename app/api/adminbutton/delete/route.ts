@@ -5,7 +5,7 @@ import { deleteUser } from '@/app/admin/alluser/fetch';
 export async function POST(req: NextApiRequest,res : NextApiResponse) {
         try {
             const id = req.body;
-            if (typeof id == 'number' && id !== 0) {
+            if (typeof id == 'string' && id !== "") {
                 const output = await deleteUser(id)
             }
             res.status(200).json({ success: true });

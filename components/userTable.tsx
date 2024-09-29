@@ -9,7 +9,7 @@ import {
     TableCell,
 } from "@nextui-org/table";
 
-import { Role, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import React, { useState } from 'react'
 import { Button } from '@nextui-org/button'
 import { Card, CardBody, CardHeader } from '@nextui-org/card'
@@ -18,21 +18,18 @@ import { Input } from '@nextui-org/input'
 import { motion } from 'framer-motion'
 import { DeleteIcon, EditIcon } from "./icons";
 import { RadioGroup, Radio } from "@nextui-org/radio";
+import { RoleAvailable } from "@/types/data_type";
 
-export interface Selected extends User {
-    user_role: Role
-}
-
-export default function UserTable({ data, role }: { data: Selected[], role: Role[] }) {
+export default function UserTable({ data }: { data: User[] }) {
     const [deleteAlert, setDeleteAlert] = useState(false);
     const [editForm, setEditForm] = useState(false);
-    const [mapData, setMapData] = useState<Selected | null>();
+    const [mapData, setMapData] = useState<User | null>();
     const [outputName, setOutputName] = useState<string>("");
     const [outputEmail, setOutputEmail] = useState<string>("");
     const [outputSurName, setOutputSurName] = useState<string>("");
     const [outputRole, setOutputRole] = useState<string>("");
 
-    const deleteClick = (item: Selected) => {
+    const deleteClick = (item: User) => {
         setMapData(item)
         setDeleteAlert(true);
     };
@@ -42,9 +39,9 @@ export default function UserTable({ data, role }: { data: Selected[], role: Role
         setDeleteAlert(false);
     };
 
-    const editClick = (item: Selected) => {
+    const editClick = (item: User) => {
         setMapData(item)
-        setOutputRole(item.user_role.role_name)
+        setOutputRole(item.role)
         setEditForm(true);
     };
 
@@ -55,14 +52,14 @@ export default function UserTable({ data, role }: { data: Selected[], role: Role
 
     const handleEdit = async (e: React.FormEvent) => {
         e.preventDefault();
-        let id:number = mapData?.user_id || 0;
+        let user_id:string = mapData?.id || "";
         try {
             const res = await fetch('/api/adminbutton/edit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({id,outputName,outputSurName,outputEmail,outputRole}),
+                body: JSON.stringify({user_id,outputName,outputSurName,outputEmail,outputRole}),
             });
 
         } catch (error) {
@@ -72,14 +69,14 @@ export default function UserTable({ data, role }: { data: Selected[], role: Role
 
     const handleDelete = async (e: React.FormEvent) => {
         e.preventDefault();
-        let id:number = mapData?.user_id || 0;
+        let user_id:string = mapData?.id || "";
         try {
             const res = await fetch('/api/adminbutton/delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({id}),
+                body: JSON.stringify({user_id}),
             });
             // const data = await res.json();
             console.log("test end")
@@ -105,21 +102,20 @@ export default function UserTable({ data, role }: { data: Selected[], role: Role
                                 initial={{ y: 200, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                             >
-                                <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOutputEmail(e.target.value)} value={mapData?.user_email} type="email" label="Email" />
-                                <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOutputName(e.target.value)} value={mapData?.user_name} type="text" label="First name" />
-                                <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOutputSurName(e.target.value)} value={mapData?.user_surname} type="text" label="Last name" />
-                                <DatePicker label="Birthday" />
+                                <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOutputEmail(e.target.value)} value={mapData?.email || ""} type="email" label="Email" />
+                                <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOutputName(e.target.value)} value={mapData?.name || ""} type="text" label="First name" />
+                                {/* <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOutputSurName(e.target.value)} value={mapData?.surname} type="text" label="Last name" /> */}
                                 <div className="flex flex-col gap-3 p-5">
                                     <RadioGroup
                                         label="Role"
                                         value={outputRole}
                                         onValueChange={setOutputRole}
                                     >
-                                        {role.map((item: Role) => (
-                                            <Radio value={item.role_name}>{item.role_name}</Radio>
+                                        {Object.values(RoleAvailable).map((item : string) => (
+                                            <Radio value={item}>{item}</Radio>
                                         ))}
                                     </RadioGroup>
-                                    <p className="text-default-500 text-small">Selected: {outputRole}</p>
+                                    <p className="text-default-500 text-small">User: {outputRole}</p>
                                 </div>
                                 <Button color='primary' variant='shadow' className="uppercase w-full" radius="full" type="submit">confirm</Button>
 
@@ -146,7 +142,7 @@ export default function UserTable({ data, role }: { data: Selected[], role: Role
                                 <span className="uppercase font-semibold text-xl">Are You Sure ?</span>
                                 <p className="text-danger text-lg">
                                     <span>Delete </span>
-                                    {mapData?.user_name} {mapData?.user_surname}
+                                    {mapData?.name}
                                     <span> from User ?</span>
                                 </p>
                             </div>
@@ -164,12 +160,12 @@ export default function UserTable({ data, role }: { data: Selected[], role: Role
                     <TableColumn align="center">STATUS</TableColumn>
                 </TableHeader>
                 <TableBody emptyContent={"No Data for Display."}>
-                    {data.map((item: Selected) => (
-                        <TableRow key={item.user_id}>
-                            <TableCell><span>{item.user_name} {item.user_surname}</span></TableCell>
-                            <TableCell>{item.user_email}</TableCell>
-                            <TableCell>{item.user_phone}</TableCell>
-                            <TableCell>{item.user_role.role_name}</TableCell>
+                    {data.map((item: User) => (
+                        <TableRow key={item.id}>
+                            <TableCell><span>{item.name} </span></TableCell>
+                            <TableCell>{item.email}</TableCell>
+                            <TableCell>{item.mobile}</TableCell>
+                            <TableCell>{item.role}</TableCell>
                             <TableCell>
                                 <div className="flex justify-center gap-2 w-full">
                                     <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
