@@ -33,3 +33,13 @@ export type EventLandingData = Prisma.EventGetPayload<{include: {
         }
     }
 }}>
+
+export interface Seat_Type {
+    seat_id: number;
+    seat_name: string;
+    seat_price: number;
+    seat_create_date: Date;
+    seat_due_date: Date;
+    event_seat_id: number;
+    Seat_Dispatch?: Seat_Dispatch; // Include this if it's optional
+}

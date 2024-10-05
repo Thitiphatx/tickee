@@ -1,9 +1,8 @@
 "use client"
-import { ChangeEvent, useState } from "react"
+import { useState } from "react"
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { parseZonedDateTime } from "@internationalized/date";
-import { Input } from "@nextui-org/input";
-import { addEvent } from "./add";
+import TextEditor from "@/components/texteditor";
 
 
 export default function Addevent() {
@@ -11,10 +10,25 @@ export default function Addevent() {
     const [event_intro, setevent_intro] = useState('');
     const [event_description, setevent_description] = useState('');
     const [eventimageURL, seteventimageURL] = useState('');
-    const [event_location, setevent_location] = useState('');
+
+
+
     const startDateTime = parseZonedDateTime("2024-04-01T00:45[Asia/Bangkok]");
     const endDateTime = parseZonedDateTime("2024-04-08T11:15[Asia/Bangkok]");
 
+
+
+    interface EventLocation {
+        address: string;
+        city: string;
+        country: string;
+    }
+
+    const [event_location, setevent_location] = useState<EventLocation>({
+        address: '',
+        city: '',
+        country: ''
+    });
 
     interface seatdata {
         seat_name: string;
@@ -67,7 +81,31 @@ export default function Addevent() {
     };
 
 
-    
+    const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setevent_location((prev) => ({
+            ...prev,
+            address: e.target.value,
+        }));
+    };
+
+    const handleChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setevent_location((prev) => ({
+            ...prev,
+            city: e.target.value,
+        }));
+    };
+
+    const handleChangeCountry = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setevent_location((prev) => ({
+            ...prev,
+            country: e.target.value,
+        }));
+    };
+
+
+
+
+
     const addtodb = async () => {
         console.log("name :", event_name)
         console.log("intro :", event_intro)
@@ -78,32 +116,33 @@ export default function Addevent() {
         const startDateTimeISO = startDateTime.toDate().toISOString();
         const endDateTimeISO = endDateTime.toDate().toISOString();
 
-       const data ={
+
+        const data = {
             event_name: event_name,
             event_intro: event_intro,
             event_description: event_description,
             event_images: eventimageURL,
             event_start_date: startDateTimeISO,
             event_last_date: endDateTimeISO,
-            event_location: event_location,
-            event_seat_per_order:5,
-            producer_id:'cm1avzx4y00004tp2eoe5elo8',
-            event_type_id:1,
+            event_location: JSON.stringify(event_location),
+            event_seat_per_order: 5,
+            producer_id: 'cm1avzx4y00004tp2eoe5elo8',
+            event_type_id: parseInt(selectedeventTypeValue),
         }
 
         try {
             const response = await fetch('/api/addevent', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(data),
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
             });
-      
+
             if (!response.ok) {
-              throw new Error('Failed to create event');
+                throw new Error('Failed to create event');
             }
-      
+
             const result = await response.json();
             console.log('event created successfully:', result);
 
@@ -115,9 +154,9 @@ export default function Addevent() {
                         seat_name: seatItem.seat_name,
                         seat_price: seatItem.seat_price,
                         seat_max: seatItem.seat_max,
-                        seat_create_date:startDateTimeISO,
-                        seat_due_date:endDateTimeISO,
-                        event_seat_id:eventId
+                        seat_create_date: startDateTimeISO,
+                        seat_due_date: endDateTimeISO,
+                        event_seat_id: eventId
                     };
                     // Send a POST request to insert the seat into the seat table
                     const seatResponse = await fetch('/api/addseat', {
@@ -127,30 +166,55 @@ export default function Addevent() {
                         },
                         body: JSON.stringify(seatData),
                     });
-    
+
                     if (!seatResponse.ok) {
                         throw new Error('Failed to add seat');
                     }
-    
+
                     const result = await seatResponse.json();
                     console.log('seat created successfully:', result);
                 })
             );
 
-          } catch (error) {
+        } catch (error) {
             console.error('Error creating eventandseat:', error);
-          }
+        }
     }
+
+    const [selectedeventTypeValue, setselectedeventTypeValue] = useState("1");
+
+    // Step 3: Handle change event
+    const handleChange = (event) => {
+        setselectedeventTypeValue(event.target.value); // Update state with the selected value
+    };
 
 
     return (
 
         <div >
-
             <h1 className="text-2xl font-bold mb-4">Create Event</h1>
 
+            <div className="flex w-full ">
+                <div className="flex pr-4 items-center ps-4 border border-gray-200 rounded dark:border-gray-700 ">
+                    <input id="bordered-radio-1" onChange={handleChange} type="radio" value="1" name="bordered-radio" className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300  dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600" />
+                    <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Concert</label>
+                </div>
+                <div className="flex pr-4 items-center ml-5 ps-4 border border-gray-200 rounded dark:border-gray-700">
+                    <input id="bordered-radio-2" onChange={handleChange} type="radio" value="2" name="bordered-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600" />
+                    <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Entertainment</label>
+                </div>
+                <div className="flex pr-4 items-center ml-5 ps-4 border border-gray-200 rounded dark:border-gray-700">
+                    <input id="bordered-radio-2" onChange={handleChange} type="radio" value="3" name="bordered-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600" />
+                    <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Sport</label>
+                </div>
+                <div className="flex pr-4 items-center ml-5 ps-4 border border-gray-200 rounded dark:border-gray-700">
+                    <input id="bordered-radio-2" onChange={handleChange} type="radio" value="4" name="bordered-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300  dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600" />
+                    <label className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">E-Sport</label>
+                </div>
+            </div>
 
-            <div>
+
+            <div className="mt-2">
                 <label className="block mb-2 text-sm font-medium leading-6 ">Event name</label>
                 <input
                     type="text"
@@ -166,19 +230,11 @@ export default function Addevent() {
                 <label className="block mb-2 text-sm font-medium leading-6 ">
                     Introduction
                 </label>
-                <div className="mt-2">
-                    <textarea
-
-                        name="intro"
-                        rows={3}
-                        className="text-white p-2 block w-full rounded-md border-0 py-1.5  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        value={event_intro}
-                        onChange={(e) => setevent_intro(e.target.value)}
-                    />
+                <div className="rounded-md border-1 p-4 ring-gray-300">
+                    <TextEditor setContent={setevent_intro} />
                 </div>
-                <p className="mt-3 text-sm leading-6 text-gray-400">เขียนเชิญชวนผู้มาเข้างาน</p>
+                <p className="mt-3 text-sm leading-6 text-gray-400 ">เขียนเชิญชวนผู้มาเข้างาน</p>
             </div>
-
             <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
 
             <div>
@@ -235,13 +291,29 @@ export default function Addevent() {
 
 
             <div className="mt-4 flex flex-row">
-                <label className="block mb-2 text-sm font-medium leading-6 ">Event location</label>
+                <label className="block mb-2 text-sm font-medium leading-6 w-40 ">Event location</label>
                 <input
                     type="text"
                     className="w-2/4 p-2 border ml-5 border-gray-300 rounded"
                     placeholder="สถานที่จัดงาน"
-                    value={event_location}
-                    onChange={(e) => setevent_location(e.target.value)}
+                    value={event_location.address}
+                    onChange={handleChangeAddress}
+                    required
+                />
+                <input
+                    type="text"
+                    className="w-1/4 p-2 border ml-5 border-gray-300 rounded"
+                    placeholder="จังหวัด"
+                    value={event_location.city}
+                    onChange={handleChangeCity}
+                    required
+                />
+                <input
+                    type="text"
+                    className="w-2/4 p-2 border ml-5 border-gray-300 rounded"
+                    placeholder="ประเทศ"
+                    value={event_location.country}
+                    onChange={handleChangeCountry}
                     required
                 />
 
@@ -310,15 +382,8 @@ export default function Addevent() {
                 <label className="block mb-2 text-sm font-medium leading-6 ">
                     Event description
                 </label>
-                <div className="mt-2">
-                    <textarea
-
-                        name="descript"
-                        rows={10}
-                        className="text-white p-2 block w-full rounded-md border-0 py-1.5  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        value={event_description}
-                        onChange={(e) => setevent_description(e.target.value)}
-                    />
+                <div className="rounded-md border-1 p-4 ring-gray-300">
+                    <TextEditor setContent={setevent_description} />
                 </div>
                 <p className="mt-3 text-sm leading-6 text-gray-400">เขียนรายละเอียดเกี่ยวกับตั๋วและโปรโมชั่น</p>
             </div>
