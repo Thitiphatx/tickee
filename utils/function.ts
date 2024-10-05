@@ -90,56 +90,58 @@ export async function updateBannerImages(data:string[]) {
     return output
 }
 
-export async function userSignIn(input:SignInData) {
-    let output;
-    try {
-        output = await prisma.user.findFirst({
-            where:{
-                AND: [
-                    {
-                        user_email:input.email
-                    },
-                    {
-                        user_password:input.password
-                    },
-                ],
-            }
-        })
-    } catch (error) {
-        console.log("userSignIn Error")
-        return null
-    }
-    return output
-}
+// old signup and signin manually
 
-export async function userSignUp(input:SignUpData) {
-    let role;
-    try {
-        role = await prisma.role.findFirst({
-            where:{
-                role_name:"User"
-            }
-        })
-    } catch (error) {
-        console.log("findRole Error")
-        return null
-    }
+// export async function userSignIn(input:SignInData) {
+//     let output;
+//     try {
+//         output = await prisma.user.findFirst({
+//             where:{
+//                 AND: [
+//                     {
+//                         user_email:input.email
+//                     },
+//                     {
+//                         user_password:input.password
+//                     },
+//                 ],
+//             }
+//         })
+//     } catch (error) {
+//         console.log("userSignIn Error")
+//         return null
+//     }
+//     return output
+// }
 
-    try {
-        let output = await prisma.user.create({
-            data: {
-                user_email:input.email,
-                user_name:input.name,
-                user_surname:input.surname,
-                user_password: input.password,
-                user_IDcard: input.idcard,
-                user_birthdate:input.birthdate,
-                user_phone:input.phone,
-                user_role_id:role?.role_id || 0,
-            }
-        })
-    } catch (error) {
-        console.log("userSignIn Error")
-        return null
-    }
-}
+// export async function userSignUp(input:SignUpData) {
+//     let role;
+//     try {
+//         role = await prisma.role.findFirst({
+//             where:{
+//                 role_name:"User"
+//             }
+//         })
+//     } catch (error) {
+//         console.log("findRole Error")
+//         return null
+//     }
+
+//     try {
+//         let output = await prisma.user.create({
+//             data: {
+//                 user_email:input.email,
+//                 user_name:input.name,
+//                 user_surname:input.surname,
+//                 user_password: input.password,
+//                 user_IDcard: input.idcard,
+//                 user_birthdate:input.birthdate,
+//                 user_phone:input.phone,
+//                 user_role_id:role?.role_id || 0,
+//             }
+//         })
+//     } catch (error) {
+//         console.log("userSignIn Error")
+//         return null
+//     }
+// }
