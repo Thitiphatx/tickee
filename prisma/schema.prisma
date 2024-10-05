@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -102,3 +103,4 @@ model Admin_Data {
   fee           Float
   banner_images String[]
 }
+

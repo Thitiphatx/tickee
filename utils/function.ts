@@ -44,6 +44,12 @@ export async function searchEventwithName(input:string) {
     }
     return output
 }
+export async function fetchEvent() {
+    const event = await prisma.event.findMany();
+    return {
+        event
+    }
+  }
 
 export async function getBannerImages() {
     let output;

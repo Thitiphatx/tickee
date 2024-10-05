@@ -23,7 +23,6 @@ async function main(){
             password: hashSync("123", 10),
         },
     });
-
 }
 main()
     .then(() => prisma.$disconnect())
