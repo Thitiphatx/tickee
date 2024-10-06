@@ -13,7 +13,6 @@ import { User } from "@prisma/client";
 import React, { useState } from 'react'
 import { Button } from '@nextui-org/button'
 import { Card, CardBody, CardHeader } from '@nextui-org/card'
-import { DatePicker } from '@nextui-org/date-picker'
 import { Input } from '@nextui-org/input'
 import { motion } from 'framer-motion'
 import { DeleteIcon, EditIcon } from "./icons";
@@ -26,7 +25,6 @@ export default function UserTable({ data }: { data: User[] }) {
     const [mapData, setMapData] = useState<User | null>();
     const [outputName, setOutputName] = useState<string>("");
     const [outputEmail, setOutputEmail] = useState<string>("");
-    const [outputSurName, setOutputSurName] = useState<string>("");
     const [outputRole, setOutputRole] = useState<string>("");
 
     const deleteClick = (item: User) => {
@@ -59,7 +57,7 @@ export default function UserTable({ data }: { data: User[] }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({user_id,outputName,outputSurName,outputEmail,outputRole}),
+                body: JSON.stringify({user_id,outputName,outputEmail,outputRole}),
             });
 
         } catch (error) {
@@ -78,8 +76,6 @@ export default function UserTable({ data }: { data: User[] }) {
                 },
                 body: JSON.stringify({user_id}),
             });
-            // const data = await res.json();
-            console.log("test end")
         } catch (error) {
             console.error('Error creating user:', error);
         }
@@ -103,8 +99,7 @@ export default function UserTable({ data }: { data: User[] }) {
                                 animate={{ y: 0, opacity: 1 }}
                             >
                                 <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOutputEmail(e.target.value)} value={mapData?.email || ""} type="email" label="Email" />
-                                <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOutputName(e.target.value)} value={mapData?.name || ""} type="text" label="First name" />
-                                {/* <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOutputSurName(e.target.value)} value={mapData?.surname} type="text" label="Last name" /> */}
+                                <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOutputName(e.target.value)} value={mapData?.name || ""} type="text" label="Name" />
                                 <div className="flex flex-col gap-3 p-5">
                                     <RadioGroup
                                         label="Role"
@@ -115,7 +110,7 @@ export default function UserTable({ data }: { data: User[] }) {
                                             <Radio value={item}>{item}</Radio>
                                         ))}
                                     </RadioGroup>
-                                    <p className="text-default-500 text-small">User: {outputRole}</p>
+                                    <p className="text-default-500 text-small">Role : {outputRole}</p>
                                 </div>
                                 <Button color='primary' variant='shadow' className="uppercase w-full" radius="full" type="submit">confirm</Button>
 
@@ -162,7 +157,7 @@ export default function UserTable({ data }: { data: User[] }) {
                 <TableBody emptyContent={"No Data for Display."}>
                     {data.map((item: User) => (
                         <TableRow key={item.id}>
-                            <TableCell><span>{item.name} </span></TableCell>
+                            <TableCell>{item.name}</TableCell>
                             <TableCell>{item.email}</TableCell>
                             <TableCell>{item.mobile}</TableCell>
                             <TableCell>{item.role}</TableCell>

@@ -29,9 +29,9 @@ model Receipt {
   rec_id          Int       @id @default(autoincrement())
   rec_date        DateTime  @default(now())
   rec_quantity    Int
-  rec_customer    User      @relation(fields: [rec_customer_id], references: [id])
+  rec_customer    User      @relation(fields: [rec_customer_id], references: [id], onDelete: Cascade)
   rec_customer_id String
-  rec_seat        Seat_Type @relation(fields: [rec_seat_id], references: [seat_id])
+  rec_seat        Seat_Type @relation(fields: [rec_seat_id], references: [seat_id], onDelete: Cascade)
   rec_seat_id     Int
 }
 
@@ -41,7 +41,7 @@ model Seat_Type {
   seat_price       Float
   seat_create_date DateTime
   seat_due_date    DateTime
-  event_seat       Event          @relation(fields: [event_seat_id], references: [event_id])
+  event_seat       Event          @relation(fields: [event_seat_id], references: [event_id], onDelete: Cascade)
   event_seat_id    Int
   Receipt          Receipt[]
   Seat_Dispatch    Seat_Dispatch?
@@ -50,7 +50,7 @@ model Seat_Type {
 
 model Seat_Dispatch {
   st_id        Int       @id @default(autoincrement())
-  seat_type    Seat_Type @relation(fields: [seat_type_id], references: [seat_id])
+  seat_type    Seat_Type @relation(fields: [seat_type_id], references: [seat_id], onDelete: Cascade)
   seat_type_id Int       @unique
   sd_max       Int
   sd_current   Int       @default(0)
@@ -66,7 +66,7 @@ model Event {
   event_last_date      DateTime
   event_location       String
   event_seat_per_order Int
-  producer             User        @relation(fields: [producer_id], references: [id])
+  producer             User        @relation(fields: [producer_id], references: [id], onDelete: Cascade)
   producer_id          String
   event_type           Event_Type  @relation(fields: [event_type_id], references: [et_id])
   event_type_id        Int
@@ -81,7 +81,7 @@ model Event_Type {
 
 model Promotion {
   pro_id          Int            @id @default(autoincrement())
-  seat_type       Seat_Type      @relation(fields: [seat_type_id], references: [seat_id])
+  seat_type       Seat_Type      @relation(fields: [seat_type_id], references: [seat_id], onDelete: Cascade)
   seat_type_id    Int            @unique
   pro_description String
   pro_discount    Float
