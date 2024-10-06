@@ -1,9 +1,8 @@
 "use client"
-import Graph from "@/components/graph";
+import Graph from "@/components/admin/graph";
 import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 import { useRouter } from "next/navigation";
-
 
 export default function Admin() {
     const router = useRouter();

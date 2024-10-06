@@ -4,7 +4,7 @@ import { Event_Type, Event, Seat_Type } from "@prisma/client";
 import React, { useState } from 'react'
 import { Button } from '@nextui-org/button'
 import { Card, CardBody, CardHeader } from '@nextui-org/card'
-import { DeleteIcon } from "./icons";
+import { DeleteIcon } from "../icons";
 import { Image } from "@nextui-org/image";
 import { Chip } from "@nextui-org/chip";
 import { Divider } from "@nextui-org/divider";

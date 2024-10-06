@@ -15,7 +15,7 @@ import { Button } from '@nextui-org/button'
 import { Card, CardBody, CardHeader } from '@nextui-org/card'
 import { Input } from '@nextui-org/input'
 import { motion } from 'framer-motion'
-import { DeleteIcon, EditIcon } from "./icons";
+import { DeleteIcon, EditIcon } from "../icons";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { RoleAvailable } from "@/types/data_type";
 

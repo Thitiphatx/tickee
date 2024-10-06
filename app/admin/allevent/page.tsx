@@ -2,7 +2,7 @@ import { Button } from "@nextui-org/button";
 import { getSelectedEvent } from "./fetch";
 import { notFound } from "next/navigation";
 import { Card, CardBody } from "@nextui-org/card";
-import AdminEventCard from "@/components/adminEventCard";
+import AdminEventCard from "@/components/admin/adminEventCard";
 
 export default async function AllEvent() {
     let input = ""

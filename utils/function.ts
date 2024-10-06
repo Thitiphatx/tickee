@@ -53,11 +53,11 @@ export async function getBannerImages() {
                 banner_images:true
             }
         })
+        return output
     } catch (error) {
         console.log("getBannerImages Error")
         return null
     }
-    return output
 }
 
 export async function updateBannerImages(data:string[]) {

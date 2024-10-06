@@ -1,7 +1,7 @@
 import Searchbar from "@/components/searchbar";
 import { notFound } from "next/navigation";
 import { getSelectedUser } from "./fetch";
-import UserTable from "@/components/userTable";
+import UserTable from "@/components/admin/userTable";
 
 
 export default async function AllUser() {
