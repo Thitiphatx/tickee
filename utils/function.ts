@@ -1,19 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import { SignInData, SignUpData } from "../types/data_type";
 
-export async function searchEventwithTag(input:string) {
+export async function searchEventwithTag(input: string) {
     let output;
     try {
         output = await prisma.event.findMany({
-            include:{
-                event_type:true,
-                producer:true,
-            },where: {
-                event_type:{
-                    et_name:input
+            include: {
+                event_type: true,
+                producer: true,
+            }, where: {
+                event_type: {
+                    et_name: input
                 }
-            },orderBy : {
-                event_last_date:"asc"
+            }, orderBy: {
+                event_last_date: "asc"
             }
         })
     } catch (error) {
@@ -23,19 +23,19 @@ export async function searchEventwithTag(input:string) {
     return output
 }
 
-export async function searchEventwithName(input:string) {
+export async function searchEventwithName(input: string) {
     let output;
     try {
         output = await prisma.event.findMany({
-            include:{
-                event_type:true,
-                producer:true,
-            },where: {
-                event_name:{
-                    contains:input
+            include: {
+                event_type: true,
+                producer: true,
+            }, where: {
+                event_name: {
+                    contains: input
                 }
-            },orderBy : {
-                event_last_date:"asc"
+            }, orderBy: {
+                event_last_date: "asc"
             }
         })
     } catch (error) {
@@ -45,43 +45,36 @@ export async function searchEventwithName(input:string) {
     return output
 }
 
-export async function getBannerImages() {
+export async function getBusinessData() {
     let output;
     try {
-        output = await prisma.admin_Data.findFirst({
-            select:{
-                banner_images:true
-            }
-        })
+        output = await prisma.admin_Data.findFirst({})
         return output
     } catch (error) {
-        console.log("getBannerImages Error")
+        console.log("getBusinessData Error")
         return null
     }
 }
 
-export async function updateBannerImages(data:string[]) {
+export async function updateBusinessData(newImages: string[], newFee: number) {
     let output;
     try {
-        output = getBannerImages()
-    } catch (error) {
-        console.log("updateBannerImages Error")
-        return null
-    }
-    try {
+        output = await getBusinessData()
+
         let updateData = await prisma.admin_Data.update({
             where: {
-                ad_id:1
+                ad_id: output?.ad_id
             },
             data: {
-                banner_images: data
+                banner_images: newImages,
+                fee: newFee
             }
         })
+        return updateData
     } catch (error) {
-        console.log("updateBannerImages Error")
+        console.log("updateBusinessData Error")
         return null
     }
-    return output
 }
 
 // old signup and signin manually
