@@ -6,22 +6,23 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
- 
+
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  password      String?
-  image         String?
-  role          String    @default("user")
-  idCard        String?
-  mobile        String?
-  birthDate     DateTime? @default(now())
-  provider      String   @default("credentials")
-  Receipt       Receipt[]
-  Event         Event[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id        String    @id @default(cuid())
+  name      String?
+  email     String?   @unique
+  password  String?
+  image     String?
+  role      String    @default("user")
+  idCard    String?
+  mobile    String?
+  birthDate DateTime? @default(now())
+  provider  String    @default("credentials")
+  Receipt   Receipt[]
+  Event     Event[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
   @@map("users")
 }
 
@@ -33,6 +34,7 @@ model Receipt {
   rec_customer_id String
   rec_seat        Seat_Type @relation(fields: [rec_seat_id], references: [seat_id], onDelete: Cascade)
   rec_seat_id     Int
+  rec_status      Int       @default(0)
 }
 
 model Seat_Type {
