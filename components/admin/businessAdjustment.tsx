@@ -6,7 +6,6 @@ import { DeleteIcon, PlusIcon } from "../icons";
 import { Image } from "@nextui-org/image";
 import { Chip } from "@nextui-org/chip";
 import { Divider } from "@nextui-org/divider";
-import { getBusinessData } from "@/utils/function";
 import { Input } from "@nextui-org/input";
 
 
@@ -18,9 +17,10 @@ export default function BusinessAdjustment() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await getBusinessData();
-                setBanner(response?.banner_images || null);
-                setFee(response?.fee || 0)
+                const res = await fetch('/api/admin/business');
+                const data = await res.json();
+                setBanner(data.banner_images || null);
+                setFee(data.fee || 0)
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -62,12 +62,12 @@ export default function BusinessAdjustment() {
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         try {
-            const res = await fetch('/api/adminbutton/business', {
+            const res = await fetch('/api/admin/business', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ banner , fee }),
+                body: JSON.stringify({ banner, fee }),
             });
         } catch (error) {
             console.error('Error Upload banner:', error);
@@ -77,33 +77,34 @@ export default function BusinessAdjustment() {
     };
 
     return (
-        <div>
-            <div className="flex flex-col items-center gap-2 w-full">
-                <h1>Banners</h1>
+        <div className='flex flex-col items-center py-10'>
+            <h1 className="font-bold text-inherit uppercase text-3xl">Banners</h1>
+            <div className="flex flex-col items-center gap-2 w-full my-10 p-10 bg-opacity-30 bg-gray-500 rounded-2xl">
+
                 {banner?.map((src, index) => (
-                    <div key={index}>
+                    <div key={index} className='relative'>
                         <span className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(index)}>
                             <DeleteIcon />
                         </span>
                         <img src={src} style={{ width: '100%', height: 'auto' }} />
                     </div>
                 ))}
-                <div onClick={insertNewBanner}>
+                <div onClick={insertNewBanner} className='size-1/4'>
                     {!display && (
-                        <PlusIcon />
+                        <PlusIcon className='size-full' />
+                    )}
+
+                    {display && (
+                        <div className='flex flex-col items-center size-full'>
+                            <input className='size-full' type="text" value={newImage} onChange={handleImageInputChange} />
+                            <button className='size-full' onClick={updateNewBanner}>submit</button>
+                        </div>
                     )}
                 </div>
-
-                {display && (
-                    <div>
-                        <input type="text" value={newImage} onChange={handleImageInputChange}/>
-                        <button onClick={updateNewBanner}>submit</button>
-                    </div>
-                )}
             </div>
 
             <div className="flex flex-col items-center gap-2 w-full">
-                <h1>Fee Charge per Ticket</h1>
+            <h1 className="font-bold text-inherit uppercase text-3xl">Fee</h1>
                 <input type="number" value={fee} onChange={handleFeeChange} />
                 <button onClick={handleSubmit}>submit</button>
             </div>

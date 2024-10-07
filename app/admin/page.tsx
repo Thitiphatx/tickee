@@ -8,13 +8,14 @@ import { useRouter } from "next/navigation";
 export default function Admin() {
     const router = useRouter();
     return (
-        <div className="h-fit pb-5">
+        <div className="flex flex-col items-center h-fit pb-5 gap-10">
             <Graph />
-            <div className="flex w-1/2 justify-around">
-                <Button color="primary" size="lg" className="w-1/3" onClick={() => router.push(`/admin/alluser`)}>User</Button>
+            <div className="flex w-3/4 justify-around">
+                <Button color="primary" variant="bordered" size="lg" className="w-1/4" onClick={() => router.push(`/admin/alluser`)}>User</Button>
                 <Divider orientation="vertical" />
-                <Button color="primary" size="lg" className="w-1/3" onClick={() => router.push(`/admin/allevent`)}>Event</Button>
-                {/* <Button color="primary" size="lg" className="w-full" >verification form</Button> */}
+                <Button color="primary" variant="bordered" size="lg" className="w-1/4" onClick={() => router.push(`/admin/allevent`)}>Event</Button>
+                <Divider orientation="vertical" />
+                <Button color="primary" variant="bordered" size="lg" className="w-1/4" >Return Request</Button>
             </div>
             <BusinessAdjustment />
         </div>

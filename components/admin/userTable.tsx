@@ -52,7 +52,7 @@ export default function UserTable({ data }: { data: User[] }) {
         e.preventDefault();
         let user_id:string = mapData?.id || "";
         try {
-            const res = await fetch('/api/adminbutton/edit', {
+            const res = await fetch('/api/admin/edit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export default function UserTable({ data }: { data: User[] }) {
         e.preventDefault();
         let user_id:string = mapData?.id || "";
         try {
-            const res = await fetch('/api/adminbutton/delete', {
+            const res = await fetch('/api/admin/delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

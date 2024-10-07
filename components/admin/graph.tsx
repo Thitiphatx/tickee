@@ -51,14 +51,12 @@ export default function Graph() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await getReceiptDate();
-                setDataDB(response);
+                const res = await fetch('/api/admin/graph'); 
+                const data = await res.json();
+                setDataDB(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
-            //   finally {
-            //     setLoading(false);
-            //   }
         };
         fetchData();
     }, []);
@@ -90,8 +88,8 @@ export default function Graph() {
     };
     return (
         <>
-            <h1 className="font-bold text-inherit uppercase text-xl">Graph</h1>
-            <div className="flex w-full justify-center p-3">
+            <h1 className="font-bold text-inherit uppercase text-3xl">Graph</h1>
+            <div className="flex w-full justify-center px-20 py-3">
                 <Line
                     className="size-full"
                     data={data}

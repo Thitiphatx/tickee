@@ -48,12 +48,17 @@ export async function searchEventwithName(input: string) {
 export async function getBusinessData() {
     let output;
     try {
-        output = await prisma.admin_Data.findFirst({})
-        return output
+        output = await prisma.admin_Data.findFirst({
+            where : {
+                ad_id:1
+            }
+        })
+        console.log(output)
     } catch (error) {
         console.log("getBusinessData Error")
         return null
     }
+    return output
 }
 
 export async function updateBusinessData(newImages: string[], newFee: number) {

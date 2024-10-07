@@ -8,9 +8,9 @@ export async function getReceiptDate() {
                 rec_seat:true
             }
         })
+        return output
     } catch (error) {
         console.log("getReceiptDateToPlot Error")
         return null
     }
-    return output
 }

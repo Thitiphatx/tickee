@@ -55,6 +55,7 @@ export enum RoleAvailable  {
 export enum ReceiptStatus  {
     Success = 0,
     Expired = 1,
-    ReturnRequest = 2,
-    ReturnSuccess = 3,
+    UnableToReturn = 2,
+    ReturnRequest = 3,
+    ReturnSuccess = 4,
 }

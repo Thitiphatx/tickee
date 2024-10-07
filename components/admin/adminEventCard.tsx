@@ -43,7 +43,7 @@ export default function AdminEventCard({ data }: { data: EventOutput[] }) {
         e.preventDefault();
         let id: number = mapData?.event_id || 0;
         try {
-            const res = await fetch('/api/adminbutton/deleteEvent', {
+            const res = await fetch('/api/admin/deleteEvent', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
