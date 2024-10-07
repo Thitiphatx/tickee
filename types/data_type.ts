@@ -51,3 +51,10 @@ export enum RoleAvailable  {
     Organizer = 'organizer',
     Admin = 'admin',
 }
+
+export enum ReceiptStatus  {
+    Success = 0,
+    Expired = 1,
+    ReturnRequest = 2,
+    ReturnSuccess = 3,
+}
