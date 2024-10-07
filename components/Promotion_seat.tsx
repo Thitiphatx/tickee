@@ -28,7 +28,7 @@ const Promotion_seat: React.FC<PromotionProps> = ({ events }) => {
           className="min-w-52 flex-shrink-0 h-64 w-52 overflow-hidden" // Set height and width
           key={detail.event_id}
           isPressable
-          onPress={() => router.push(`/promotion_show_edit/${detail.event_id}`)}
+          onPress={() => router.push(`/editpromotion/${detail.event_id}`)}
         >
           <Image
             alt={`Image for ${detail.event_name}`}
