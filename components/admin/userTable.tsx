@@ -11,21 +11,27 @@ import {
 
 import { User } from "@prisma/client";
 import React, { useState } from 'react'
-import { Button } from '@nextui-org/button'
+import { Button, ButtonGroup } from '@nextui-org/button'
 import { Card, CardBody, CardHeader } from '@nextui-org/card'
 import { Input } from '@nextui-org/input'
 import { motion } from 'framer-motion'
 import { DeleteIcon, EditIcon } from "../icons";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { RoleAvailable } from "@/types/data_type";
+import Searchbar from "../searchbar";
 
 export default function UserTable({ data }: { data: User[] }) {
+    const [roleType, setRoleType] = useState<string>(RoleAvailable.User);
     const [deleteAlert, setDeleteAlert] = useState(false);
     const [editForm, setEditForm] = useState(false);
     const [mapData, setMapData] = useState<User | null>();
     const [outputName, setOutputName] = useState<string>("");
     const [outputEmail, setOutputEmail] = useState<string>("");
     const [outputRole, setOutputRole] = useState<string>("");
+
+    const roleSelection = (role: string) => {
+        setRoleType(role)
+    };
 
     const deleteClick = (item: User) => {
         setMapData(item)
@@ -50,14 +56,14 @@ export default function UserTable({ data }: { data: User[] }) {
 
     const handleEdit = async (e: React.FormEvent) => {
         e.preventDefault();
-        let user_id:string = mapData?.id || "";
+        let user_id: string = mapData?.id || "";
         try {
             const res = await fetch('/api/admin/edit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({user_id,outputName,outputEmail,outputRole}),
+                body: JSON.stringify({ user_id, outputName, outputEmail, outputRole }),
             });
 
         } catch (error) {
@@ -67,14 +73,14 @@ export default function UserTable({ data }: { data: User[] }) {
 
     const handleDelete = async (e: React.FormEvent) => {
         e.preventDefault();
-        let user_id:string = mapData?.id || "";
+        let user_id: string = mapData?.id || "";
         try {
             const res = await fetch('/api/admin/delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({user_id}),
+                body: JSON.stringify({ user_id }),
             });
         } catch (error) {
             console.error('Error creating user:', error);
@@ -82,7 +88,7 @@ export default function UserTable({ data }: { data: User[] }) {
     };
 
     return (
-        <>
+        <div className="flex flex-col items-center gap-5">
             {editForm && (
                 <form onSubmit={handleEdit}>
                     <button
@@ -106,7 +112,7 @@ export default function UserTable({ data }: { data: User[] }) {
                                         value={outputRole}
                                         onValueChange={setOutputRole}
                                     >
-                                        {Object.values(RoleAvailable).map((item : string) => (
+                                        {Object.values(RoleAvailable).map((item: string) => (
                                             <Radio value={item}>{item}</Radio>
                                         ))}
                                     </RadioGroup>
@@ -146,6 +152,16 @@ export default function UserTable({ data }: { data: User[] }) {
                     </Card>
                 </form>
             )}
+            <ButtonGroup className="w-1/3">
+                {Object.values(RoleAvailable).map((item: string) => (
+                    <Button className="w-1/3" variant="bordered" onClick={() => roleSelection(item)}>{item}</Button>
+                ))}
+            </ButtonGroup>
+            
+            <div className="w-full">
+                <Searchbar />
+            </div>
+
             <Table className="p-8" selectionMode="single" color="default" >
                 <TableHeader>
                     <TableColumn align="center">NAME</TableColumn>
@@ -155,7 +171,7 @@ export default function UserTable({ data }: { data: User[] }) {
                     <TableColumn align="center">STATUS</TableColumn>
                 </TableHeader>
                 <TableBody emptyContent={"No Data for Display."}>
-                    {data.map((item: User) => (
+                    {data.filter((item: User) => item.role == roleType).map((item: User) => (
                         <TableRow key={item.id}>
                             <TableCell>{item.name}</TableCell>
                             <TableCell>{item.email}</TableCell>
@@ -175,7 +191,7 @@ export default function UserTable({ data }: { data: User[] }) {
                     ))}
                 </TableBody>
             </Table>
-        </>
+        </div>
 
     )
 };

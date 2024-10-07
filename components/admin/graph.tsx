@@ -1,6 +1,5 @@
 "use client"
 
-import { getReceiptDate } from "@/app/admin/fetch";
 import { Receipt, Seat_Type } from "@prisma/client";
 import { notFound } from "next/navigation";
 

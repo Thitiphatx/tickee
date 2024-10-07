@@ -3,11 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@nextui-org/button'
 import { DeleteIcon, PlusIcon } from "../icons";
-import { Image } from "@nextui-org/image";
-import { Chip } from "@nextui-org/chip";
-import { Divider } from "@nextui-org/divider";
 import { Input } from "@nextui-org/input";
-
 
 export default function BusinessAdjustment() {
     const [display, setDisplay] = useState(false);
@@ -47,6 +43,7 @@ export default function BusinessAdjustment() {
             const newArray = [...banner]
             newArray.push(newImage)
             setBanner(newArray)
+            setNewImage("")
             setDisplay(false);
         }
     };
@@ -79,7 +76,7 @@ export default function BusinessAdjustment() {
     return (
         <div className='flex flex-col items-center py-10'>
             <h1 className="font-bold text-inherit uppercase text-3xl">Banners</h1>
-            <div className="flex flex-col items-center gap-2 w-full my-10 p-10 bg-opacity-30 bg-gray-500 rounded-2xl">
+            <div className="flex flex-col items-center gap-2 w-full my-10 p-10 bg-opacity-20 bg-gray-600 rounded-2xl">
 
                 {banner?.map((src, index) => (
                     <div key={index} className='relative'>
@@ -89,24 +86,28 @@ export default function BusinessAdjustment() {
                         <img src={src} style={{ width: '100%', height: 'auto' }} />
                     </div>
                 ))}
-                <div onClick={insertNewBanner} className='size-1/4'>
+                <div onClick={insertNewBanner} className='flex justify-center h-1/3 w-3/4 p-5'>
                     {!display && (
-                        <PlusIcon className='size-full' />
+                        <PlusIcon className='size-52' />
                     )}
 
                     {display && (
-                        <div className='flex flex-col items-center size-full'>
-                            <input className='size-full' type="text" value={newImage} onChange={handleImageInputChange} />
-                            <button className='size-full' onClick={updateNewBanner}>submit</button>
+                        <div className='flex flex-col items-center gap-3 size-full'>
+                            <Input onChange={handleImageInputChange} value={newImage} type="text" label="Image URL" />
+                            <Button onClick={updateNewBanner} color='primary' variant='shadow' className="uppercase w-full" radius="full">insert</Button>
                         </div>
                     )}
                 </div>
             </div>
 
-            <div className="flex flex-col items-center gap-2 w-full">
-            <h1 className="font-bold text-inherit uppercase text-3xl">Fee</h1>
-                <input type="number" value={fee} onChange={handleFeeChange} />
-                <button onClick={handleSubmit}>submit</button>
+            <div className="flex flex-col items-center gap-5 w-2/5">
+                <h1 className="font-bold text-inherit uppercase text-3xl">Fee</h1>
+                <Input onChange={handleFeeChange} labelPlacement='outside' size='lg' type="number" value={fee.toString()} label="Fee Charge Per Reservation" endContent={
+                    <div className="pointer-events-none flex items-center">
+                        <span className="text-default-400 text-medium">$</span>
+                    </div>
+                } />
+                <Button onClick={handleSubmit} color='primary' variant='shadow' className="uppercase w-full" radius="full">submit</Button>
             </div>
         </div>
 

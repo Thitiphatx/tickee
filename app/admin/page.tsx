@@ -15,7 +15,7 @@ export default function Admin() {
                 <Divider orientation="vertical" />
                 <Button color="primary" variant="bordered" size="lg" className="w-1/4" onClick={() => router.push(`/admin/allevent`)}>Event</Button>
                 <Divider orientation="vertical" />
-                <Button color="primary" variant="bordered" size="lg" className="w-1/4" >Return Request</Button>
+                <Button color="primary" variant="bordered" size="lg" className="w-1/4" onClick={() => router.push(`/admin/returning`)}>Return Request</Button>
             </div>
             <BusinessAdjustment />
         </div>
