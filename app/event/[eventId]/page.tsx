@@ -15,7 +15,6 @@ export default async function EventLanding({ params }: { params: { eventId: stri
             event_id: parseInt(params.eventId),
         }
     })
-    console.log(details)
     if (details)
     return(
         <div>
