@@ -13,7 +13,7 @@ import Payment from './payment/paymentpage';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { EventLandingData } from '@/types/data_type';
+import { EventLandingData, Seat_Type } from '@/types/data_type';
 
 export default function Eventpage({ eventDetails }: { eventDetails: EventLandingData }) {
     const [currentTab, setCurrentTab] = useState(0);
@@ -36,14 +36,19 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
         setShowTicketInfo(false); // Hide ticket info when selecting a different seat
     };
 
-    const handleBookingClick = (price: number) => {
-        console.log("ราคา :", price)
-        setTotalPrice(price);
+    const [seatData, setSeatData] = useState<Seat_Type | null>(null);
+    const [quantity, setQuantity] = useState(1);
+
+    const handleBookingClick = (quantity: number,seatData: Seat_Type | null) => {
+        console.log("จำนวนซื้อทั้งหมด :", quantity)
+        setQuantity(quantity);
+        setSeatData(seatData)
+        console.log("ข้อมูลที่นั่ง:", seatData);
         setShowPaymentPage(true); // Show PaymentPage
     };
 
     if (showPaymentPage) {
-        return <Payment totalPrice={totalPrice} />;
+        return <Payment quantity={quantity} seatData={seatData} eventname={eventDetails.event_name} />;
     }
     return (
         <div className="space-y-5">
