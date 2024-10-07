@@ -33,6 +33,7 @@ model Receipt {
   rec_customer_id String
   rec_seat        Seat_Type @relation(fields: [rec_seat_id], references: [seat_id], onDelete: Cascade)
   rec_seat_id     Int
+  rec_status      Int       @default(0)
 }
 
 model Seat_Type {
