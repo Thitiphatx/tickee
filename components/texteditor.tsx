@@ -2,7 +2,7 @@ import '../styles/globals.css'
 import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
 import TextStyle from '@tiptap/extension-text-style'
-import { EditorProvider, useCurrentEditor, EditorContent, useEditor } from '@tiptap/react'
+import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Document from '@tiptap/extension-document'
 import Dropcursor from '@tiptap/extension-dropcursor'
@@ -11,8 +11,7 @@ import Paragraph from '@tiptap/extension-paragraph'
 import Text from '@tiptap/extension-text'
 import React from 'react'
 import TextAlign from '@tiptap/extension-text-align'; // Import TextAlign extension
-import { Button, ButtonGroup } from '@nextui-org/button'
-import Head from 'next/head'
+import { Button } from '@nextui-org/button'
 import { IconAlignCenter, IconAlignLeft, IconAlignRight, IconArrowBackOutline, IconArrowForwardOutline, IconBold, IconBxImageAdd, IconFontColors, IconFormatItalic, IconFormatListBulleted, IconHr, IconItalic, IconOrderedList, IconReturnDownForwardSharp } from '@/styles/icon'
 import { Tooltip } from '@nextui-org/tooltip'
 
@@ -28,104 +27,120 @@ const MenuBar = ({ editor }) => {
     }
 
     return (
-        <div className="control-group">
-            <ButtonGroup>
+        <div className="max-w-screen-md">
+            <div className="space-x-2">
                 <Tooltip content="ตัวหนา" placement="bottom">
                     <Button
+                        isIconOnly
                         onClick={() => editor.chain().focus().toggleBold().run()}
                         disabled={!editor.can().chain().focus().toggleBold().run()}
                         className={editor.isActive('bold') ? 'is-active' : ''}
                     >
-                        <IconBold />
+                        <IconBold width="1.2rem" height="1.2rem" />
                     </Button>
                 </Tooltip>
 
                 <Tooltip content="ตัวเอียง" placement="bottom">
                 <Button
+                    isIconOnly
                     onClick={() => editor.chain().focus().toggleItalic().run()}
                     disabled={!editor.can().chain().focus().toggleItalic().run()}
                     className={editor.isActive('italic') ? 'is-active' : ''}
                 >
-                    <IconItalic />
+                    <IconItalic width="1.2rem" height="1.2rem" />
                 </Button>
                 </Tooltip>
                 <Tooltip content="สีแดง" placement="bottom">
                 <Button
+                    isIconOnly
                     onClick={() => editor.chain().focus().setColor('#FF0000').run()}
                     className={editor.isActive('textStyle', { color: '#FF0000' }) ? 'is-active' : ''}
                 >
-                    <IconFontColors />
+                    <IconFontColors width="1.2rem" height="1.2rem" />
                 </Button>
                 </Tooltip>
                 <Tooltip content="Bullet" placement="bottom">
                 <Button
+                    isIconOnly
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
                     className={editor.isActive('bulletList') ? 'is-active' : ''}
                 >
-                    <IconFormatListBulleted />
+                    <IconFormatListBulleted width="1.2rem" height="1.2rem" />
                 </Button>
                 </Tooltip>
                 <Tooltip content="Order" placement="bottom">
                 <Button
+                    isIconOnly
                     onClick={() => editor.chain().focus().toggleOrderedList().run()}
                     className={editor.isActive('orderedList') ? 'is-active' : ''}
                 >
-                    <IconOrderedList />
+                    <IconOrderedList width="1.2rem" height="1.2rem" />
                 </Button>
                 </Tooltip>
                 <Tooltip content="คั่นหน้า" placement="bottom">
-                <Button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
-                    <IconHr />
+                <Button 
+                    isIconOnly
+                    onClick={() => editor.chain().focus().setHorizontalRule().run()}>
+                    <IconHr width="1.2rem" height="1.2rem" />
                 </Button>
                 </Tooltip>
                 <Tooltip content="ชิดซ้าย" placement="bottom">
                 <Button
+                    isIconOnly
                     onClick={() => editor.chain().focus().setTextAlign('left').run()}
                     className={editor.isActive({ textAlign: 'left' }) ? 'is-active' : ''}
                 >
-                    <IconAlignLeft />
+                    <IconAlignLeft width="1.2rem" height="1.2rem" />
                 </Button>
                 </Tooltip>
                 <Tooltip content="กึ่งกลาง" placement="bottom">
                 <Button
+                    isIconOnly
                     onClick={() => editor.chain().focus().setTextAlign('center').run()}
                     className={editor.isActive({ textAlign: 'center' }) ? 'is-active' : ''}
                 >
-                    <IconAlignCenter />
+                    <IconAlignCenter width="1.2rem" height="1.2rem" />
                 </Button>
                 </Tooltip>
                 <Tooltip content="ชิดขวา" placement="bottom">
 
                 <Button
+                    isIconOnly
                     onClick={() => editor.chain().focus().setTextAlign('right').run()}
                     className={editor.isActive({ textAlign: 'right' }) ? 'is-active' : ''}
                 >
-                    <IconAlignRight />
+                    <IconAlignRight width="1.2rem" height="1.2rem" />
                 </Button>
                 </Tooltip>
                 <Tooltip content="เลิกทำ" placement="bottom">
                 <Button
+                    isIconOnly
+                    className="cursor-pointer"
                     onClick={() => editor.chain().focus().undo().run()}
                     disabled={!editor.can().chain().focus().undo().run()}
                 >
-                    <IconArrowBackOutline />
+                    <IconArrowBackOutline width="1.2rem" height="1.2rem" />
                 </Button>
                 </Tooltip>
                 <Tooltip content="ทำซ้ำ" placement="bottom">
                 <Button
+                    isIconOnly
+                    className="cursor-pointer"
                     onClick={() => editor.chain().focus().redo().run()}
                     disabled={!editor.can().chain().focus().redo().run()}
                 >
-                    <IconArrowForwardOutline />
+                    <IconArrowForwardOutline width="1.2rem" height="1.2rem" />
                 </Button>
                 </Tooltip>
                 <Tooltip content="เพิ่มรูปภาพ" placement="bottom">
-                <Button onClick={addImage}>
-                    <IconBxImageAdd />
+                <Button
+                    isIconOnly
+                    onClick={addImage}>
+                    <IconBxImageAdd width="1.2rem" height="1.2rem" />
                 </Button>
                 </Tooltip>
 
-            </ButtonGroup>
+            </div>
 
         </div>
     )
@@ -162,6 +177,7 @@ const TextEditor = ({ setContent }) => {
     const editor = useEditor({
         extensions,
         content,
+        immediatelyRender: false,
         onUpdate: ({ editor }) => {
             const html = editor.getHTML(); // Get the HTML content
             setContent(html); // Update the parent state with the content
@@ -171,9 +187,8 @@ const TextEditor = ({ setContent }) => {
     return (
 
 
-        <div>
+        <div className="flex flex-col justify-center items-center gap-5 w-full">
             <MenuBar editor={editor} />
-
             <EditorContent editor={editor} />
         </div>
 

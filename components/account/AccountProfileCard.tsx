@@ -25,8 +25,7 @@ export default function AccountProfileCard({ userData }: { userData: User }) {
           if (!response.ok) {
             throw new Error('Failed to create event');
           }
-    
-          const result = await response.json();
+        const result = await response.json();
     }
     const handleChangePassword = async ()=> {
         // const response = await fetch('/api/changepassword', {
@@ -58,7 +57,7 @@ export default function AccountProfileCard({ userData }: { userData: User }) {
                     <Input label="ID card" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setData({...data, idCard: e.target.value})} value={data.idCard ?? ""} required/>
                     <RadioGroup onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setData({...data, role: e.target.value})} orientation="horizontal" label="Role selection (for test)" defaultValue={data.role}>
                         <Radio value="user">User</Radio>
-                        <Radio value="producer">Producer</Radio>
+                        <Radio value="organizer">Organizer</Radio>
                         <Radio value="admin">Admin</Radio>
                     </RadioGroup>
                     <Button onClick={handleEditProfile} radius="full" color="primary">Save</Button>

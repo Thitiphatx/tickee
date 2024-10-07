@@ -17,8 +17,8 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { signOut, useSession } from "next-auth/react";
 import Searchbar from "./searchbar";
-import { IconAccount } from "@/styles/icon";
-import {useState, useEffect} from 'react'
+import { IconAccount, IconCalendarEventFill, IconDoorOpenFill, IconLogout, IconTicket, IconUser } from "@/styles/icon";
+import { useState, useEffect } from 'react'
 
 export const Navbar = () => {
     const { data: session, status } = useSession();
@@ -56,16 +56,61 @@ export const Navbar = () => {
                             <div className="w-10 h-10 bg-gray-200 rounded-full" />
                         </div>
                     ) : session ? (
-                        <Dropdown placement="bottom-end" backdrop="blur">
-                            <DropdownTrigger>
-                                <Link isBlock color="foreground" className="cursor-pointer"><IconAccount />{session.user?.name}</Link>
-                            </DropdownTrigger>
-                            <DropdownMenu aria-label="Profile Actions" variant="flat">
-                                <DropdownItem key="profile" href="/account/profile">Profile</DropdownItem>
-                                <DropdownItem key="settings" href="/account/myticket">My Ticket</DropdownItem>
-                                <DropdownItem key="logout" color="danger" onClick={() => signOut()}>Log Out</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
+                        <>
+                            <Dropdown placement="bottom-end" backdrop="blur">
+                                <DropdownTrigger>
+                                    <Button
+                                        variant="bordered"
+                                    >
+                                        {session.user.name}
+                                    </Button>
+                                </DropdownTrigger>
+                                <DropdownMenu variant="faded" aria-label="Dropdown menu with description">
+                                    <DropdownItem
+                                        description="จัดการบัญชีของฉัน"
+                                        startContent={<IconUser width="1.5rem" height="1.5rem" />}
+                                        key="profile"
+                                        href="/account/profile"
+                                    >
+                                        Profile
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        key="myticket"
+                                        href="/account/myticket"
+                                        description="ตั๋วของฉัน"
+                                        startContent={<IconTicket width="1.5rem" height="1.5rem" />}
+                                    >
+                                        My ticket
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        key="event"
+                                        href="/event-organizer"
+                                        description="จัดการกิจกรรม"
+                                        startContent={<IconCalendarEventFill width="1.5rem" height="1.5rem" />}
+                                    >
+                                        Event
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        key="backend"
+                                        description="ระบบหลังบ้าน"
+                                        startContent={<IconDoorOpenFill width="1.5rem" height="1.5rem" />}
+                                    >
+                                        Backend
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        key="logout"
+                                        onClick={() => signOut()}
+                                        className="text-danger"
+                                        color="danger"
+                                        description="ออกจากระบบ"
+                                        startContent={<IconLogout width="1.5rem" height="1.5rem" />}
+                                    >
+                                        Logout
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </>
+
                     ) : (
                         <Button
                             as={Link}
