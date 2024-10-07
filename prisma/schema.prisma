@@ -68,7 +68,7 @@ model Event {
   event_seat_per_order Int
   producer             User        @relation(fields: [producer_id], references: [id], onDelete: Cascade)
   producer_id          String
-  event_type           Event_Type  @relation(fields: [event_type_id], references: [et_id])
+  event_type           Event_Type  @relation(fields: [event_type_id], references: [et_id], onDelete: Cascade)
   event_type_id        Int
   Seat_Type            Seat_Type[]
 }
@@ -87,7 +87,7 @@ model Promotion {
   pro_discount    Float
   pro_start_date  DateTime
   pro_last_date   DateTime
-  pro_type        Promotion_Type @relation(fields: [pro_type_id], references: [pt_id])
+  pro_type        Promotion_Type @relation(fields: [pro_type_id], references: [pt_id], onDelete: Cascade)
   pro_type_id     Int
 }
 
