@@ -11,7 +11,7 @@ interface SeatType {
 interface Event {
   event_id: number;
   event_name: string;
-  seat_types: SeatType[]; // Include seat types associated with the event
+  seat_types: SeatType[];
 }
 
 interface PromotionType {
@@ -21,19 +21,21 @@ interface PromotionType {
 
 interface PromotionFormProps {
   events: Event[];
-  promotionTypes: PromotionType[]; // Add promotion types to the props
+  promotionTypes: PromotionType[];
+  promotionId?: number; // Make promotionId optional
 }
 
-const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionTypes }) => {
-  // Safely set the initial form data with fallback for promotionTypes
+const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionTypes, promotionId }) => {
   const initialPromotionType = promotionTypes.length > 0 ? promotionTypes[0].id.toString() : '';
-  
+
   const [formData, setFormData] = useState({
+    seat_type_id: '', // Initialize seat_type_id here
     pro_description: '',
     pro_discount: '',
     pro_start_date: null as DateValue | null,
     pro_last_date: null as DateValue | null,
-    pro_type: initialPromotionType, // Use the initialPromotionType variable
+    event_id: events[0]?.event_id.toString() || '',
+    pro_type: promotionTypes[0]?.id.toString() || '', // Default to the first promotion type
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -47,29 +49,30 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Prepare the data for submission
+  
     const promotionData = {
+      promotionId: promotionId, // Include the promotion ID here
+      seat_type_id: parseInt(formData.seat_type_id),
       pro_description: formData.pro_description,
-      pro_discount: formData.pro_type !== '3' ? parseFloat(formData.pro_discount) : 0, // No discount if promotion type is 'free gift'
+      pro_discount: formData.pro_type !== '3' ? parseFloat(formData.pro_discount) : 0,
       pro_start_date: formData.pro_start_date,
       pro_last_date: formData.pro_last_date,
       pro_type: parseInt(formData.pro_type),
     };
-
+  
     try {
-      const response = await fetch('/api/promotion', {
+      const response = await fetch(`/api/promotion`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(promotionData),
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to update promotion');
       }
-
+  
       const result = await response.json();
       console.log('Promotion updated successfully:', result);
     } catch (error) {
@@ -79,9 +82,16 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4">
-      <h2 className="text-xl font-bold">{events[0]?.event_name}</h2>
+      {promotionId ? (
+        <>
+          <h2 className="text-xl font-bold">Editing Promotion ID: {promotionId}</h2>
+        </>
+      ) : (
+        <h2 className="text-xl font-bold text-red-500">No Promotion ID Available</h2>
+      )}
 
-      {/* Promotion Description */}
+      <h3 className="text-lg">{events[0]?.event_name}</h3>
+
       <Textarea
         name="pro_description"
         label="Promotion Description"
@@ -90,8 +100,7 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
         required
       />
 
-      {/* Conditional Rendering for Discount Field */}
-      {formData.pro_type !== '3' && ( // Only show if not "free gift"
+      {formData.pro_type !== '3' && (
         <Input
           name="pro_discount"
           label="Promotion Discount"
@@ -102,7 +111,6 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
         />
       )}
 
-      {/* Promotion Type Dropdown */}
       <select
         name="pro_type"
         value={formData.pro_type}
@@ -118,7 +126,6 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
         ))}
       </select>
 
-      {/* Date Pickers */}
       <DatePicker
         name="pro_start_date"
         label="Promotion Start Date"
@@ -130,7 +137,6 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
         onChange={handleDateChange('pro_last_date')}
       />
 
-      {/* Displaying the locked seat type */}
       <select
         name="seat_type_id"
         value={events[0]?.seat_types[0]?.seat_id}
