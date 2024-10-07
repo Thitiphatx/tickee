@@ -6,7 +6,7 @@ import { Seat_Type } from '@/types/data_type';
 // สร้าง PaymentPage component
 
 
-export default function TicketInformation({ currentTab, onBookingClick }: { currentTab: number, onBookingClick: (totalPrice: number) => void }) {
+export default function TicketInformation({ currentTab, onBookingClick }: { currentTab: number, onBookingClick: (quantity: number, seatData: Seat_Type | null) => void }) {
     console.log("แสดงข้อมูลที่นั่ง seat id: ", currentTab)
 
     const [seatData, setSeatData] = useState<Seat_Type | null>(null);
@@ -118,7 +118,7 @@ export default function TicketInformation({ currentTab, onBookingClick }: { curr
                 <div className="flex justify-between mt-8">
                     <Button>Back</Button>
                     {/* คลิก Booking แล้วแสดงหน้า Payment */}
-                    <Button color="primary" onClick={() => onBookingClick(totalPrice)} >Booking</Button>
+                    <Button color="primary" onClick={() => onBookingClick(quantity,seatData)} >Booking</Button>
                 </div>
             </Card>
         </div>
