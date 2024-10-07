@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { hashSync } from 'bcrypt';
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
  
@@ -19,10 +20,9 @@ async function main(){
         create: {
             email: 'test@test.com',
             name: "testUser",
-            password: '123',
+            password: hashSync("123", 10),
         },
     });
-
 }
 main()
     .then(() => prisma.$disconnect())

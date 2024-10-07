@@ -45,7 +45,7 @@ export default function Addevent() {
 
 
 
-    const removeSeat = (indexToRemove) => {
+    const removeSeat = (indexToRemove: any) => {
         const updatedSeats = [...seat];
 
         // Remove the item at the specified index

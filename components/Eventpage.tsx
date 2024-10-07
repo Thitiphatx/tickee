@@ -13,7 +13,8 @@ import Payment from './payment/paymentpage';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { EventLandingData, Seat_Type } from '@/types/data_type';
+import { EventLandingData } from '@/types/data_type';
+import { IconArrowBackOutline } from '@/styles/icon';
 
 export default function Eventpage({ eventDetails }: { eventDetails: EventLandingData }) {
     const [currentTab, setCurrentTab] = useState(0);
@@ -52,11 +53,11 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     }
     return (
         <div className="space-y-5">
-            <Button onClick={() => router.back()}>Back</Button>
+            <Button onClick={() => router.back()} isIconOnly><IconArrowBackOutline /></Button>
 
             <Card className="grid grid-cols-1 lg:grid-cols-2">
                 <CardHeader className="w-full flex justify-center items-center">
-                    <Image className="" width={"100%"} src={eventDetails.event_images} />
+                    <Image className="relative" width={"100%"} src={eventDetails.event_images} />
                 </CardHeader>
                 <CardBody className="flex flex-col justify-between">
                     <div className="space-y-3">
@@ -115,8 +116,6 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
             </div>
             <Card className="leading-10">
                 <div className='p-4' dangerouslySetInnerHTML={{ __html: eventDetails.event_description }} />
-                <Image src={"https://atkmedia.allticket.com/images/up/21174/BMMF14_06092024_PosterSoldOut_CW.jpg"} />
-                <Image src={"https://atkmedia.allticket.com/images/up/21174/BMMF14_16082024_Info_Lineup.jpg"} />
             </Card>
 
         </div>

@@ -1,7 +1,20 @@
--- AlterTable
-ALTER TABLE "users" ADD COLUMN     "birthDate" TIMESTAMP(3),
-ADD COLUMN     "idCard" TEXT,
-ADD COLUMN     "mobile" TEXT;
+-- CreateTable
+CREATE TABLE "users" (
+    "id" TEXT NOT NULL,
+    "name" TEXT,
+    "email" TEXT,
+    "password" TEXT,
+    "image" TEXT,
+    "role" TEXT NOT NULL DEFAULT 'user',
+    "idCard" TEXT,
+    "mobile" TEXT,
+    "birthDate" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "provider" TEXT NOT NULL DEFAULT 'credentials',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Receipt" (
@@ -90,6 +103,9 @@ CREATE TABLE "Admin_Data" (
 
     CONSTRAINT "Admin_Data_pkey" PRIMARY KEY ("ad_id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Seat_Dispatch_seat_type_id_key" ON "Seat_Dispatch"("seat_type_id");
