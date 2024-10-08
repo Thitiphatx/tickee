@@ -139,10 +139,11 @@ export default function AccountMyticketCard() {
                     <Card>
                         <CardHeader>
                             <h2 className="font-bold uppercase">past events</h2>
+                            <p className=" ml-4 font-normal text-gray-500 dark:text-gray-200">ตั๋วเหล่านี้หมดอายุแล้ว</p>
                         </CardHeader>
                         <CardBody className="p-6">
                             {pastEvents.map((receipt) => (
-                                <a href="#" onClick={(e) => handleLinkClick(e, receipt)} className="w-full flex flex-col bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                <a href="#" className="w-full flex flex-col bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
                                     <img className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" src={receipt.seatType.event_seat.event_images} alt="" />
                                     <div className="flex flex-col p-4 leading-normal">
                                         <h5 className="mb-2 text-l font-bold tracking-tight text-gray-900 dark:text-white">{receipt.seatType.event_seat.event_name}</h5>
