@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { editUser } from '@/app/admin/alluser/fetch';
+import { editUser } from '@/app/admin/user/fetch';
 
 
 export async function POST(req: NextApiRequest, res: NextApiResponse) {

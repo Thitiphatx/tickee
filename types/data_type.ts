@@ -1,4 +1,4 @@
-import { Event_Type, Event, Seat_Dispatch, Prisma } from "@prisma/client"
+import { Event_Type, Event, Seat_Dispatch, Prisma, Admin_Data, Promotion_Type } from "@prisma/client"
 
 export interface Address {
     street: string
@@ -44,6 +44,12 @@ export interface Seat_Type {
     seat_due_date: Date;
     event_seat_id: number;
     Seat_Dispatch?: Seat_Dispatch; // Include this if it's optional
+}
+
+export interface BusinessData {
+    admin: Admin_Data | null;
+    eventType: Event_Type[];
+    promotionType: Promotion_Type[];
 }
 
 export enum RoleAvailable  {

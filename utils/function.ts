@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { SignInData, SignUpData } from "../types/data_type";
+import { BusinessData, SignInData, SignUpData } from "../types/data_type";
+import { Admin_Data, Event_Type, Promotion_Type } from "@prisma/client";
 
 export async function searchEventwithTag(input: string) {
     let output;
@@ -45,20 +46,30 @@ export async function searchEventwithName(input: string) {
     return output
 }
 
-export async function getBusinessData() {
-    let output;
+
+export async function getBusinessData(): Promise<BusinessData | null> {
+    let admin:Admin_Data|null,eventType:Event_Type[],promotionType:Promotion_Type[];
     try {
-        output = await prisma.admin_Data.findFirst({
+        admin = await prisma.admin_Data.findFirst({
             where : {
                 ad_id:1
             }
         })
-        console.log(output)
+
+        eventType = await prisma.event_Type.findMany({})
+
+        promotionType = await prisma.promotion_Type.findMany({})
+
     } catch (error) {
         console.log("getBusinessData Error")
         return null
     }
-    return output
+
+    return {
+        admin,
+        eventType,
+        promotionType
+    };
 }
 
 export async function updateBusinessData(newImages: string[], newFee: number) {
@@ -68,7 +79,7 @@ export async function updateBusinessData(newImages: string[], newFee: number) {
 
         let updateData = await prisma.admin_Data.update({
             where: {
-                ad_id: output?.ad_id
+                ad_id: output?.admin?.ad_id
             },
             data: {
                 banner_images: newImages,

@@ -18,7 +18,9 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 export async function GET() {
     try {
         const data = await getBusinessData()
-        return NextResponse.json(data);
+        if (data) {
+            return NextResponse.json(data);
+        }
     } catch (error) {
         console.error('Error Get Business Data', error);
         return null

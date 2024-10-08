@@ -1,5 +1,5 @@
 
-import { deleteEvent } from '@/app/admin/allevent/fetch';
+import { deleteEvent } from '@/app/admin/event/fetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export async function POST(req: NextApiRequest,res : NextApiResponse) {

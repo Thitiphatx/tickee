@@ -4,19 +4,27 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '@nextui-org/button'
 import { DeleteIcon, PlusIcon } from "../icons";
 import { Input } from "@nextui-org/input";
+import { Event_Type, Promotion_Type } from '@prisma/client';
+import { BusinessData } from '@/types/data_type';
+import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/table';
 
 export default function BusinessAdjustment() {
     const [display, setDisplay] = useState(false);
     const [banner, setBanner] = useState<string[] | null>([]);
     const [newImage, setNewImage] = useState<string>("");
     const [fee, setFee] = useState<number>(0);
+    const [eventType, setEventType] = useState<Event_Type[]>([]);
+    const [promotionType, setPromotionType] = useState<Promotion_Type[]>([]);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const res = await fetch('/api/admin/business');
-                const data = await res.json();
-                setBanner(data.banner_images || null);
-                setFee(data.fee || 0)
+                const data: BusinessData = await res.json();
+                setBanner(data.admin?.banner_images || null);
+                setFee(data.admin?.fee || 0)
+                setEventType(data.eventType)
+                setPromotionType(data.promotionType)
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -75,6 +83,67 @@ export default function BusinessAdjustment() {
 
     return (
         <div className='flex flex-col items-center py-10'>
+            <div className="flex flex-col items-center gap-5 w-full">
+                <h1 className="font-bold text-inherit uppercase text-3xl">type</h1>
+                <div className='flex justify-around w-full'>
+                    <div className='flex w-1/3'>
+                        <Table className="p-8" selectionMode="single" color="default" >
+                            <TableHeader>
+                                <TableColumn align="center">Event Type</TableColumn>
+                            </TableHeader>
+                            <TableBody emptyContent={"No Data for Display."}>
+                                {eventType.map((item: Event_Type) => (
+                                    <TableRow key={item.et_id}>
+                                        <TableCell>{item.et_name}</TableCell>
+                                        {/* <TableCell>
+                                <div className="flex justify-center gap-2 w-full">
+                                    <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                        <EditIcon onClick={() => editClick(item)} />
+                                    </span>
+                                    <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                                        <DeleteIcon onClick={() => deleteClick(item)} />
+                                    </span>
+                                </div>
+                            </TableCell> */}
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+
+                    <div className='flex w-1/3'>
+                        <Table className="p-8" selectionMode="single" color="default" >
+                            <TableHeader>
+                                <TableColumn align="center">Promotion Type</TableColumn>
+                            </TableHeader>
+                            <TableBody emptyContent={"No Data for Display."}>
+                                {promotionType.map((item: Promotion_Type) => (
+                                    <TableRow key={item.pt_id}>
+                                        <TableCell>{item.pt_name}</TableCell>
+                                        {/* <TableCell>
+                                <div className="flex justify-center gap-2 w-full">
+                                    <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                        <EditIcon onClick={() => editClick(item)} />
+                                    </span>
+                                    <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                                        <DeleteIcon onClick={() => deleteClick(item)} />
+                                    </span>
+                                </div>
+                            </TableCell> */}
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </div>
+                {/* <Input onChange={handleFeeChange} labelPlacement='outside' size='lg' type="number" value={fee.toString()} label="Fee Charge Per Reservation" endContent={
+                    <div className="pointer-events-none flex items-center">
+                        <span className="text-default-400 text-medium">$</span>
+                    </div>
+                } /> */}
+                {/* <Button onClick={handleSubmit} color='primary' variant='shadow' className="uppercase w-full" radius="full">submit</Button> */}
+            </div>
+
             <h1 className="font-bold text-inherit uppercase text-3xl">Banners</h1>
             <div className="flex flex-col items-center gap-2 w-full my-10 p-10 bg-opacity-20 bg-gray-600 rounded-2xl">
 
