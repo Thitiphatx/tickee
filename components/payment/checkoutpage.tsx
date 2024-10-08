@@ -50,7 +50,7 @@ export default function Checkoutpage({ amount ,quantity ,seatdata}: { amount: nu
             const receiptData = {
                 rec_date: new Date(),
                 rec_quantity: quantity, // ใช้จำนวนเงินที่ชำระเป็นจำนวนสินค้าที่รับ
-                rec_customer_id: "cm1avzx4y00004tp2eoe5elo8", // รหัสลูกค้าของคุณ
+                rec_customer_id: "cm1yuiuxn0000vku17f87pyah", // รหัสลูกค้าของคุณ
                 rec_seat_id: seatdata.seat_id // รหัสที่นั่งของคุณ
             };
 
@@ -63,6 +63,7 @@ export default function Checkoutpage({ amount ,quantity ,seatdata}: { amount: nu
             })
             .then((response) => {
                 if (!response.ok) {
+                    alert('Failed to create receipt.');
                     throw new Error("Failed to create receipt.");
                 }
                 return response.json();
@@ -73,6 +74,7 @@ export default function Checkoutpage({ amount ,quantity ,seatdata}: { amount: nu
         
                 // แสดงข้อความยืนยันการชำระเงินที่สำเร็จ
                 alert('Payment successful! Thank you for your purchase.');
+                
             })
             .catch((error) => {
                 // จัดการกับข้อผิดพลาดที่เกิดขึ้น
