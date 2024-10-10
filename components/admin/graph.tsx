@@ -17,53 +17,77 @@ interface RecSeat extends Receipt {
 }
 
 function calculation(rec: RecSeat[]) {
-    let processedData = []
-    let selectedDay = 0
-    let adjustableLength = 0
+    let processedData: { x: string; y: number }[] = []
+    let yearListData = []
+    let sunday = 0, saturday = 6
+    let adjustableLength = 0, weeklyOrders = 0
     if (rec.length == 0) {
         return
     }
     for (let index = rec.length - 1; index >= 0; index--) {
-        if (rec[index].rec_date.getDay() == selectedDay) {
-            adjustableLength = index - 1;
+        if (new Date(rec[index].rec_date).getDay() == saturday) {
+            adjustableLength = index;
             break;
         }
     }
-    let temp = 0
+    // batch calculation (rec[index].rec_date.getDay() == saturday)
+    let sum = 0, temp = 0, year = 0
+    let calculated = false, period = false
     for (let index = adjustableLength; index >= 0; index--) {
-        if (rec[index].rec_date.getDay() == selectedDay) {
-            for (let day = 0; day < 7; day++) {
-                if (index + day >= adjustableLength) {
-                    processedData.unshift({ x: rec[index].rec_date, y: (temp / (day + 1)) })
-                    temp = 0
+        if (!period) {
+            year = new Date(rec[index].rec_date).getFullYear()
+            period = true
+        } else if (index - 1 >= 0 && new Date(rec[index - 1].rec_date).getFullYear() != year) {
+            period = false
+            yearListData.push(processedData)
+            processedData = []
+        } else if (new Date(rec[index].rec_date).getDay() == sunday && !calculated) {
+            temp = weeklyOrders
+            calculated = true
+            while (temp >= 0) {
+                if (temp == 0) {
+                    processedData.unshift(
+                        {
+                            x: rec[index].rec_date.toDateString(),
+                            y: (sum / 7)
+                        })
+                    sum = 0
+                    weeklyOrders = 0
                 } else {
-                    temp += (rec[index + day].rec_quantity * rec[index + day].rec_seat.seat_price)
+                    sum += (rec[index + temp].rec_quantity * rec[index + temp].rec_seat.seat_price)
+                    temp--
                 }
             }
+        } else {
+            if (calculated && new Date(rec[index].rec_date).getDay() == saturday) {
+                calculated = false
+            }
+            weeklyOrders++
         }
     }
-    return processedData
+    return yearListData
 }
 
 export default function Graph() {
-    const [dataDB, setDataDB] = useState<RecSeat[] | null>([]);
+    const [receiptOrders, setReceiptOrders] = useState<RecSeat[] | null>([]);
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch('/api/admin/graph'); 
+                const res = await fetch('/api/admin/graph');
                 const data = await res.json();
-                setDataDB(data);
+                setReceiptOrders(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
         fetchData();
     }, []);
-    if (dataDB == null) {
-        console.log("error dataDB")
+    if (receiptOrders == null) {
+        console.log("error receiptOrders")
         // return
+        notFound()
     }
-    // const processedData = calculation(dataDB)
+    const calculatedData = calculation(receiptOrders) || []
 
     const chartData: { x: string; y: number }[] = [
         { x: '2023-01-01T00:00:00', y: 65 },
@@ -75,15 +99,13 @@ export default function Graph() {
         { x: '2023-12-30T00:00:00', y: 40 },
     ];
     const data = {
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: chartData,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: true,
-            },
-        ],
+        datasets: calculatedData.map((item: { x: string; y: number }[], index) => ({
+            label: `Year ${new Date().getFullYear() - calculatedData.length - 1}`,
+            data: item,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            fill: true,
+        }))
     };
     return (
         <>

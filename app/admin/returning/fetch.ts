@@ -5,15 +5,15 @@ export async function getReturningOrder() {
     let output;
     try {
         output = await prisma.receipt.findMany({
-            where:{
-                rec_status:ReceiptStatus.ReturnRequest
+            where: {
+                rec_status: ReceiptStatus.ReturnRequest
             },
-            include:{
-                rec_customer:true,
-                rec_seat:{
-                    include:{
-                        event_seat:true,
-                        Seat_Dispatch:true
+            include: {
+                rec_customer: true,
+                rec_seat: {
+                    include: {
+                        event_seat: true,
+                        Seat_Dispatch: true
                     }
                 }
             }
@@ -25,18 +25,70 @@ export async function getReturningOrder() {
     }
 }
 
-export async function setReturningStatus(newStatus:number,id:number) {
+export async function setReturningStatus(newStatus: number, id: number) {
     let output;
     try {
-        output = await prisma.receipt.update({
-            where:{
-                rec_id:id,
-            },
-            data:{
-                rec_status:newStatus
+        if (newStatus == ReceiptStatus.ReturnSuccess) {
+
+            const rec = await prisma.receipt.findUnique({
+                where: {
+                    rec_id: id,
+                },
+                include: {
+                    rec_seat: true,
+                },
+            });
+
+            if (!rec) {
+                console.log("No Table1 row found with the given id.");
+                return;
             }
-        })
-        return output
+
+            const seat = rec.rec_seat;
+
+            if (seat) {
+                const recUpdate = await prisma.receipt.update({
+                    where: {
+                        rec_id: id,
+                    },
+                    data: {
+                        rec_status: newStatus,
+                    },
+                });
+
+                const dispatch = await prisma.seat_Dispatch.findFirst({
+                    where: {
+                        seat_type_id: seat.seat_id,
+                    },
+                });
+
+                if (!dispatch) {
+                    console.log("No dispatch data.");
+                    return
+                }
+
+                const output = await prisma.seat_Dispatch.update({
+                    where: {
+                        seat_type_id: seat.seat_id,
+                    },
+                    data: {
+                        sd_current: dispatch?.sd_current - rec.rec_quantity,
+                    },
+                });
+                return output
+            }
+        } else if (newStatus == ReceiptStatus.UnableToReturn){
+            output = await prisma.receipt.update({
+                where: {
+                    rec_id: id,
+                },
+                data: {
+                    rec_status: newStatus
+                }
+            })
+            return output
+        }
+
     } catch (error) {
         console.log("set Returning status Error")
         return null
