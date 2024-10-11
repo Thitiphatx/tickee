@@ -4,9 +4,9 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
     try {
-        const { banner, fee } = req.body;
+        const { banner, fee, insertEventType, insertPromotionType} = req.body;
         if (typeof fee == 'number') {
-            const output = await updateBusinessData(banner, fee)
+            const output = await updateBusinessData(banner, fee, insertEventType, insertPromotionType)
         }
         res.status(200).json({ success: true });
     } catch (error) {

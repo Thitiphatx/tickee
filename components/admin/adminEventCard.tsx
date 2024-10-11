@@ -18,6 +18,11 @@ export default function AdminEventCard({ data }: { data: EventOutput[] }) {
     const [deleteAlert, setDeleteAlert] = useState(false);
     const [display, setDisplay] = useState(false);
     const [mapData, setMapData] = useState<EventOutput | null>();
+    const [onLoad, setOnLoad] = useState<boolean>(true);
+
+    if (data && onLoad) {
+        setOnLoad(false)
+    }
 
     const deleteClick = (item: EventOutput | null) => {
         setMapData(item)
@@ -125,7 +130,7 @@ export default function AdminEventCard({ data }: { data: EventOutput[] }) {
                     </Card>
                 </form>
             )}
-            {data.map((event: EventOutput) => (
+            {!onLoad && data.map((event: EventOutput) => (
                 <Card className="w-72 flex-shrink-0 overflow-hidden p-2" key={event.event_id}>
                     <span className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(event)}>
                         <DeleteIcon />

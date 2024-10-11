@@ -9,6 +9,7 @@ import {
     TableCell,
 } from "@nextui-org/table";
 
+
 import { User } from "@prisma/client";
 import React, { useState } from 'react'
 import { Button, ButtonGroup } from '@nextui-org/button'
@@ -28,6 +29,11 @@ export default function UserTable({ data }: { data: User[] }) {
     const [outputName, setOutputName] = useState<string>("");
     const [outputEmail, setOutputEmail] = useState<string>("");
     const [outputRole, setOutputRole] = useState<string>("");
+    const [onLoad, setOnLoad] = useState<boolean>(true);
+
+    if (data && onLoad) {
+        setOnLoad(false)
+    }
 
     const roleSelection = (role: string) => {
         setRoleType(role)
@@ -152,45 +158,50 @@ export default function UserTable({ data }: { data: User[] }) {
                     </Card>
                 </form>
             )}
-            <ButtonGroup className="w-1/3">
-                {Object.values(RoleAvailable).map((item: string) => (
-                    <Button className="w-1/3" variant="bordered" onClick={() => roleSelection(item)}>{item}</Button>
-                ))}
-            </ButtonGroup>
-            
-            <div className="w-full">
-                <Searchbar />
-            </div>
+            {!onLoad && (
+                <>
+                    <ButtonGroup className="w-1/3">
+                        {Object.values(RoleAvailable).map((item: string) => (
+                            <Button className="w-1/3 capitalize" variant="bordered" onClick={() => roleSelection(item)}>{item}</Button>
+                        ))}
+                    </ButtonGroup>
 
-            <Table className="p-8" selectionMode="single" color="default" >
-                <TableHeader>
-                    <TableColumn align="center">NAME</TableColumn>
-                    <TableColumn align="center">EMAIL</TableColumn>
-                    <TableColumn align="center">PHONE</TableColumn>
-                    <TableColumn align="center">ROLE</TableColumn>
-                    <TableColumn align="center">STATUS</TableColumn>
-                </TableHeader>
-                <TableBody emptyContent={"No Data for Display."}>
-                    {data.filter((item: User) => item.role == roleType).map((item: User) => (
-                        <TableRow key={item.id}>
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell>{item.email}</TableCell>
-                            <TableCell>{item.mobile}</TableCell>
-                            <TableCell>{item.role}</TableCell>
-                            <TableCell>
-                                <div className="flex justify-center gap-2 w-full">
-                                    <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                        <EditIcon onClick={() => editClick(item)} />
-                                    </span>
-                                    <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                                        <DeleteIcon onClick={() => deleteClick(item)} />
-                                    </span>
-                                </div>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                    <div className="w-full">
+                        <Searchbar />
+                    </div>
+
+                    <Table className="p-8" selectionMode="single" color="default" >
+                        <TableHeader>
+                            <TableColumn align="center">NAME</TableColumn>
+                            <TableColumn align="center">EMAIL</TableColumn>
+                            <TableColumn align="center">PHONE</TableColumn>
+                            <TableColumn align="center">ROLE</TableColumn>
+                            <TableColumn align="center">STATUS</TableColumn>
+                        </TableHeader>
+                        <TableBody emptyContent={"No Data for Display."}>
+                            {data.filter((item: User) => item.role == roleType).map((item: User) => (
+                                <TableRow key={item.id}>
+                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>{item.email}</TableCell>
+                                    <TableCell>{item.mobile}</TableCell>
+                                    <TableCell>{item.role}</TableCell>
+                                    <TableCell>
+                                        <div className="flex justify-center gap-2 w-full">
+                                            <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                                <EditIcon onClick={() => editClick(item)} />
+                                            </span>
+                                            <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                                                <DeleteIcon onClick={() => deleteClick(item)} />
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </>
+            )}
+
         </div>
 
     )

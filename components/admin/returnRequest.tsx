@@ -31,10 +31,13 @@ export default function ReturnRequest({ data }: { data: any[] }) {
     const [reject, setReject] = useState(false);
     const [accept, setAccept] = useState(false);
     const [orderID, setOrderID] = useState<number>(0);
-    // const [outputEmail, setOutputEmail] = useState<string>("");
-    // const [outputRole, setOutputRole] = useState<string>("");
+    const [onLoad, setOnLoad] = useState<boolean>(true);
 
-    const rejectOrder = (id:number) => {
+    if (data && onLoad) {
+        setOnLoad(false)
+    }
+
+    const rejectOrder = (id: number) => {
         setOrderID(id)
         setReject(true);
     };
@@ -44,7 +47,7 @@ export default function ReturnRequest({ data }: { data: any[] }) {
         setReject(false);
     };
 
-    const acceptOrder = (id:number) => {
+    const acceptOrder = (id: number) => {
         setOrderID(id)
         setAccept(true);
     };
@@ -57,7 +60,7 @@ export default function ReturnRequest({ data }: { data: any[] }) {
     const handleAccept = async (e: React.FormEvent) => {
         e.preventDefault();
         let status: number = ReceiptStatus.ReturnSuccess;
-        let id:number = orderID
+        let id: number = orderID
         try {
             const res = await fetch('/api/admin/returning', {
                 method: 'POST',
@@ -75,7 +78,7 @@ export default function ReturnRequest({ data }: { data: any[] }) {
     const handleReject = async (e: React.FormEvent) => {
         e.preventDefault();
         let status: number = ReceiptStatus.UnableToReturn;
-        let id:number = orderID
+        let id: number = orderID
         try {
             const res = await fetch('/api/admin/returning', {
                 method: 'POST',
@@ -131,7 +134,7 @@ export default function ReturnRequest({ data }: { data: any[] }) {
                             <div className="flex flex-col justify-center items-center gap-2 p-5 w-full h-56">
                                 <span className="uppercase font-semibold text-xl">Reject Returning</span>
                                 <p className="text-danger text-lg">
-                                <span>Receipt ID </span>
+                                    <span>Receipt ID </span>
                                     {orderID}
                                     <span>Unable to Return?</span>
                                 </p>
@@ -141,38 +144,40 @@ export default function ReturnRequest({ data }: { data: any[] }) {
                     </Card>
                 </form>
             )}
-            <Table className="p-8" selectionMode="single" color="default" >
-                <TableHeader>
-                    <TableColumn align="center">USER</TableColumn>
-                    <TableColumn align="center">EMAIL</TableColumn>
-                    <TableColumn align="center">EVENT</TableColumn>
-                    <TableColumn align="center">SEAT / ZONE</TableColumn>
-                    <TableColumn align="center">TOTAL PRICE</TableColumn>
-                    <TableColumn align="center">STATUS</TableColumn>
-                </TableHeader>
-                <TableBody emptyContent={"No Data for Display."}>
-                    {data.map((item: ReturnOrder) => (
-                        <TableRow key={item.rec_id}>
-                            <TableCell>{item.rec_customer.name}</TableCell>
-                            <TableCell>{item.rec_customer.email}</TableCell>
-                            <TableCell>{item.rec_seat.event_seat.event_name}</TableCell>
-                            <TableCell>{item.rec_seat.seat_name}</TableCell>
-                            <TableCell>{item.rec_seat.seat_price * item.rec_quantity}</TableCell>
-                            {/* <TableCell>{item.rec_status}</TableCell> */}
-                            <TableCell>
-                                <div className="flex justify-center gap-2 w-full">
-                                    <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                        <EditIcon onClick={() => acceptOrder(item.rec_id)} />
-                                    </span>
-                                    <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                                        <DeleteIcon onClick={() => rejectOrder(item.rec_id)} />
-                                    </span>
-                                </div>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+            {!onLoad && (
+                <Table className="p-8" selectionMode="single" color="default" >
+                    <TableHeader>
+                        <TableColumn align="center">USER</TableColumn>
+                        <TableColumn align="center">EMAIL</TableColumn>
+                        <TableColumn align="center">EVENT</TableColumn>
+                        <TableColumn align="center">SEAT / ZONE</TableColumn>
+                        <TableColumn align="center">TOTAL PRICE</TableColumn>
+                        <TableColumn align="center">STATUS</TableColumn>
+                    </TableHeader>
+                    <TableBody emptyContent={"No Data for Display."}>
+                        {data.map((item: ReturnOrder) => (
+                            <TableRow key={item.rec_id}>
+                                <TableCell>{item.rec_customer.name}</TableCell>
+                                <TableCell>{item.rec_customer.email}</TableCell>
+                                <TableCell>{item.rec_seat.event_seat.event_name}</TableCell>
+                                <TableCell>{item.rec_seat.seat_name}</TableCell>
+                                <TableCell>{item.rec_seat.seat_price * item.rec_quantity}</TableCell>
+                                {/* <TableCell>{item.rec_status}</TableCell> */}
+                                <TableCell>
+                                    <div className="flex justify-center gap-2 w-full">
+                                        <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                            <EditIcon onClick={() => acceptOrder(item.rec_id)} />
+                                        </span>
+                                        <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                                            <DeleteIcon onClick={() => rejectOrder(item.rec_id)} />
+                                        </span>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            )}
         </>
 
     )

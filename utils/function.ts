@@ -48,11 +48,11 @@ export async function searchEventwithName(input: string) {
 
 
 export async function getBusinessData(): Promise<BusinessData | null> {
-    let admin:Admin_Data|null,eventType:Event_Type[],promotionType:Promotion_Type[];
+    let admin: Admin_Data | null, eventType: Event_Type[], promotionType: Promotion_Type[];
     try {
         admin = await prisma.admin_Data.findFirst({
-            where : {
-                ad_id:1
+            where: {
+                ad_id: 1
             }
         })
 
@@ -72,7 +72,7 @@ export async function getBusinessData(): Promise<BusinessData | null> {
     };
 }
 
-export async function updateBusinessData(newImages: string[], newFee: number) {
+export async function updateBusinessData(newImages: string[], newFee: number, newEvent: string[], newPromotion: string[]) {
     let output;
     try {
         output = await getBusinessData()
@@ -86,6 +86,19 @@ export async function updateBusinessData(newImages: string[], newFee: number) {
                 fee: newFee
             }
         })
+
+        let insertEvent = await prisma.event_Type.createMany({
+            data: newEvent.map((eventINS: string) => (
+                { et_name: eventINS }
+            )),
+        });
+
+        let insertPromotion = await prisma.promotion_Type.createMany({
+            data: newPromotion.map((promotionINS: string) => (
+                { pt_name: promotionINS }
+            )),
+        });
+
         return updateData
     } catch (error) {
         console.log("updateBusinessData Error")

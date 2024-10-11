@@ -7,7 +7,9 @@ import { Line } from 'react-chartjs-2';
 
 import { Chart as ChartJS, TimeScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import { useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
+import { Button } from "@nextui-org/button";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
 
 ChartJS.register(TimeScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -16,132 +18,106 @@ interface RecSeat extends Receipt {
     rec_seat: Seat_Type
 }
 
-function calculation(rec: RecSeat[]) {
-    let processedData: { x: string; y: number }[] = []
-    let yearListData = []
-    let sunday = 0, saturday = 6
-    let adjustableLength = 0, weeklyOrders = 0
-    if (rec.length == 0) {
-        return
-    }
-    for (let index = rec.length - 1; index >= 0; index--) {
-        if (new Date(rec[index].rec_date).getDay() == saturday) {
-            adjustableLength = index;
-            break;
-        }
-    }
-    // batch calculation (rec[index].rec_date.getDay() == saturday)
-    let sum = 0, temp = 0, year = 0
-    let calculated = false, period = false
-    for (let index = adjustableLength; index >= 0; index--) {
-        if (!period) {
-            year = new Date(rec[index].rec_date).getFullYear()
-            period = true
-        } else if (index - 1 >= 0 && new Date(rec[index - 1].rec_date).getFullYear() != year) {
-            period = false
-            yearListData.push(processedData)
-            processedData = []
-        } else if (new Date(rec[index].rec_date).getDay() == sunday && !calculated) {
-            temp = weeklyOrders
-            calculated = true
-            while (temp >= 0) {
-                if (temp == 0) {
-                    processedData.unshift(
-                        {
-                            x: rec[index].rec_date.toDateString(),
-                            y: (sum / 7)
-                        })
-                    sum = 0
-                    weeklyOrders = 0
-                } else {
-                    sum += (rec[index + temp].rec_quantity * rec[index + temp].rec_seat.seat_price)
-                    temp--
-                }
-            }
-        } else {
-            if (calculated && new Date(rec[index].rec_date).getDay() == saturday) {
-                calculated = false
-            }
-            weeklyOrders++
-        }
-    }
-    return yearListData
-}
-
 export default function Graph() {
-    const [receiptOrders, setReceiptOrders] = useState<RecSeat[] | null>([]);
+    const [recdata, setrecdata] = useState<any | null>(null);
+    const [inYearData, setInYearData] = useState<any | null>(null);
+    const [onLoad, setOnLoad] = useState<boolean>(true);
+    const [selectYear, setSelectYear] = useState<number>(0);
+    const [yearArray, setYearArray] = useState<number[]>([]);
+
     useEffect(() => {
         const fetchData = async () => {
+            setOnLoad(true)
             try {
                 const res = await fetch('/api/admin/graph');
-                const data = await res.json();
-                setReceiptOrders(data);
+                const { data, yearArray } = await res.json();
+                setrecdata(data)
+                setYearArray(yearArray)
+
+                let seperate = JSON.parse(JSON.stringify(data));
+                seperate.datasets = [data.datasets[selectYear]]
+                setInYearData(seperate)
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
+            setOnLoad(false)
         };
         fetchData();
     }, []);
-    if (receiptOrders == null) {
-        console.log("error receiptOrders")
-        // return
-        notFound()
-    }
-    const calculatedData = calculation(receiptOrders) || []
 
-    const chartData: { x: string; y: number }[] = [
-        { x: '2023-01-01T00:00:00', y: 65 },
-        { x: '2023-04-05T00:00:00', y: 59 },
-        { x: '2023-09-10T00:00:00', y: 80 },
-        { x: '2023-10-15T00:00:00', y: 81 },
-        { x: '2023-10-20T00:00:00', y: 56 },
-        { x: '2023-12-25T00:00:00', y: 55 },
-        { x: '2023-12-30T00:00:00', y: 40 },
-    ];
-    const data = {
-        datasets: calculatedData.map((item: { x: string; y: number }[], index) => ({
-            label: `Year ${new Date().getFullYear() - calculatedData.length - 1}`,
-            data: item,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            fill: true,
-        }))
-    };
+    const yearChangeAction = (key: Key) => {
+        setOnLoad(true)
+        try {
+            setSelectYear(Number(key))
+            console.log(Number(key), key)
+            let seperate = JSON.parse(JSON.stringify(recdata))
+            seperate.datasets = [recdata.datasets[Number(key)]]
+            setInYearData(seperate)
+        } catch (error) {
+            console.error('Error Setting data:', error);
+        }
+        setOnLoad(false)
+    }
+
+
     return (
         <>
             <h1 className="font-bold text-inherit uppercase text-3xl">Graph</h1>
-            <div className="flex w-full justify-center px-20 py-3">
-                <Line
-                    className="size-full"
-                    data={data}
-                    options={{
-                        maintainAspectRatio: false,
-                        scales: {
-                            x: {
-                                type: "time",
-                                time: {
-                                    unit: 'month',
-                                },
+            {!onLoad && (
+                <div className="relative w-full px-36">
+                    <Dropdown placement="bottom-end">
+                        <DropdownTrigger>
+                            <Button
+                                variant="bordered"
+                                className="capitalize absolute z-30 top-3 right-36"
+                            >
+                                {yearArray[selectYear]}
+                            </Button>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                            aria-label="Year Selection"
+                            variant="flat"
+                            disallowEmptySelection
+                            selectionMode="single"
+                            onAction={(key) => { yearChangeAction(key) }}
+                        >
+                            {yearArray.map((item: number, index) => (
+                                <DropdownItem key={index}>{item}</DropdownItem>
+                            ))}
+                        </DropdownMenu>
+                    </Dropdown>
+                    <Line
+                        className="size-full"
+                        data={inYearData}
+                        options={{
+                            maintainAspectRatio: true,
+                            plugins: {
                                 title: {
+                                    text: 'Profit / Year',
                                     display: true,
-                                    text: 'poon the data',
                                 },
                             },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: 'Value',
+                            scales: {
+                                x: {
+                                    type: "time",
+                                    time: {
+                                        unit: 'month'
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Time',
+                                    },
                                 },
-                            },
-                        },
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Time-Series Line Chart',
-                            },
-                        }
-                    }} />
-            </div>
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Value',
+                                    },
+                                },
+                            }
+                        }} />
+                </div>
+            )}
         </>
     )
 };
