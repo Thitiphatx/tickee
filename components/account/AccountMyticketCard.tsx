@@ -98,7 +98,7 @@ export default function AccountMyticketCard() {
                             {upcomingEvents.map((receipt, index) => (
                                 <a key={index} href="#" onClick={(e) => handleLinkClick(index)} className="w-full flex flex-col">
                                     <Card className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
-                                        <Image className="object-cover w-full" width={"100%"} height={"300px"} src="https://atkmedia.allticket.com/assets/content/24932/13082024WayV_TicketCard.jpg" alt="" />
+                                        <Image className="object-cover w-full" width={"100%"} height={"300px"} src={receipt.rec_seat.event_seat.event_images} alt="" />
                                         <CardBody className="sm:grid-cols-1 md:col-span-2 lg:col-span-3">
                                             <div className="flex flex-col p-4 leading-normal col-span-3">
                                                 <h5 className="mb-2 text-l font-bold tracking-tight text-gray-900 dark:text-white">{receipt.rec_seat.event_seat.event_name}</h5>
@@ -161,7 +161,7 @@ export default function AccountMyticketCard() {
                             <h2 className="font-bold uppercase">past events</h2>
                             <p className=" ml-4 font-normal text-gray-500 dark:text-gray-200">ตั๋วเหล่านี้หมดอายุแล้ว</p>
                         </CardHeader>
-                        <CardBody className="p-6">
+                        <CardBody className="p-6  space-y-5">
                             {pastEvents.map((receipt) => (
                                 <a href="#" className="w-full flex flex-col bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
                                     <img className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" src={receipt.rec_seat.event_seat.event_images} alt="" />
