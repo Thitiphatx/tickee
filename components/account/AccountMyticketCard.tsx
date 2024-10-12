@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 export default function AccountMyticketCard() {
     const [receipts, setReceipts] = useState([]);
     const { data: session, status } = useSession();
+    const [processingReceipts, setProcessingReceipts] = useState(new Set());
     const options = {
         year: 'numeric',
         month: 'long',
@@ -39,9 +40,10 @@ export default function AccountMyticketCard() {
         setIsModalOpen(false); // ปิด modal
     };
 
-    const removeRecepit = (event) => {
+    const removeRecepit1 = (event:any,receipt:any) => {
         event.stopPropagation();
         console.log("ขอเงินคืน")
+        removeReceipt(receipt)
     };
 
     useEffect(() => {
@@ -62,6 +64,34 @@ export default function AccountMyticketCard() {
 
         fetchReceipts();
     }, []);
+    const removeReceipt = async (receipt: any) => {
+        const confirmed = window.confirm("Are you sure you want to process this refund? This action cannot be undone.");
+        if (!confirmed) return; // Exit if user cancels
+    
+        // Add the receipt ID to the processing state
+        const newProcessingReceipts = new Set(processingReceipts);
+        newProcessingReceipts.add(receipt.rec_id);
+        setProcessingReceipts(newProcessingReceipts);
+    
+        try {
+            const response = await fetch(`/api/refund`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(receipt),
+            });
+    
+            if (response.ok) {
+                console.log('Refund processed successfully.');
+            } else {
+                console.error('Failed to process refund.');
+            }
+        } catch (error) {
+            console.error('Error processing refund:', error);
+        }
+    };
+    
 
     // แบ่งข้อมูลเป็น upcoming และ past events
     const now = new Date();
@@ -95,8 +125,8 @@ export default function AccountMyticketCard() {
 
                                         <div className="flex-row flex">
                                             <h5 className="mb-2 text-l font-bold tracking-tight text-gray-900 dark:text-white">สถานที่จัดงาน / location</h5>
-                                            <p className="mb-3 ml-4 font-normal text-gray-500 dark:text-gray-200">{JSON.parse(receipt.seatType.event_seat.event_location).address}</p>
-                                            <p className="mb-3 ml-4 font-normal text-gray-500 dark:text-gray-200">{JSON.parse(receipt.seatType.event_seat.event_location).city}</p>
+                                            {/* <p className="mb-3 ml-4 font-normal text-gray-500 dark:text-gray-200">{JSON.parse(receipt.seatType.event_seat.event_location).address}</p> */}
+                                            {/* <p className="mb-3 ml-4 font-normal text-gray-500 dark:text-gray-200">{JSON.parse(receipt.seatType.event_seat.event_location).city}</p> */}
                                         </div>
 
                                         <div className="flex-row flex">
@@ -119,8 +149,8 @@ export default function AccountMyticketCard() {
                                                     const diffInTime = eventStartDate - now; // คำนวณความต่างของเวลา (มิลลิวินาที)
                                                     const diffInDays = Math.ceil(diffInTime / (1000 * 3600 * 24)); // แปลงเป็นจำนวนวัน
 
-                                                    return diffInDays > 30 && (
-                                                        <button onClick={removeRecepit} type="button" className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                                    return diffInDays > 0 && (
+                                                        <button onClick={(e) =>removeRecepit1(e,receipt)}  type="button" className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
                                                             ขอคืนเงิน
                                                         </button>
                                                     );
@@ -217,7 +247,7 @@ export default function AccountMyticketCard() {
                                     </div>
                                     <div>
                                         <h4 className="text-md font-semibold">Location</h4>
-                                        <p className="text-gray-600">{JSON.parse(ticketinfo?.seatType.event_seat.event_location).address}</p>
+                                        {/* <p className="text-gray-600">{JSON.parse(ticketinfo?.seatType.event_seat.event_location).address}</p> */}
                                     </div>
                                 </div>
 

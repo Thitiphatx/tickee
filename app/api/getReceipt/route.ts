@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     const url = new URL(request.url);
     // const customerId = url.searchParams.get("customerid") || ""; // ใช้ ID ที่กำหนด ถ้าไม่มีให้ใช้ ID นี้
     // console.log('customerid = ',customerId)
-    const customerId = "cm1yvcuv8000fjzpemr7f7prw";
+    const customerId = "cm25q58op000012nm01ry1d1l";
     try {
         const receipts = await prisma.receipt.findMany({
             where: {

@@ -134,7 +134,7 @@ export default function Addevent() {
             event_last_date: endDateTimeISO,
             event_location: JSON.stringify(event_location),
             event_seat_per_order: 5,
-            producer_id: 'cm1yuiuxn0000vku17f87pyah',
+            producer_id: 'cm25q58op000012nm01ry1d1l',
             event_type_id: parseInt(selectedeventTypeValue),
         }
 
