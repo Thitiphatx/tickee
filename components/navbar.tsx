@@ -57,7 +57,7 @@ export const Navbar = () => {
                         </div>
                     ) : session ? (
                         <>
-                            <Dropdown placement="bottom-end" backdrop="blur">
+                            <Dropdown placement="bottom-end">
                                 <DropdownTrigger>
                                     <Button
                                         variant="bordered"
