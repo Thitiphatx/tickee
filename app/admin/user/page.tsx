@@ -1,7 +1,6 @@
-import Searchbar from "@/components/searchbar";
 import { notFound } from "next/navigation";
 import { getSelectedUser } from "./fetch";
-import UserTable from "@/components/userTable";
+import UserTable from "@/components/admin/userTable";
 
 
 export default async function AllUser() {
@@ -14,9 +13,6 @@ export default async function AllUser() {
 
     return (
         <div className="h-2/3">
-            <div className="w-full">
-                <Searchbar />
-            </div>
             <UserTable data={selectedUser}></UserTable>
  
         </div>

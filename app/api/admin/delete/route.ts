@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { deleteUser } from '@/app/admin/alluser/fetch';
+import { deleteUser } from '@/app/admin/user/fetch';
 
 
 export async function POST(req: NextApiRequest,res : NextApiResponse) {

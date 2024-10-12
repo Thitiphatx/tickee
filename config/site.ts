@@ -62,6 +62,10 @@ export const siteConfig = {
         {
             label: "My ticket",
             href: "/account/myticket"
+        },
+        {
+            label: "My refund",
+            href: "/account/refund"
         }
     ]
 };

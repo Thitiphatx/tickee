@@ -48,6 +48,7 @@ export default async function PromotionPage({ params }: { params: IParams }) {
     id: type.pt_id,
     name: type.pt_name,
   }));
+  console.log(params.promotionId)
 
   return (
     <div>

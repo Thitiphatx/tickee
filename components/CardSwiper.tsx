@@ -46,7 +46,7 @@ export default function CardSwiper({ title, items, fullPage }: { title?: string,
                     grabCursor={true}
                 >
                     {items.map((event, index) => {
-                        const address: Address = JSON.parse(event.event_location);
+                        // const address: Address = JSON.parse(event.event_location);
                         return (
                             <SwiperSlide key={index}>
                                 <a href={`event/${event.event_id}`} key={index}>
@@ -55,7 +55,7 @@ export default function CardSwiper({ title, items, fullPage }: { title?: string,
                                         <CardBody className="overflow-visible py-2">
                                             <p className="text-tiny uppercase">{event.event_start_date.toLocaleDateString('en-US', { day: 'numeric', month: 'long'})}</p>
                                             <p className="text-tiny uppercase font-bold">{event.event_name}</p>
-                                            <small className="text-default-500 truncate">{`${address.address} ${address.city}, ${address.country}`}</small>
+                                            {/* <small className="text-default-500 truncate">{`${address.address} ${address.city}, ${address.country}`}</small> */}
                                         </CardBody>
                                     </Card>
                                 </a>
