@@ -20,9 +20,10 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) 
 
 
 
-    const [startDateTime, setStartDateTime] = useState(parseZonedDateTime("2024-04-01T00:45[Asia/Bangkok]"));
-    const [endDateTime, setEndDateTime] = useState(parseZonedDateTime("2024-04-08T11:15[Asia/Bangkok]"));
-
+    const [dateRange, setDateRange] = useState({
+        start: parseZonedDateTime("2024-04-01T00:45[Asia/Bangkok]"),
+        end: parseZonedDateTime("2024-04-08T11:15[Asia/Bangkok]"),
+    });
 
 
     interface EventLocation {
@@ -109,6 +110,11 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) 
         }));
     };
 
+    const handleDateChange = (range) => {
+        // อัปเดตสถานะเมื่อมีการเลือกวันที่ใหม่
+        setDateRange(range);
+    };
+
     const addtodb = async () => {
         console.log("name :", event_name)
         console.log("intro :", event_intro)
@@ -116,8 +122,8 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) 
         console.log("location :", event_location)
         console.log("seat :", seat)
         console.log("des:", event_description)
-        const startDateTimeISO = startDateTime.toDate().toISOString();
-        const endDateTimeISO = endDateTime.toDate().toISOString();
+        const startDateTimeISO = dateRange.start.toDate().toISOString();
+        const endDateTimeISO = dateRange.end.toDate().toISOString();
 
 
         const data = {
@@ -268,10 +274,8 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) 
                     label="ระยะเวลา Event"
                     hideTimeZone
                     visibleMonths={2}
-                    defaultValue={{
-                        start: startDateTime,
-                        end: endDateTime,
-                    }}
+                    onChange={handleDateChange}
+                    defaultValue={dateRange}
                 />
             </div>
 
