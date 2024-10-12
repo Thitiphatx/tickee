@@ -13,8 +13,16 @@ export default function Addevent() {
 
 
 
-    const startDateTime = parseZonedDateTime("2024-04-01T00:45[Asia/Bangkok]");
-    const endDateTime = parseZonedDateTime("2024-04-08T11:15[Asia/Bangkok]");
+    const [dateRange, setDateRange] = useState({
+        start: parseZonedDateTime("2024-04-01T00:45[Asia/Bangkok]"),
+        end: parseZonedDateTime("2024-04-08T11:15[Asia/Bangkok]"),
+    });
+
+    const handleDateChange = (range) => {
+        // อัปเดตสถานะเมื่อมีการเลือกวันที่ใหม่
+        setDateRange(range);
+        console.log("Selected Date Range:", range); // แสดงค่าที่เลือกใน console
+    };
 
 
 
@@ -113,8 +121,8 @@ export default function Addevent() {
         console.log("location :", event_location)
         console.log("seat :", seat)
         console.log("des:", event_description)
-        const startDateTimeISO = startDateTime.toDate().toISOString();
-        const endDateTimeISO = endDateTime.toDate().toISOString();
+        const startDateTimeISO = dateRange.start.toDate().toISOString();
+        const endDateTimeISO = dateRange.end.toDate().toISOString();
 
 
         const data = {
@@ -126,7 +134,7 @@ export default function Addevent() {
             event_last_date: endDateTimeISO,
             event_location: JSON.stringify(event_location),
             event_seat_per_order: 5,
-            producer_id: '10',
+            producer_id: 'cm1yuiuxn0000vku17f87pyah',
             event_type_id: parseInt(selectedeventTypeValue),
         }
 
@@ -282,10 +290,8 @@ export default function Addevent() {
                     label="ระยะเวลา Event"
                     hideTimeZone
                     visibleMonths={2}
-                    defaultValue={{
-                        start: startDateTime,
-                        end: endDateTime,
-                    }}
+                    defaultValue={dateRange}
+                    onChange={handleDateChange}
                 />
             </div>
 

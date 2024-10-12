@@ -111,7 +111,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
 
             <div className="mt-8">
                 {showTicketInfo && (
-                    <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick} />
+                    <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick}  />
                 )}
             </div>
             <Card className="leading-10">
