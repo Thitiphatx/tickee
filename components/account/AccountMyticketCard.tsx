@@ -202,10 +202,10 @@ export default function AccountMyticketCard() {
                         <CardBody className="p-6">
                             {pastEvents.map((receipt) => (
                                 <a href="#" className="w-full flex flex-col bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                    <img className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" src={receipt.rec_seat.event_seat.event_images} alt="" />
-                                    <div className="flex flex-col p-4 leading-normal">
+                                    <Card>
+                                    <Image className="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" src={receipt.rec_seat.event_seat.event_images} alt="" />
+                                    <CardBody className="flex flex-col p-4 leading-normal">
                                         <h5 className="mb-2 text-l font-bold tracking-tight text-gray-900 dark:text-white">{receipt.rec_seat.event_seat.event_name}</h5>
-
                                                 <div className="flex-row flex">
                                                     <h5 className="mb-2 text-l font-bold tracking-tight text-gray-900 dark:text-white">ประเภทบัตร/Zone</h5>
                                                     <p className="mb-3 ml-4 font-normal text-gray-500 dark:text-gray-200">{receipt.rec_seat.seat_name}</p>
@@ -234,7 +234,6 @@ export default function AccountMyticketCard() {
                                                     <h5 className="mb-2 text-l font-bold tracking-tight text-gray-900 dark:text-white">หมวดหมู่ / category</h5>
                                                     <p className="mb-3 ml-4 font-normal text-gray-500 dark:text-gray-200">{receipt.rec_seat.event_seat.event_type.et_name}</p>
                                                 </div>
-                                            </div>
                                         </CardBody>
                                     </Card>
                                 </a>
