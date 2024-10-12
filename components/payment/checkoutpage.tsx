@@ -7,13 +7,15 @@ import {
 } from "@stripe/react-stripe-js";
 import { Seat_Type } from "@/types/data_type";
 import { useSession} from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 
 
 export default function Checkoutpage({ amount ,quantity ,seatdata}: { amount: number,quantity:number,seatdata: Seat_Type }) {
     const stripe = useStripe();
     const elements = useElements();
-
+    const router = useRouter();
+    const {data: session} = useSession();
     const [errormessage, seterrormessage] = useState<string>();
     const [clientSecret, setClientSecret] = useState("");
     const [loading, setloading] = useState(false);
@@ -30,6 +32,10 @@ export default function Checkoutpage({ amount ,quantity ,seatdata}: { amount: nu
             .then((data) => setClientSecret(data.clientSecret))
 
     }, [amount]);
+
+    if (!session) {
+        router.push("/");
+    }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         console.log("click")
@@ -50,7 +56,7 @@ export default function Checkoutpage({ amount ,quantity ,seatdata}: { amount: nu
             const receiptData = {
                 rec_date: new Date(),
                 rec_quantity: quantity, // ใช้จำนวนเงินที่ชำระเป็นจำนวนสินค้าที่รับ
-                rec_customer_id: "cm1yuiuxn0000vku17f87pyah", // รหัสลูกค้าของคุณ
+                rec_customer_id: session?.user.id, // รหัสลูกค้าของคุณ
                 rec_seat_id: seatdata.seat_id // รหัสที่นั่งของคุณ
             };
 

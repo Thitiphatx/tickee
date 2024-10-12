@@ -1,10 +1,8 @@
 import { Event_Type, Event, Seat_Dispatch, Prisma } from "@prisma/client"
 
 export interface Address {
-    street: string
-    sub_district: string
-    district: string
-    province: string
+    address: string,
+    city: string,
     country: string
 }
 

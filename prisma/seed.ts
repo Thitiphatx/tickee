@@ -8,11 +8,6 @@ export const prisma = globalForPrisma.prisma || new PrismaClient()
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
 
 async function main(){
-    // const role = await prisma.role.create({
-    //     data: {
-    //         role_name: "Admin",
-    //     },
-    // });
 
     const user = await prisma.user.upsert({
         where: { email: 'test@test.com' },
