@@ -14,10 +14,6 @@ import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-o
 ChartJS.register(TimeScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 
-interface RecSeat extends Receipt {
-    rec_seat: Seat_Type
-}
-
 export default function Graph() {
     const [recdata, setrecdata] = useState<any | null>(null);
     const [inYearData, setInYearData] = useState<any | null>(null);

@@ -13,10 +13,12 @@ export default function Admin() {
     const router = useRouter();
     const [onLoad, setOnLoad] = useState<boolean>(true);
     const { data: session, status } = useSession();
-    if (session?.user.role != RoleAvailable.Admin || !session) {
+    if ((session?.user.role != RoleAvailable.Admin || !session) && status != "loading") {
+        console.log(session)
         redirectingByRole(session)
+    } else if (onLoad) {
+        setOnLoad(false)
     }
-    setOnLoad(false)
     return (
         <>
             {!onLoad && (

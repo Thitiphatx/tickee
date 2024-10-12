@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { ReceiptStatus } from "@/types/data_type";
 
 export async function getReceiptDate() {
     let output;
@@ -11,6 +12,9 @@ export async function getReceiptDate() {
     let period = false
     try {
         output = await prisma.receipt.findMany({
+            // where: {
+            //     rec_status: ReceiptStatus.Expired
+            // },
             include: {
                 rec_seat: true
             },
@@ -28,7 +32,6 @@ export async function getReceiptDate() {
                 yearArray.push(year)
                 period = true
             } else if (
-                // index - 1 >= 0 &&
                 new Date(output[index].rec_date).getFullYear() != year &&
                 yearCount <= 5
             ) {
