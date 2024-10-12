@@ -9,11 +9,14 @@ import Dropcursor from '@tiptap/extension-dropcursor'
 import Image from '@tiptap/extension-image'
 import Paragraph from '@tiptap/extension-paragraph'
 import Text from '@tiptap/extension-text'
+import { Image as TipTapImage } from '@tiptap/extension-image'
 import React from 'react'
 import TextAlign from '@tiptap/extension-text-align'; // Import TextAlign extension
 import { Button } from '@nextui-org/button'
 import { IconAlignCenter, IconAlignLeft, IconAlignRight, IconArrowBackOutline, IconArrowForwardOutline, IconBold, IconBxImageAdd, IconFontColors, IconFormatItalic, IconFormatListBulleted, IconHr, IconItalic, IconOrderedList, IconReturnDownForwardSharp } from '@/styles/icon'
 import { Tooltip } from '@nextui-org/tooltip'
+
+
 
 const MenuBar = ({ editor }) => {
     if (!editor) return null
@@ -140,11 +143,41 @@ const MenuBar = ({ editor }) => {
                 </Button>
                 </Tooltip>
 
-            </div>
+            </ButtonGroup>
 
         </div>
     )
 }
+const ResizableImage = TipTapImage.extend({
+    addAttributes() {
+      return {
+        ...this.parent?.(),
+        width: {
+          default: 'auto',
+          renderHTML: attributes => {
+            return { width: attributes.width }
+          },
+        },
+        height: {
+          default: 'auto',
+          renderHTML: attributes => {
+            return { height: attributes.height }
+          },
+        },
+      }
+    },
+  })
+  
+  // ฟังก์ชันนี้ใช้เพื่อเพิ่มรูปภาพพร้อมขนาดที่กำหนดโดยผู้ใช้
+  const addImageWithSize = (editor) => {
+    const url = window.prompt('URL ของรูปภาพ')
+    const width = window.prompt('ความกว้าง (px)')
+    const height = window.prompt('ความสูง (px)')
+  
+    if (url) {
+      editor.chain().focus().setImage({ src: url, width: width || 'auto', height: height || 'auto' }).run()
+    }
+  }
 
 const extensions = [
     Color.configure({ types: [TextStyle.name, ListItem.name] }),
@@ -158,7 +191,9 @@ const extensions = [
     Text,
     Image,
     Dropcursor,
+    ResizableImage,
     TextAlign.configure({ types: ['heading', 'paragraph'] })
+
 ]
 
 const content = `

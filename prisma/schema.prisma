@@ -80,6 +80,7 @@ model Event_Type {
   Event   Event[]
 }
 
+
 model Promotion {
   pro_id          Int            @id @default(autoincrement())
   seat_type       Seat_Type      @relation(fields: [seat_type_id], references: [seat_id])

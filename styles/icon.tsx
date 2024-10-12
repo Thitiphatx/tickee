@@ -219,88 +219,40 @@ export function IconAlignCenter(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function IconBxImageAdd(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      height="2em"
-      width="2em"
-      {...props}
-    >
-      <path d="M4 5h13v7h2V5c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h8v-2H4V5z" />
-      <path d="M8 11l-3 4h11l-4-6-3 4z" />
-      <path d="M19 14h-2v3h-3v2h3v3h2v-3h3v-2h-3z" />
-    </svg>
-  );
-}
-export function IconUser(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      viewBox="0 0 448 512"
-      fill="currentColor"
-      height="1em"
-      width="1em"
-      {...props}
-    >
-      <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm-45.7 48C79.8 304 0 383.8 0 482.3 0 498.7 13.3 512 29.7 512h388.6c16.4 0 29.7-13.3 29.7-29.7 0-98.5-79.8-178.3-178.3-178.3h-91.4z" />
-    </svg>
-  );
-}
+  export function IconBxImageAdd(props) {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        height="2em"
+        width="2em"
+        {...props}
+      >
+        <path d="M4 5h13v7h2V5c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h8v-2H4V5z" />
+        <path d="M8 11l-3 4h11l-4-6-3 4z" />
+        <path d="M19 14h-2v3h-3v2h3v3h2v-3h3v-2h-3z" />
+      </svg>
+    );
+  }
 
-export function IconTicket(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      viewBox="0 0 512 512"
-      fill="currentColor"
-      height="1em"
-      width="1em"
-      {...props}
-    >
-      <path d="M490.18 181.4l-44.13-44.13a20 20 0 00-27-1 30.81 30.81 0 01-41.68-1.6 30.81 30.81 0 01-1.6-41.67 20 20 0 00-1-27L330.6 21.82a19.91 19.91 0 00-28.13 0l-70.35 70.34a39.87 39.87 0 00-9.57 15.5 7.71 7.71 0 01-4.83 4.83 39.78 39.78 0 00-15.5 9.58l-180.4 180.4a19.91 19.91 0 000 28.13L66 374.73a20 20 0 0027 1 30.69 30.69 0 0143.28 43.28 20 20 0 001 27l44.13 44.13a19.91 19.91 0 0028.13 0l180.4-180.4a39.82 39.82 0 009.58-15.49 7.69 7.69 0 014.84-4.84 39.84 39.84 0 0015.49-9.57l70.34-70.35a19.91 19.91 0 00-.01-28.09zm-228.37-29.65a16 16 0 01-22.63 0l-11.51-11.51a16 16 0 0122.63-22.62l11.51 11.5a16 16 0 010 22.63zm44 44a16 16 0 01-22.62 0l-11-11a16 16 0 1122.63-22.63l11 11a16 16 0 01.01 22.66zm44 44a16 16 0 01-22.63 0l-11-11a16 16 0 0122.63-22.62l11 11a16 16 0 01.05 22.67zm44.43 44.54a16 16 0 01-22.63 0l-11.44-11.5a16 16 0 1122.68-22.57l11.45 11.49a16 16 0 01-.01 22.63z" />
-    </svg>
-  );
-}
+  export function IconImageResizeLandscape(props) {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        height="2em"
+        width="2em"
+        {...props}
+      >
+        <path d="M13 11H2a1 1 0 00-1 1v9a1 1 0 001 1h11a1 1 0 001-1v-9a1 1 0 00-1-1zm-5.56 9l1.93-1.93a.3.3 0 01.5 0L11.79 20zM12 17.38l-.72-.71a2.41 2.41 0 00-3.33 0L4.61 20H3v-7h9zM2 4.11a1 1 0 00.86-.49A1.05 1.05 0 003.05 3 1 1 0 002 2a1 1 0 00-1 1v.1a1 1 0 001 1.01zM9.91 4h.19a1 1 0 000-2h-.19a1 1 0 000 2zM2 8.78a1 1 0 001-1v-.22a1 1 0 10-2 0v.22a1 1 0 001 1zM14.09 2h-.19a1 1 0 000 2h.19a1 1 0 000-2zM5.91 4h.19a1 1 0 000-2h-.19a1 1 0 000 2zM22 6.4a1 1 0 00-1 1v.21a1 1 0 002 0V7.4a1 1 0 00-1-1zM17.12 20h-.24a1 1 0 100 2h.24a1 1 0 000-2zM21.9 2a1 1 0 00-.9 1 1 1 0 00.1.42 1 1 0 001.9-.31V3a1.09 1.09 0 00-1.1-1zm.1 8.9a1 1 0 00-1 1v.22a1 1 0 002 0v-.22a1 1 0 00-1-1zM18.09 2h-.19a1 1 0 000 2h.19a1 1 0 000-2zM22 20a.93.93 0 00-.44.11A1 1 0 0021 21a1 1 0 001 1 1.09 1.09 0 001-1.1 1 1 0 00-1-.9zm0-4.56a1 1 0 00-1 1v.22a1 1 0 102 0v-.26a1 1 0 00-1-1z" />
+      </svg>
+    );
+  }
+  
+  
+ 
+ 
 
-export function IconLogout(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      viewBox="0 0 900 1000"
-      fill="currentColor"
-      height="1em"
-      width="1em"
-      {...props}
-    >
-      <path d="M502 850V750h98v100c0 26.667-9.667 50-29 70s-43 30-71 30H100c-26.667 0-50-10-70-30S0 876.667 0 850V150c0-28 10-51.667 30-71s43.333-29 70-29h400c28 0 51.667 9.667 71 29s29 43 29 71v150h-98V150H100v700h402m398-326L702 720V600H252V450h450V330l198 194" />
-    </svg>
-  );
-}
+  
 
-export function IconCalendarEventFill(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      fill="currentColor"
-      viewBox="0 0 16 16"
-      height="1em"
-      width="1em"
-      {...props}
-    >
-      <path d="M4 .5a.5.5 0 00-1 0V1H2a2 2 0 00-2 2v1h16V3a2 2 0 00-2-2h-1V.5a.5.5 0 00-1 0V1H4V.5zM16 14V5H0v9a2 2 0 002 2h12a2 2 0 002-2zm-3.5-7h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1a.5.5 0 01.5-.5z" />
-    </svg>
-  );
-}
-
-export function IconDoorOpenFill(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      fill="currentColor"
-      viewBox="0 0 16 16"
-      height="1em"
-      width="1em"
-      {...props}
-    >
-      <path d="M1.5 15a.5.5 0 000 1h13a.5.5 0 000-1H13V2.5A1.5 1.5 0 0011.5 1H11V.5a.5.5 0 00-.57-.495l-7 1A.5.5 0 003 1.5V15H1.5zM11 2h.5a.5.5 0 01.5.5V15h-1V2zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z" />
-    </svg>
-  );
-}
-
+  

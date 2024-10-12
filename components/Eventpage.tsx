@@ -37,14 +37,19 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
         setShowTicketInfo(false); // Hide ticket info when selecting a different seat
     };
 
-    const handleBookingClick = (price: number) => {
-        console.log("ราคา :", price)
-        setTotalPrice(price);
+    const [seatData, setSeatData] = useState<Seat_Type | null>(null);
+    const [quantity, setQuantity] = useState(1);
+
+    const handleBookingClick = (quantity: number,seatData: Seat_Type | null) => {
+        console.log("จำนวนซื้อทั้งหมด :", quantity)
+        setQuantity(quantity);
+        setSeatData(seatData)
+        console.log("ข้อมูลที่นั่ง:", seatData);
         setShowPaymentPage(true); // Show PaymentPage
     };
 
     if (showPaymentPage) {
-        return <Payment totalPrice={totalPrice} />;
+        return <Payment quantity={quantity} seatData={seatData} eventname={eventDetails.event_name} />;
     }
     return (
         <div className="space-y-5">
@@ -106,7 +111,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
 
             <div className="mt-8">
                 {showTicketInfo && (
-                    <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick} />
+                    <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick}  />
                 )}
             </div>
             <Card className="leading-10">

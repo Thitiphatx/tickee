@@ -5,9 +5,12 @@ import {
     PaymentElement,
 
 } from "@stripe/react-stripe-js";
+import { Seat_Type } from "@/types/data_type";
+import { useSession} from "next-auth/react";
 
 
-export default function Checkoutpage({ amount }: { amount: number }) {
+
+export default function Checkoutpage({ amount ,quantity ,seatdata}: { amount: number,quantity:number,seatdata: Seat_Type }) {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -42,6 +45,43 @@ export default function Checkoutpage({ amount }: { amount: number }) {
             setloading(false)
             return;
         }
+        else {
+            console.log('Payment successful!');
+            const receiptData = {
+                rec_date: new Date(),
+                rec_quantity: quantity, // ใช้จำนวนเงินที่ชำระเป็นจำนวนสินค้าที่รับ
+                rec_customer_id: "cm1yuiuxn0000vku17f87pyah", // รหัสลูกค้าของคุณ
+                rec_seat_id: seatdata.seat_id // รหัสที่นั่งของคุณ
+            };
+
+            fetch("/api/addreceipt", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(receiptData),
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    alert('Failed to create receipt.');
+                    throw new Error("Failed to create receipt.");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                // การสร้างข้อมูลสำเร็จ
+                console.log("Receipt created:", data);
+        
+                // แสดงข้อความยืนยันการชำระเงินที่สำเร็จ
+                alert('Payment successful! Thank you for your purchase.');
+                
+            })
+            .catch((error) => {
+                // จัดการกับข้อผิดพลาดที่เกิดขึ้น
+                console.error("Error creating receipt:", error);
+                seterrormessage("Failed to create receipt.");
+            });
+        }
 
         const { error } = await stripe.confirmPayment({
             elements,
@@ -53,11 +93,8 @@ export default function Checkoutpage({ amount }: { amount: number }) {
 
         if (error) {
             seterrormessage(error.message)
-
         }
-        else {
-
-        }
+        
 
         setloading(false)
 
@@ -79,7 +116,7 @@ export default function Checkoutpage({ amount }: { amount: number }) {
             {clientSecret && <PaymentElement />}
             {errormessage && <div className="text-black mt-3">{errormessage}</div>}
             <button disabled={!stripe || loading} type="submit" className="disabled:animate-pulse disabled:opacity-50 align-middle mt-4 focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
-                {!loading ? `Pay ฿${amount}` : "Processing...."}
+                {!loading ? `Pay ฿${amount/100}` : "Processing...."}
             </button>
         </form>
 
