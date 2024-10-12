@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import { DateRangePicker } from "@nextui-org/date-picker";
-import { parseZonedDateTime } from "@internationalized/date";
+import { CalendarDate, CalendarDateTime, parseZonedDateTime, ZonedDateTime } from "@internationalized/date";
 import TextEditor from "@/components/texteditor";
 import { Select, SelectItem } from "@nextui-org/select";
 import { Event_Type } from "@prisma/client";
@@ -109,8 +109,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) 
             country: e.target.value,
         }));
     };
-
-    const handleDateChange = (range) => {
+    const handleDateChange = (range: any) => {
         // อัปเดตสถานะเมื่อมีการเลือกวันที่ใหม่
         setDateRange(range);
     };

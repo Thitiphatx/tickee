@@ -17,7 +17,7 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { signOut, useSession } from "next-auth/react";
 import Searchbar from "./searchbar";
-import { IconAccount, IconCalendarEventFill, IconDoorOpenFill, IconLogout, IconTicket, IconUser } from "@/styles/icon";
+import { IconCalendarEventFill, IconDoorOpenFill, IconLogout, IconTicket, IconUser } from "@/styles/icon";
 import { useState, useEffect } from 'react'
 
 export const Navbar = () => {
