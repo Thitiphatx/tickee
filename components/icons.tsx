@@ -142,3 +142,55 @@ export const DeleteIcon = ({
     />
   </svg>
 );
+
+export const CloseIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height={height || size}
+    width={width || size}
+    role="presentation"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      d="M6 18 17.94 6M18 18 6.06 6"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+    />
+  </svg>
+);
+
+export const PlusIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height={height || size}
+    width={width || size}
+    role="presentation"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      d="M5 12h14m-7 7V5"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+    />
+  </svg>
+);

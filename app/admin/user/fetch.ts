@@ -58,7 +58,7 @@ export async function deleteUser(uid: string) {
     }
 }
 
-export async function editUser(id: string, email: string, name: string, surname: string, role: string) {
+export async function editUser(id: string, email: string, name: string,  role: string) {
     try {
         const output = await prisma.user.update({
             where: {

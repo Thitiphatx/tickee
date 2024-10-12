@@ -6,7 +6,8 @@ export async function getSelectedEvent(input: string) {
         try {
             output = await prisma.event.findMany({
                 include: {
-                    event_type: true
+                    event_type: true,
+                    Seat_Type:true
                 }
             })
         } catch (error) {
@@ -18,7 +19,8 @@ export async function getSelectedEvent(input: string) {
         try {
             output = await prisma.event.findMany({
                 include: {
-                    event_type: true
+                    event_type: true,
+                    Seat_Type:true
                 }
                 , where: {
                     event_name: {
@@ -33,4 +35,17 @@ export async function getSelectedEvent(input: string) {
         }
     }
     return output
+}
+
+export async function deleteEvent(id: number) {
+    try {
+        const output = await prisma.event.delete({
+            where: {
+                event_id: id
+            }
+        })
+    } catch (error) {
+        console.log("deleteEvent error")
+        return null
+    }
 }

@@ -1,19 +1,20 @@
 import { prisma } from "@/lib/prisma";
-import { SignInData, SignUpData } from "../types/data_type";
+import { BusinessData, SignInData, SignUpData } from "../types/data_type";
+import { Admin_Data, Event_Type, Promotion_Type } from "@prisma/client";
 
-export async function searchEventwithTag(input:string) {
+export async function searchEventwithTag(input: string) {
     let output;
     try {
         output = await prisma.event.findMany({
-            include:{
-                event_type:true,
-                producer:true,
-            },where: {
-                event_type:{
-                    et_name:input
+            include: {
+                event_type: true,
+                producer: true,
+            }, where: {
+                event_type: {
+                    et_name: input
                 }
-            },orderBy : {
-                event_last_date:"asc"
+            }, orderBy: {
+                event_last_date: "asc"
             }
         })
     } catch (error) {
@@ -23,19 +24,19 @@ export async function searchEventwithTag(input:string) {
     return output
 }
 
-export async function searchEventwithName(input:string) {
+export async function searchEventwithName(input: string) {
     let output;
     try {
         output = await prisma.event.findMany({
-            include:{
-                event_type:true,
-                producer:true,
-            },where: {
-                event_name:{
-                    contains:input
+            include: {
+                event_type: true,
+                producer: true,
+            }, where: {
+                event_name: {
+                    contains: input
                 }
-            },orderBy : {
-                event_last_date:"asc"
+            }, orderBy: {
+                event_last_date: "asc"
             }
         })
     } catch (error) {
@@ -51,43 +52,64 @@ export async function fetchEvent() {
     }
   }
 
-export async function getBannerImages() {
-    let output;
+
+export async function getBusinessData(): Promise<BusinessData | null> {
+    let admin: Admin_Data | null, eventType: Event_Type[], promotionType: Promotion_Type[];
     try {
-        output = await prisma.admin_Data.findFirst({
-            select:{
-                banner_images:true
+        admin = await prisma.admin_Data.findFirst({
+            where: {
+                ad_id: 1
             }
         })
+
+        eventType = await prisma.event_Type.findMany({})
+
+        promotionType = await prisma.promotion_Type.findMany({})
+
     } catch (error) {
-        console.log("getBannerImages Error")
+        console.log("getBusinessData Error")
         return null
     }
-    return output
+
+    return {
+        admin,
+        eventType,
+        promotionType
+    };
 }
 
-export async function updateBannerImages(data:string[]) {
+export async function updateBusinessData(newImages: string[], newFee: number, newEvent: string[], newPromotion: string[]) {
     let output;
     try {
-        output = getBannerImages()
-    } catch (error) {
-        console.log("updateBannerImages Error")
-        return null
-    }
-    try {
+        output = await getBusinessData()
+
         let updateData = await prisma.admin_Data.update({
             where: {
-                ad_id:1
+                ad_id: output?.admin?.ad_id
             },
             data: {
-                banner_images: data
+                banner_images: newImages,
+                fee: newFee
             }
         })
+
+        let insertEvent = await prisma.event_Type.createMany({
+            data: newEvent.map((eventINS: string) => (
+                { et_name: eventINS }
+            )),
+        });
+
+        let insertPromotion = await prisma.promotion_Type.createMany({
+            data: newPromotion.map((promotionINS: string) => (
+                { pt_name: promotionINS }
+            )),
+        });
+
+        return updateData
     } catch (error) {
-        console.log("updateBannerImages Error")
+        console.log("updateBusinessData Error")
         return null
     }
-    return output
 }
 
 // old signup and signin manually

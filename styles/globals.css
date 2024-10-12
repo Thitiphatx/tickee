@@ -41,6 +41,16 @@
     @apply text-danger-500 text-sm
 }
 
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 .tiptap {
     padding: 10px;
     margin-top: 30px;
