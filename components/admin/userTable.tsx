@@ -20,6 +20,7 @@ import { DeleteIcon, EditIcon } from "../icons";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { RoleAvailable } from "@/types/data_type";
 import Searchbar from "../searchbar";
+import { useSession } from "next-auth/react";
 
 export default function UserTable({ data }: { data: User[] }) {
     const [roleType, setRoleType] = useState<string>(RoleAvailable.User);
@@ -31,9 +32,15 @@ export default function UserTable({ data }: { data: User[] }) {
     const [outputRole, setOutputRole] = useState<string>("");
     const [onLoad, setOnLoad] = useState<boolean>(true);
 
+    const { data: session, status } = useSession(); 
+
     if (data && onLoad) {
         setOnLoad(false)
     }
+
+    // const filterSelf =(item:User)=>{
+    //     .filter((item: User) => item.role == roleType).map
+    // }
 
     const roleSelection = (role: string) => {
         setRoleType(role)
@@ -179,7 +186,7 @@ export default function UserTable({ data }: { data: User[] }) {
                             <TableColumn align="center">STATUS</TableColumn>
                         </TableHeader>
                         <TableBody emptyContent={"No Data for Display."}>
-                            {data.filter((item: User) => item.role == roleType).map((item: User) => (
+                            {data.filter((item: User) => (item.role == roleType && session?.user.id != item.id)).map((item: User) => (
                                 <TableRow key={item.id}>
                                     <TableCell>{item.name}</TableCell>
                                     <TableCell>{item.email}</TableCell>
