@@ -1,16 +1,19 @@
 
 import { deleteEvent } from '@/app/admin/event/fetch';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: NextApiRequest,res : NextApiResponse) {
-        try {
-            const id = req.body;
-            if (typeof id == 'number' && id !== 0) {
-                const output = await deleteEvent(id)
-            }
-            res.status(200).json({ success: true });
-        } catch (error) {
-            console.error('Error delete Event', error);
-            res.status(500).json({ success: false, error: 'Failed to delete Event' });
+export async function POST(req: NextRequest) {
+    try {
+        const { id } = await req.json();
+        if (typeof id == 'number' && id != 0) {
+            const output = await deleteEvent(id)
         }
+        return NextResponse.json({
+            message: 'Delete Event successfully',
+        });
+    } catch (error) {
+        return NextResponse.json({
+            message: 'Failed to Delete Event',
+        });
+    }
 }

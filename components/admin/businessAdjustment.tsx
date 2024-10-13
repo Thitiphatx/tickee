@@ -20,31 +20,20 @@ export default function BusinessAdjustment() {
     const [promotionType, setPromotionType] = useState<Promotion_Type[]>([]);
     const [insertPromotionType, setInsertPromotionType] = useState<string[] | null>([]);
     const [onLoad, setOnLoad] = useState<boolean>(true);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setOnLoad(true)
-            try {
-                const res = await fetch('/api/admin/business');
-                const data: BusinessData = await res.json();
-                setBanner(data.admin?.banner_images || null);
-                setFee(data.admin?.fee || 0)
-                setEventType(data.eventType)
-                setPromotionType(data.promotionType)
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-            setOnLoad(false)
-        };
-        fetchData();
-    }, []);
-    if (banner == null) {
-        console.log("error banner")
-    }
+    // const [onUpdateLoad, setOnUpdateLoad] = useState<boolean>(false);
 
     const deleteClick = (idx: number) => {
         if (banner != null) {
             const newArray = banner.filter((_, index) => index !== idx);
+            setBanner(newArray)
+        }
+    };
+
+    const setErrorNewBanner = (e: React.SyntheticEvent<HTMLImageElement, Event>, index: number) => {
+        e.currentTarget.src = "https://atkmedia.allticket.com/assets/content/21176/Maleehuana_30082024_SlideBanner.jpg"
+        if (banner != null) {
+            const newArray = [...banner]
+            newArray[index] = "https://atkmedia.allticket.com/assets/content/21176/Maleehuana_30082024_SlideBanner.jpg"
             setBanner(newArray)
         }
     };
@@ -115,22 +104,53 @@ export default function BusinessAdjustment() {
         setNewImage(e.target.value);
     };
 
+    const filteringBanner = () => {
+        if (banner != null) {
+            return banner.filter((item: string) => item != "https://atkmedia.allticket.com/assets/content/21176/Maleehuana_30082024_SlideBanner.jpg")
+        }
+        return [];
+    };
+
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         try {
-            const res = await fetch('/api/admin/business', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ banner, fee , insertEventType, insertPromotionType}),
-            });
+                const bannerFiltered = filteringBanner();
+                setBanner(bannerFiltered);
+
+                const res = await fetch('/api/admin/business', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ bannerFiltered, fee, insertEventType, insertPromotionType }),
+                });
+            // }
         } catch (error) {
             console.error('Error Upload banner:', error);
         }
-
-        setDisplay(false)
+        // setOnUpdateLoad(false)
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setOnLoad(true)
+                const res = await fetch('/api/admin/business');
+                const data: BusinessData = await res.json();
+                setBanner(data.admin?.banner_images || null);
+                setFee(data.admin?.fee || 0)
+                setEventType(data.eventType)
+                setPromotionType(data.promotionType)
+                setOnLoad(false)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+    }, []);
+    if (banner == null) {
+        console.log("error banner")
+    }
 
     return (
         <div className='flex flex-col items-center py-10'>
@@ -193,13 +213,19 @@ export default function BusinessAdjustment() {
 
                     <h1 className="font-bold text-inherit uppercase text-3xl">Banners</h1>
                     <div className="flex flex-col items-center gap-2 w-full my-10 p-10 bg-opacity-20 bg-gray-600 rounded-2xl">
-
                         {banner?.map((src, index) => (
                             <div key={index} className='relative'>
                                 <span className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(index)}>
                                     <DeleteIcon />
                                 </span>
-                                <img src={src} style={{ width: '100%', height: 'auto' }} />
+                                <img
+                                    src={src}
+                                    style={{
+                                        width: '100%',
+                                        height: 'auto',
+                                    }}
+                                    onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => setErrorNewBanner(e, index)}
+                                />
                             </div>
                         ))}
                         <div onClick={insertNewBanner} className='flex justify-center h-1/3 w-3/4 p-5'>

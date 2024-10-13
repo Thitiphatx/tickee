@@ -1,10 +1,7 @@
 "use client"
 
-import { Receipt, Seat_Type } from "@prisma/client";
 import { notFound } from "next/navigation";
-
 import { Line } from 'react-chartjs-2';
-
 import { Chart as ChartJS, TimeScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { Key, useEffect, useState } from "react";
@@ -12,7 +9,6 @@ import { Button } from "@nextui-org/button";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
 
 ChartJS.register(TimeScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
 
 export default function Graph() {
     const [recdata, setrecdata] = useState<any | null>(null);

@@ -74,12 +74,12 @@ export async function getReceiptDate() {
                 weeklyOrders++
             }
         }
-
+        
         const data = {
             datasets: yearListData.map((item: { x: string; y: number }[], index) => ({
                 label: `Year ${new Date().getFullYear() - index}`,
                 borderColor: `rgba(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, 1)`,
-                backgroundColor: `rgba(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, 0.2)`,
+                backgroundColor: `rgba(255, 255, 255, 0.2)`,
                 fill: true,
                 data: item
             }))

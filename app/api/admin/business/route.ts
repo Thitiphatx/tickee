@@ -1,17 +1,19 @@
 import { getBusinessData, updateBusinessData } from '@/utils/function';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest) {
     try {
-        const { banner, fee, insertEventType, insertPromotionType} = req.body;
+        const { bannerFiltered, fee, insertEventType, insertPromotionType } = await req.json();
         if (typeof fee == 'number') {
-            const output = await updateBusinessData(banner, fee, insertEventType, insertPromotionType)
+            const output = await updateBusinessData(bannerFiltered, fee, insertEventType, insertPromotionType)
         }
-        res.status(200).json({ success: true });
+        return NextResponse.json({
+            message: 'Promotion created successfully',
+        });
     } catch (error) {
-        console.error('Error update Business', error);
-        res.status(500).json({ success: false, error: 'Failed to update Business' });
+        return NextResponse.json({
+            message: 'Promotion created fail',
+        });
     }
 }
 

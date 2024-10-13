@@ -45,7 +45,7 @@ export async function deleteEvent(id: number) {
             }
         })
     } catch (error) {
-        console.log("deleteEvent error")
+        console.log("deleteEvent error\n",error)
         return null
     }
 }
