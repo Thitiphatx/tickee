@@ -3,7 +3,7 @@ import { deleteEvent } from '@/app/admin/event/fetch';
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest) {
+export async function DELETE(req: NextRequest) {
     try {
         const { id } = await req.json();
         if (typeof id == 'number' && id != 0) {

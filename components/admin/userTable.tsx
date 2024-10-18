@@ -73,7 +73,7 @@ export default function UserTable({ data }: { data: User[] }) {
         e.preventDefault();
         let user_id: string = returnID();
         try {
-            const res = await fetch('/api/admin/edit', {
+            const res = await fetch('/api/admin/user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -91,8 +91,8 @@ export default function UserTable({ data }: { data: User[] }) {
         e.preventDefault();
         let user_id: string = mapData?.id || "";
         try {
-            const res = await fetch('/api/admin/delete', {
-                method: 'POST',
+            const res = await fetch('/api/admin/user', {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
