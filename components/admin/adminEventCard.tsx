@@ -8,7 +8,8 @@ import { DeleteIcon } from "../icons";
 import { Image } from "@nextui-org/image";
 import { Divider } from "@nextui-org/divider";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal";
-import DisplayEventModal from "./displayEventModal";
+import { motion } from 'framer-motion'
+import { Chip } from "@nextui-org/chip";
 
 interface EventOutput extends Event {
     event_type: Event_Type,
@@ -17,13 +18,21 @@ interface EventOutput extends Event {
 
 export default function AdminEventCard({ data }: { data: EventOutput[] }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [display, setDisplay] = useState(false);
+    const [isOpen2, setOpen2] = useState<boolean>(false);
     const [mapData, setMapData] = useState<EventOutput | null>();
     const [onLoad, setOnLoad] = useState<boolean>(true);
 
     if (data && onLoad) {
         setOnLoad(false)
     }
+
+    const onOpen2 = () => {
+        setOpen2(true)
+    };
+
+    const onClose2 = () => {
+        setOpen2(false)
+    };
 
     const deleteClick = (item: EventOutput | null) => {
         setMapData(item)
@@ -33,7 +42,7 @@ export default function AdminEventCard({ data }: { data: EventOutput[] }) {
 
     const eventDetailClick = (item: EventOutput) => {
         setMapData(item)
-        setDisplay(true);
+        onOpen2()
     };
 
     const handleDelete = async (e: React.FormEvent) => {
@@ -51,11 +60,60 @@ export default function AdminEventCard({ data }: { data: EventOutput[] }) {
             console.error('Error creating user:', error);
         }
         onClose()
+        onClose2()
     };
 
     return (
         <>
-            <DisplayEventModal data={mapData || null} display={display} setDisplay={setDisplay}/>
+            <Modal backdrop={"blur"} isOpen={isOpen2} onClose={onClose2} size={"2xl"}>
+                <ModalContent>
+                    <>
+                        <ModalHeader className="flex flex-col gap-1 text-2xl text-center ">Edit</ModalHeader>
+                        <Divider />
+                        <form onSubmit={handleDelete}>
+                            <ModalBody className="px-5 py-6 gap-3">
+                                <motion.div className="space-y-2"
+                                    initial={{ y: 200, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                >
+                                    <Card className="flex flex-col items-center px-5">
+                                        <CardHeader className="w-full flex justify-center items-center border-2">
+                                            <Image className="" width={"100%"} src={mapData?.event_images} />
+                                        </CardHeader>
+                                        <CardBody className="flex flex-col justify-between">
+                                            <div className="space-y-3">
+                                                <h1 className="text-xl font-bold">{mapData?.event_name}</h1>
+                                                <div className="flex flex-row">
+                                                    <Chip size="sm" className="">{mapData?.event_type.et_name}</Chip>
+                                                </div>
+
+                                                <div className='p-2' dangerouslySetInnerHTML={{ __html: mapData?.event_intro || "" }} />
+                                            </div>
+                                            <div className="p-3">
+                                                <p className="uppercase font-bold px-3 py-5">Ticket</p>
+                                                <div className="max-w-full px-5">
+                                                    {mapData?.Seat_Type.map((seat, index) => (
+                                                        <div key={seat.seat_id}>
+                                                            <p className="text-medium font-medium">{seat.seat_name}</p>
+                                                            <p className="text-small text-default-400 px-5">฿ {seat.seat_price}</p>
+                                                            {index !== mapData?.Seat_Type.length - 1 && (
+                                                                <Divider className="my-3" />
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+                                </motion.div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color='danger' variant='shadow' className="uppercase w-full" radius="full" type="submit">Delete</Button>
+                            </ModalFooter>
+                        </form>
+                    </>
+                </ModalContent>
+            </Modal>
 
             <Modal backdrop={"blur"} isOpen={isOpen} onClose={onClose}>
                 <form onSubmit={handleDelete}>

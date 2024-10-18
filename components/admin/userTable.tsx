@@ -9,7 +9,7 @@ import {
     TableCell,
 } from "@nextui-org/table";
 
-
+import { motion } from 'framer-motion'
 import { User } from "@prisma/client";
 import React, { useState } from 'react'
 import { Button, ButtonGroup } from '@nextui-org/button'
@@ -19,21 +19,33 @@ import Searchbar from "../searchbar";
 import { useSession } from "next-auth/react";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { Divider } from "@nextui-org/divider";
-import EditUserModal from "./editUserModal";
+import { RadioGroup, Radio } from "@nextui-org/radio";
+import { Input } from '@nextui-org/input'
 
 export default function UserTable({ data }: { data: User[] }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [isOpen2, setOpen2] = useState<boolean>(false);
     const [roleType, setRoleType] = useState<string>(RoleAvailable.User);
-    const [editForm, setEditForm] = useState<boolean>(false);
+    const [usersData, setUsersData] = useState<User[] | null>([]);
     const [mapData, setMapData] = useState<User | null>();
     const [outputRole, setOutputRole] = useState<string>("");
     const [onLoad, setOnLoad] = useState<boolean>(true);
+    const [outputName, setOutputName] = useState<string>("");
+    const [outputEmail, setOutputEmail] = useState<string>("");
 
     const { data: session, status } = useSession();
 
     if (data && onLoad) {
         setOnLoad(false)
     }
+
+    const onOpen2 = () => {
+        setOpen2(true)
+    };
+
+    const onClose2 = () => {
+        setOpen2(false)
+    };
 
     const roleSelection = (role: string) => {
         setRoleType(role)
@@ -47,7 +59,32 @@ export default function UserTable({ data }: { data: User[] }) {
     const editClick = (item: User) => {
         setMapData(item)
         setOutputRole(item.role)
-        setEditForm(true);
+        onOpen2()
+    };
+
+    const returnID = () => {
+        if (mapData) {
+            return mapData.id.toString()
+        }
+        return ""
+    }
+
+    const handleEdit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        let user_id: string = returnID();
+        try {
+            const res = await fetch('/api/admin/edit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user_id, outputName, outputEmail, outputRole }),
+            });
+
+        } catch (error) {
+            console.error('Error creating user:', error);
+        }
+        onClose2()
     };
 
     const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -69,7 +106,41 @@ export default function UserTable({ data }: { data: User[] }) {
 
     return (
         <div className="flex flex-col items-center gap-5">
-            <EditUserModal data={mapData || null} role={outputRole} editForm={editForm} setEditForm={setEditForm}/>
+
+            <Modal backdrop={"blur"} isOpen={isOpen2} onClose={onClose2}>
+                <ModalContent>
+                    <>
+                        <ModalHeader className="flex flex-col gap-1 text-2xl text-center ">Edit</ModalHeader>
+                        <Divider />
+                        <form onSubmit={handleEdit}>
+                            <ModalBody className="px-5 py-6 gap-3">
+                                <motion.div className="space-y-2"
+                                    initial={{ y: 200, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                >
+                                    <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOutputEmail(e.target.value)} defaultValue={mapData?.email || ""} type="email" label="Email" />
+                                    <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOutputName(e.target.value)} defaultValue={mapData?.name || ""} type="text" label="Name" />
+                                    <div className="flex flex-col gap-3 p-5">
+                                        <RadioGroup
+                                            label="Role"
+                                            value={outputRole}
+                                            onValueChange={setOutputRole}
+                                        >
+                                            {Object.values(RoleAvailable).map((item: string) => (
+                                                <Radio value={item}>{item}</Radio>
+                                            ))}
+                                        </RadioGroup>
+                                        <p className="text-default-500 text-small">New Role : {outputRole}</p>
+                                    </div>
+                                </motion.div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color='primary' variant='shadow' className="uppercase w-full" radius="full" type="submit">confirm</Button>
+                            </ModalFooter>
+                        </form>
+                    </>
+                </ModalContent>
+            </Modal>
 
             <Modal backdrop={"blur"} isOpen={isOpen} onClose={onClose}>
                 <ModalContent>

@@ -12,7 +12,6 @@ import {
 import { Receipt, Seat_Dispatch, Seat_Type, User, Event } from "@prisma/client";
 import React, { useState } from 'react'
 import { Button } from '@nextui-org/button'
-import { Card, CardBody, CardHeader } from '@nextui-org/card'
 import { DeleteIcon, EditIcon } from "../icons";
 import { ReceiptStatus } from "@/types/data_type";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal";
@@ -32,8 +31,6 @@ interface ReturnOrder extends Receipt {
 export default function ReturnRequest({ data }: { data: any[] }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isOpen2, setOpen2] = useState<boolean>(false);
-    const [reject, setReject] = useState(false);
-    const [accept, setAccept] = useState(false);
     const [orderID, setOrderID] = useState<number>(0);
     const [onLoad, setOnLoad] = useState<boolean>(true);
 
@@ -98,32 +95,6 @@ export default function ReturnRequest({ data }: { data: any[] }) {
 
     return (
         <>
-            {accept && (
-                // <form onSubmit={handleAccept}>
-                //     <button
-                //         className="absolute z-10 bg-white opacity-30 size-full  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
-                //         onClick={acceptOrderClose}
-                //     />
-                //     <Card className="absolute z-20 w-1/3 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
-                //         <CardHeader className="bg-foreground bg-opacity-10">
-                //             <h1 className="mx-auto text-3xl font-bold uppercase">Returning</h1>
-                //         </CardHeader>
-                //         <CardBody className="overflow-hidden">
-                //             <div className="flex flex-col justify-center items-center gap-2 p-5 w-full h-56">
-                //                 <span className="uppercase font-semibold text-xl">Accept Returning</span>
-                //                 <p className="text-danger text-lg">
-                //                     <span>Receipt ID </span>
-                //                     {orderID}
-                //                     <span> Returning Success?</span>
-                //                 </p>
-                //             </div>
-                //             <Button color='primary' variant='shadow' className="uppercase w-full" radius="full" type="submit">confirm</Button>
-                //         </CardBody>
-                //     </Card>
-                // </form>
-                <></>
-
-            )}
             <Modal backdrop={"blur"} isOpen={isOpen} onClose={onClose}>
                 <form onSubmit={handleAccept}>
                     <ModalContent>
@@ -186,31 +157,6 @@ export default function ReturnRequest({ data }: { data: any[] }) {
                 </form>
             </Modal>
 
-            {reject && (
-                <></>
-                // <form onSubmit={handleReject}>
-                //     <button
-                //         className="absolute z-10 bg-white opacity-30 size-full  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
-                //         onClick={rejectOrderClose}
-                //     />
-                //     <Card className="absolute z-20 w-1/3 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
-                //         <CardHeader className="bg-foreground bg-opacity-10">
-                //             <h1 className="mx-auto text-3xl font-bold uppercase">Returning</h1>
-                //         </CardHeader>
-                //         <CardBody className="overflow-hidden">
-                //             <div className="flex flex-col justify-center items-center gap-2 p-5 w-full h-56">
-                //                 <span className="uppercase font-semibold text-xl">Reject Returning</span>
-                //                 <p className="text-danger text-lg">
-                //                     <span>Receipt ID </span>
-                //                     {orderID}
-                //                     <span>Unable to Return?</span>
-                //                 </p>
-                //             </div>
-                //             <Button color='primary' variant='shadow' className="uppercase w-full" radius="full" type="submit">confirm</Button>
-                //         </CardBody>
-                //     </Card>
-                // </form>
-            )}
             {!onLoad && (
                 <Table className="p-8" selectionMode="single" color="default" >
                     <TableHeader>
