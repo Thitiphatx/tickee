@@ -6,6 +6,7 @@ interface SeatType {
   seat_id: number;
   seat_name: string;
   seat_price: number;
+  Promotion: any; // Assuming Promotion is an object or null
 }
 
 interface Event {
@@ -35,7 +36,8 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
     pro_type: promotionTypes[0]?.id.toString() || '', // Default to the first promotion type
   });
 
-  const seatTypes = events[0]?.seat_types || []; // Get seat types from the first event
+  // Filter seat types to only include those without promotions
+  const seatTypes = events[0]?.seat_types.filter(seat => !seat.Promotion) || [];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -45,7 +47,6 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
   const handleDateChange = (name: 'pro_start_date' | 'pro_last_date') => (value: DateValue) => {
     setFormData({ ...formData, [name]: value });
   };
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
