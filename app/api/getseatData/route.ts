@@ -8,7 +8,8 @@ async function getSeatData(seatId: number) {
       seat_id: seatId, // Filter by the seat_id
     },
     include: {
-        Seat_Dispatch: true
+        Seat_Dispatch: true,
+        Promotion:true
     }
   });
   return seatData;
