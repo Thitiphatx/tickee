@@ -41,7 +41,6 @@ export default function Graph() {
         setOnLoad(true)
         try {
             setSelectYear(Number(key))
-            console.log(Number(key), key)
             let seperate = JSON.parse(JSON.stringify(recdata))
             seperate.datasets = [recdata.datasets[Number(key)]]
             setInYearData(seperate)

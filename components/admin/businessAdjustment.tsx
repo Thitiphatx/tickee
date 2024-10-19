@@ -20,7 +20,6 @@ export default function BusinessAdjustment() {
     const [promotionType, setPromotionType] = useState<Promotion_Type[]>([]);
     const [insertPromotionType, setInsertPromotionType] = useState<string[] | null>([]);
     const [onLoad, setOnLoad] = useState<boolean>(true);
-    // const [onUpdateLoad, setOnUpdateLoad] = useState<boolean>(false);
 
     const deleteClick = (idx: number) => {
         if (banner != null) {
@@ -160,7 +159,7 @@ export default function BusinessAdjustment() {
                         <h1 className="font-bold text-inherit uppercase text-3xl">type</h1>
                         <div className='flex justify-around w-full'>
                             <div className='flex flex-col gap-3 w-1/3'>
-                                <Table selectionMode="single" color="default" >
+                                <Table selectionMode="single" color="default" aria-label='Event Type Table'>
                                     <TableHeader>
                                         <TableColumn align="center">Event Type</TableColumn>
                                     </TableHeader>
@@ -185,7 +184,7 @@ export default function BusinessAdjustment() {
                             </div>
 
                             <div className='flex flex-col gap-5 w-1/3'>
-                                <Table selectionMode="single" color="default" >
+                                <Table selectionMode="single" color="default" aria-label='Promotion Type Table'>
                                     <TableHeader>
                                         <TableColumn align="center">Promotion Type</TableColumn>
                                     </TableHeader>

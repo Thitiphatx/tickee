@@ -80,7 +80,6 @@ export async function getReceiptDate() {
                 label: `Year ${new Date().getFullYear() - index}`,
                 borderColor: `rgba(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, 1)`,
                 backgroundColor: `rgba(255, 255, 255, 0.2)`,
-                fill: true,
                 data: item
             }))
         };
