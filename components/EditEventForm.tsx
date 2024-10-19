@@ -41,6 +41,12 @@ interface EditEventFormProps {
     eventType: Event_Type[];
 }
 
+interface EventLocation {
+    address: string;
+    city: string;
+    country: string;
+}
+
 export default function EditEventForm({ eventData, eventType }: EditEventFormProps) {
     const { data: session } = useSession();
     const [event_name, setEventName] = useState("");
@@ -54,6 +60,9 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
         end: parseZonedDateTime("2024-04-08T11:15[Asia/Bangkok]"),
     });
 
+    const parsedEventLocation: EventLocation = JSON.parse(eventData.event_location);
+
+    const [event_location, setEventLocation] = useState<EventLocation>(parsedEventLocation);
 
     useEffect(() => {
         if (eventData) {
@@ -74,6 +83,27 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
         setDateRange(range);
     };
 
+    const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEventLocation((prev) => ({
+            ...prev,
+            address: e.target.value,
+        }));
+    };
+
+    const handleChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEventLocation((prev) => ({
+            ...prev,
+            city: e.target.value,
+        }));
+    };
+
+    const handleChangeCountry = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEventLocation((prev) => ({
+            ...prev,
+            country: e.target.value,
+        }));
+    };
+
 
 
 
@@ -85,6 +115,8 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
     const endDate = new Date(eventData.event_last_date); // Assuming eventData.start is a valid date string
     const formattedLastDate = endDate.toISOString().slice(0, 10);
     console.log(formattedLastDate);
+
+    console.log(JSON.stringify(eventData.event_location, null, 2));
     return (
         <div className="space-y-8">
             <Select
@@ -162,8 +194,35 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                     end: parseDate(`${formattedLastDate}`),
                 }}
                 visibleMonths={2}
+                onChange={handleDateChange}
                 pageBehavior="single"
             />
+            <div className="flex flex-row gap-5">
+                <Input
+                    type="text"
+                    placeholder="สถานที่จัดงาน"
+                    value={event_location.address}
+                    onChange={handleChangeAddress}
+                    required
+                />
+                <Input
+                    type="text"
+                    placeholder="จังหวัด"
+                    value={event_location.city}
+                    onChange={handleChangeCity}
+                    required
+                />
+                <Input
+                    type="text"
+                    placeholder="ประเทศ"
+                    value={event_location.country}
+                    onChange={handleChangeCountry}
+                    required
+                />
+
+            </div>
+            
+            
         </div>
     );
 }
