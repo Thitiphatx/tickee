@@ -20,7 +20,7 @@ export default function AdminSearchbar({ searchText, setSearchText }: SearchFunc
                 type="text"
                 name="input"
                 className="size-full rounded-md focus:outline-none py-3 px-5 text-sm"
-                placeholder="Admin Search"
+                placeholder="Search"
                 defaultValue={searchText}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
             />

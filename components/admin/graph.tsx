@@ -56,7 +56,7 @@ export default function Graph() {
         <>
             <h1 className="font-bold text-inherit uppercase text-3xl">Graph</h1>
             {!onLoad && (
-                <div className="relative w-full px-36">
+                <div className="relative w-full px-32">
                     <Dropdown placement="bottom-end">
                         <DropdownTrigger>
                             <Button

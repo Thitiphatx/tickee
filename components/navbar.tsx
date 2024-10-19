@@ -26,7 +26,7 @@ export const Navbar = () => {
 
     useEffect(() => {
         if (status !== "loading") {
-            setLoading(false); // Session data is loaded
+            setLoading(false); 
         }
     }, [status]);
 
@@ -48,7 +48,6 @@ export const Navbar = () => {
             </NavbarContent>
 
             <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
-                <Searchbar />
                 <NavbarItem className="hidden md:flex space-x-5">
                     {loading ? (
                         // Loading indicator while session is being fetched
