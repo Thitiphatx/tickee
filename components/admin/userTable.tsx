@@ -107,6 +107,8 @@ export default function UserTable() {
     const editClick = (item: User) => {
         setMapData(item)
         setOutputRole(item.role)
+        setOutputName(item.name || "")
+        setOutputEmail(item.email || "")
         onOpen2()
     };
 
@@ -126,7 +128,7 @@ export default function UserTable() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ user_id, outputName, outputEmail, outputRole }),
+                body: JSON.stringify({ id: user_id, outputName, outputEmail, outputRole }),
             });
 
         } catch (error) {
@@ -138,13 +140,14 @@ export default function UserTable() {
     const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         let user_id: string = mapData?.id || "";
+        console.log(user_id, mapData?.id, "userTable")
         try {
             const res = await fetch('/api/admin/user', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ user_id }),
+                body: JSON.stringify({ id: user_id }),
             });
         } catch (error) {
             console.error('Error creating user:', error);
@@ -224,7 +227,7 @@ export default function UserTable() {
                 <>
                     <div className="flex justify-between items-center w-2/3 gap-5 px-10">
                         <AdminSearchbar searchText={search} setSearchText={setSearch} />
-                        
+
                         <Dropdown placement="bottom-end">
                             <DropdownTrigger>
                                 <Button

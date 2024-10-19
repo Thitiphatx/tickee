@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { deleteUser, editUser, getSelectedUser } from '@/app/admin/user/fetch';
-import { revalidatePath } from 'next/cache';
-
 
 export async function PUT(req: NextRequest) {
   try {
     const { id, outputName, outputEmail, outputRole } = await req.json();
-    // console.log({ id, outputName, outputEmail, outputRole })
     if (
       typeof outputEmail === 'string' &&
       typeof outputName === 'string' &&
@@ -15,7 +12,6 @@ export async function PUT(req: NextRequest) {
       id != ""
     ) {
       const output = await editUser(id, outputEmail, outputName, outputRole);
-      await revalidatePath(`/admin/user`);
     }
     return NextResponse.json({
       message: 'Edit User successfully',
@@ -30,9 +26,8 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
       const { id } = await req.json();
-      if (typeof id == 'string' && id !== "") {
+      if (typeof id == 'string' && id != "") {
           const output = await deleteUser(id)
-          await revalidatePath(`/admin/user`);
       }
       return NextResponse.json({
           message: 'delete successfully',
