@@ -19,7 +19,18 @@ export default function Payment({ quantity, seatData, eventname }: { quantity: n
 
     const fee = 30 * quantity
     const totalPrice = seatData.seat_price * quantity
-    const totalPriceplusfee = totalPrice + fee
+    let totalPriceplusfee;
+
+    if (seatData.Promotion?.pro_type_id === 1) {
+        // ถ้าโปรโมชั่นแบบลดเป็น %
+        totalPriceplusfee = (totalPrice - (totalPrice * (seatData.Promotion.pro_discount / 100))) + fee;
+    } else if (seatData.Promotion?.pro_type_id === 2) {
+        // ถ้าโปรโมชั่นแบบลดเป็นจำนวนเงิน
+        totalPriceplusfee = (totalPrice - seatData.Promotion.pro_discount) + fee;
+    } else {
+        // ถ้าไม่มีโปรโมชั่นลด (หรือเป็นการแจกของ)
+        totalPriceplusfee = totalPrice + fee;
+    }
     return (
 
         <Card className="grid grid-cols-1 lg:grid-cols-2">
@@ -50,7 +61,7 @@ export default function Payment({ quantity, seatData, eventname }: { quantity: n
 
                             </div>
                         </li>
-                        
+
                         <li className="py-3 sm:py-4">
                             <div className="flex items-center">
                                 <div className="flex-1 min-w-0 ms-4">
@@ -66,6 +77,55 @@ export default function Payment({ quantity, seatData, eventname }: { quantity: n
                                 </div>
                             </div>
                         </li>
+
+                        <li className="py-3 sm:py-4">
+                            <div className="flex items-center">
+                                <div className="flex-1 min-w-0 ms-4">
+                                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                        โปรโมชั่น/promotions
+                                    </p>
+                                    <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                                        {seatData.Promotion?.pro_type_id === 1 ? (
+                                            <>
+                                                <h4 className="font-bold  text-green-900">
+                                                    โปรโมชั่น ลด {seatData.Promotion.pro_discount} %
+                                                </h4>
+
+                                            </>
+                                        ) : seatData.Promotion?.pro_type_id === 2 ? (
+                                            <>
+                                                <h4 className="font-bold  text-blue-900">
+                                                    โปรโมชั่น ลด {seatData.Promotion.pro_discount} บาท
+                                                </h4>
+                                            </>
+                                        ) : seatData.Promotion?.pro_type_id === 3 ? (
+                                            <>
+                                                <h4 className="font-bold  text-red-900">
+                                                    โปรโมชั่นของที่ระลึก {seatData.Promotion.pro_description} รับได้ที่หน้างาน
+                                                </h4>
+
+                                            </>
+                                        ) : null}
+                                    </p>
+                                </div>
+                                {seatData.Promotion?.pro_type_id === 1 ? (
+                                    // ถ้าเป็นโปรโมชั่นลด %
+                                    
+                                    <div className="inline-flex items-center text-base font-semibold text-red-900 dark:text-white">
+                                        {(totalPrice * (seatData.Promotion.pro_discount / 100)).toFixed(2)} บาท
+                                    </div>
+                                    
+                                ) : seatData.Promotion?.pro_type_id === 2 ? (
+                                    // ถ้าเป็นโปรโมชั่นลดเป็นจำนวนเงิน
+                                    <div className="inline-flex items-center text-base font-semibold text-red-700 dark:text-white">
+                                        {seatData.Promotion.pro_discount} บาท
+                                    </div>
+                                ) : null}
+                            </div>
+                        </li>
+
+
+
 
                         <div className="flex items-center justify-between mb-4 ">
                             <h6 className="mt-7 text-l font-bold leading-none text-[#daa520] dark:text-[#daa520]">ยอดเงินที่ต้องชำระ/Total Amount</h6>
@@ -93,7 +153,7 @@ export default function Payment({ quantity, seatData, eventname }: { quantity: n
                             currency: "thb",
                         }}
                     >
-                        <Checkoutpage amount={totalPriceplusfee * 100} quantity={quantity} seatdata={seatData}/>
+                        <Checkoutpage amount={totalPriceplusfee * 100} quantity={quantity} seatdata={seatData} />
                     </Elements>
 
 

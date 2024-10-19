@@ -198,13 +198,19 @@ const content = `
 <blockquote>Wow, that’s amazing. Good work! 👏</blockquote>
 `
 
-const TextEditor = ({ setContent }) => {
+const TextEditor = ({ setContent , maxLength = 200 }) => {
     const editor = useEditor({
         extensions,
         content,
         onUpdate: ({ editor }) => {
             const html = editor.getHTML(); // Get the HTML content
-            setContent(html); // Update the parent state with the content
+            if (html.length <= maxLength) {
+                setContent(html); // Update the parent state with the content
+            } else {
+                const truncatedHtml = html.substring(0, maxLength); // Truncate the content
+                editor.commands.setContent(truncatedHtml); // Update the editor content
+                alert(`Content exceeds maximum length of ${maxLength} characters.`);
+            }
         },
     })
 

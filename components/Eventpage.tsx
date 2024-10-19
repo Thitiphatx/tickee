@@ -13,7 +13,7 @@ import Payment from './payment/paymentpage';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { EventLandingData } from '@/types/data_type';
+import { EventLandingData, Seat_Type } from '@/types/data_type';
 import { IconArrowBackOutline } from '@/styles/icon';
 
 export default function Eventpage({ eventDetails }: { eventDetails: EventLandingData }) {
@@ -53,6 +53,13 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     if (showPaymentPage) {
         return <Payment quantity={quantity} seatData={seatData} eventname={eventDetails.event_name} />;
     }
+
+    const isSeatAvailable = (seat: Seat_Type) => {
+        const currentDate = new Date();
+        const seatCreateDate = new Date(seat.seat_create_date);
+        return currentDate >= seatCreateDate;
+    };
+    
     return (
         <div className="space-y-5">
             <Button onClick={() => router.back()} isIconOnly><IconArrowBackOutline /></Button>
@@ -75,11 +82,11 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                     <div>
                         <h2 className="uppercase font-bold">Select Ticket</h2>
                         <Selector setCurrentTab={setCurrentTab} currentTab={currentTab} onTabChange={handleTabChange} >
-                            {eventDetails.Seat_Type.map((seat) => (
+                            {eventDetails.Seat_Type.filter(isSeatAvailable).map((seat) => (
                                 <Card key={seat.seat_id} className="w-full cursor-pointer" seatId={seat.seat_id} >
                                     <CardHeader className='flex flex-col items-start' >
                                         <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง ({seat.Seat_Dispatch?.sd_max}/{seat.Seat_Dispatch?.sd_current})</h4>
-
+                                        
                                         <div className='flex flex-col'>
                                         {seat.Promotion?.pro_type?.pt_id === 1 ? (
                                             <>
