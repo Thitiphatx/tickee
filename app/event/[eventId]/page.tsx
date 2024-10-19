@@ -7,7 +7,12 @@ export default async function EventLanding({ params }: { params: { eventId: stri
             event_type: true,
             Seat_Type: {
                 include: {
-                    Seat_Dispatch: true
+                    Seat_Dispatch: true,
+                    Promotion:{
+                        include:{
+                            pro_type:true
+                        }
+                    }
                 }
             }
         },

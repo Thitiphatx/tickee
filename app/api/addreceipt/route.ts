@@ -5,6 +5,8 @@ const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
     const { rec_date, rec_quantity, rec_customer_id, rec_seat_id } = await req.json();
+    console.log(rec_customer_id);
+    
     try {
         const receipt = await prisma.receipt.create({
             data: {
