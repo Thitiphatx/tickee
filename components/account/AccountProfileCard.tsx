@@ -1,6 +1,6 @@
 "use client"
 
-import { getLocalTimeZone, parseDate, parseZonedDateTime } from "@internationalized/date"
+import { parseAbsoluteToLocal, parseDate } from "@internationalized/date"
 import { Button } from "@nextui-org/button"
 import { Card, CardBody, CardHeader } from "@nextui-org/card"
 import { DatePicker } from "@nextui-org/date-picker"
@@ -25,9 +25,14 @@ export default function AccountProfileCard({ userData }: { userData: User }) {
           if (!response.ok) {
             throw new Error('Failed to create event');
           }
-    
-          const result = await response.json();
+        const result = await response.json();
     }
+
+    const handleDateChange = (value: any)=> {
+        const bd = new Date(value);
+        setData({...data, birthDate: bd})
+    }
+
     const handleChangePassword = async ()=> {
         // const response = await fetch('/api/changepassword', {
         //     method: 'POST',
@@ -54,11 +59,15 @@ export default function AccountProfileCard({ userData }: { userData: User }) {
                     <Input label="Email" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setData({...data, email: e.target.value})} value={data.email ?? ""} />
                     <Input label="Name" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setData({...data, name: e.target.value})} value={data.name ?? ""}/>
                     <Input label="Mobile" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setData({...data, mobile: e.target.value})} value={data.mobile ?? ""}/>
-                    <DatePicker label="Birthdate"/>
+                    <DatePicker
+                        label="Birthdate"
+                        onChange={(value) => handleDateChange(value)}
+                        value={parseAbsoluteToLocal(data.birthDate?.toISOString() ?? "")}
+                    />
                     <Input label="ID card" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setData({...data, idCard: e.target.value})} value={data.idCard ?? ""} required/>
                     <RadioGroup onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setData({...data, role: e.target.value})} orientation="horizontal" label="Role selection (for test)" defaultValue={data.role}>
                         <Radio value="user">User</Radio>
-                        <Radio value="producer">Producer</Radio>
+                        <Radio value="organizer">Organizer</Radio>
                         <Radio value="admin">Admin</Radio>
                     </RadioGroup>
                     <Button onClick={handleEditProfile} radius="full" color="primary">Save</Button>

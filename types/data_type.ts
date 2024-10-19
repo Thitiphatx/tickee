@@ -1,12 +1,11 @@
 import { Event_Type, Event, Seat_Dispatch, Prisma, Admin_Data, Promotion_Type } from "@prisma/client"
 
 export interface Address {
-    street: string
-    sub_district: string
-    district: string
-    province: string
+    address: string,
+    city: string,
     country: string
 }
+
 
 export interface SignInData {
     email: string
@@ -30,7 +29,12 @@ export type EventLandingData = Prisma.EventGetPayload<{
         event_type: true,
         Seat_Type: {
             include: {
-                Seat_Dispatch: true
+                Seat_Dispatch: true,
+                Promotion:{
+                    include:{
+                        pro_type:true
+                    }
+                }
             }
         }
     }
