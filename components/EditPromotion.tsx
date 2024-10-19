@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Textarea, Button, DatePicker, DateValue } from '@nextui-org/react';
+import { useRouter } from 'next/navigation'; // Import useRouter
 
 interface SeatType {
   seat_id: number;
@@ -26,6 +27,7 @@ interface PromotionFormProps {
 }
 
 const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes }) => {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     seat_type_id: '',
     pro_description: '',
@@ -38,6 +40,13 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
 
   // Filter seat types to only include those without promotions
   const seatTypes = events[0]?.seat_types.filter(seat => !seat.Promotion) || [];
+
+  useEffect(() => {
+    // If the promotion type is 'Free Gift' (id: 3), set discount to 0 and disable the input
+    if (formData.pro_type === '3') {
+      setFormData((prev) => ({ ...prev, pro_discount: '0' }));
+    }
+  }, [formData.pro_type]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -77,6 +86,8 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
 
       const result = await response.json();
       console.log('Promotion created successfully:', result);
+
+      router.push('/promotion_show');
     } catch (error) {
       console.error('Error creating promotion:', error);
     }
