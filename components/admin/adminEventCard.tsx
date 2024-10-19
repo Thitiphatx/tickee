@@ -1,7 +1,7 @@
 "use client"
 
 import { Event_Type, Event, Seat_Type } from "@prisma/client";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@nextui-org/button'
 import { Card, CardBody, CardHeader } from '@nextui-org/card'
 import { DeleteIcon } from "../icons";
@@ -10,19 +10,59 @@ import { Divider } from "@nextui-org/divider";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { motion } from 'framer-motion'
 import { Chip } from "@nextui-org/chip";
+import { Pagination } from "@nextui-org/pagination";
+import AdminSearchbar from "./adminSearchbar";
 
 interface EventOutput extends Event {
     event_type: Event_Type,
     Seat_Type: Seat_Type[]
 }
 
-export default function AdminEventCard({ data }: { data: EventOutput[] }) {
+export default function AdminEventCard() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isOpen2, setOpen2] = useState<boolean>(false);
     const [mapData, setMapData] = useState<EventOutput | null>();
     const [onLoad, setOnLoad] = useState<boolean>(true);
+    const [page, setPage] = React.useState(1);
+    const [lastPage, setLastPage] = React.useState(1);
+    const [eventOnPage, setEventOnPage] = useState<EventOutput[] | null>(null);
+    const [allEvent, setAllEvent] = useState<EventOutput[] | null>(null);
+    const [search, setSearch] = useState<string>("");
+    const rowsPerPage = 40;
 
-    if (data && onLoad) {
+    useEffect(() => {
+        const fetchData = async () => {
+            setOnLoad(true)
+            try {
+                setAllEvent(null)
+                const res = await fetch('/api/admin/event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ searchText: search }),
+                });
+                const output = await res.json();
+                setAllEvent(output)
+            } catch (error) {
+                console.error('Error GET event:', error);
+            }
+        };
+        fetchData();
+    }, [search]);
+
+    const changePage = (input: number) => {
+        if (allEvent != null) {
+            const start = (input - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            setLastPage(Math.ceil(allEvent.length / rowsPerPage));
+            setPage(input)
+            setEventOnPage(allEvent.slice(start, end))
+        }
+    }
+
+    if (allEvent && onLoad) {
+        changePage(1)
         setOnLoad(false)
     }
 
@@ -147,33 +187,59 @@ export default function AdminEventCard({ data }: { data: EventOutput[] }) {
                 </form>
             </Modal>
 
-            {!onLoad && data.map((event: EventOutput) => (
-                <Card className="w-72 flex-shrink-0 overflow-hidden p-2" key={event.event_id}>
-                    <span className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(event)}>
-                        <DeleteIcon />
-                    </span>
-                    <div onClick={() => eventDetailClick(event)}>
-                        <Image alt="Card background" className="object-fill w-full z-0" src={event.event_images} height={250} />
-                        <CardBody className="overflow-visible py-2 gap-3" >
-                            <div className="flex w-full justify-around items-center uppercase font-bold">
-                                <Button color="primary" radius="lg" variant="bordered" className="h-4/5">
-                                    {event.event_start_date.getDate() + "-"}
-                                    {event.event_start_date.getMonth() + "-"}
-                                    {event.event_start_date.getFullYear()}
-                                </Button>
-                                <p className="text-center text-xl"> - </p>
-                                <Button color="primary" radius="lg" className="h-4/5">
-                                    {event.event_last_date.getDate() + "-"}
-                                    {event.event_last_date.getMonth() + "-"}
-                                    {event.event_last_date.getFullYear()}
-                                </Button>
-                            </div>
-                            <p className="text-lg uppercase font-bold">{event.event_name}</p>
-                            <small className="text-default-500 truncate">{event.event_location}</small>
-                        </CardBody>
+
+            <div className="flex justify-between items-center w-full px-52 justify-items-center">
+                <AdminSearchbar searchText={search} setSearchText={setSearch} />
+            </div>
+
+            {(!onLoad && eventOnPage != null && eventOnPage.length != 0) ? (
+                <>
+                    <div className="w-full h-fit my-10">
+                        {eventOnPage.map((event: EventOutput) => (
+                            <Card className="w-72 flex-shrink-0 overflow-hidden p-2" key={event.event_id}>
+                                <span className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(event)}>
+                                    <DeleteIcon />
+                                </span>
+                                <div onClick={() => eventDetailClick(event)}>
+                                    <Image alt="Card background" className="object-fill w-full z-0" src={event.event_images} height={250} />
+                                    <CardBody className="overflow-visible py-2 gap-3" >
+                                        <div className="flex w-full justify-around items-center uppercase font-bold">
+                                            <Button color="primary" radius="lg" variant="bordered" className="h-4/5">
+                                                {new Date(event.event_start_date).getDate() + "-"}
+                                                {new Date(event.event_start_date).getMonth() + "-"}
+                                                {new Date(event.event_start_date).getFullYear()}
+                                            </Button>
+                                            <p className="text-center text-xl"> - </p>
+                                            <Button color="primary" radius="lg" className="h-4/5">
+                                                {new Date(event.event_last_date).getDate() + "-"}
+                                                {new Date(event.event_last_date).getMonth() + "-"}
+                                                {new Date(event.event_last_date).getFullYear()}
+                                            </Button>
+                                        </div>
+                                        <p className="text-lg uppercase font-bold">{event.event_name}</p>
+                                        <small className="text-default-500 truncate">{event.event_location}</small>
+                                    </CardBody>
+                                </div>
+                            </Card>
+                        ))}
                     </div>
-                </Card>
-            ))}
+                    <div className="flex w-full justify-center">
+                        <Pagination
+                            isCompact
+                            showControls
+                            showShadow
+                            color="primary"
+                            page={page}
+                            total={lastPage}
+                            onChange={(page) => changePage(page)}
+                        />
+                    </div>
+                </>
+            ) : (
+                <div className="flex justify-center items-center w-full h-full">
+                    <p className="text-xl text-default-500">No Data for Display.</p>
+                </div>
+            )}
         </>
 
     )

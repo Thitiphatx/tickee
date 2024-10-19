@@ -1,13 +1,15 @@
 
 import { prisma } from "@/lib/prisma";
-import { User } from "@prisma/client";
-import { utimes } from "fs";
 
 export async function getSelectedUser(input: string) {
     let output;
     if (input == "") {
         try {
-            output = await prisma.user.findMany({})
+            output = await prisma.user.findMany({
+                orderBy: {
+                    name: "asc"
+                }
+            })
         } catch (error) {
             console.log("getSelectedUser1 Error")
             return null
@@ -28,12 +30,10 @@ export async function getSelectedUser(input: string) {
                                 contains: input
                             }
                         },
-                        {
-                            role: {
-                                contains: input
-                            }
-                        },
                     ],
+                },
+                orderBy: {
+                    name: "asc"
                 }
             })
         } catch (error) {
@@ -58,7 +58,7 @@ export async function deleteUser(uid: string) {
     }
 }
 
-export async function editUser(id: string, email: string, name: string,  role: string) {
+export async function editUser(id: string, email: string, name: string, role: string) {
     try {
         const output = await prisma.user.update({
             where: {
@@ -68,7 +68,7 @@ export async function editUser(id: string, email: string, name: string,  role: s
                 name: name,
                 email: email,
                 role: role
-            }
+            },
         })
     } catch (error) {
         console.log("editUser error")

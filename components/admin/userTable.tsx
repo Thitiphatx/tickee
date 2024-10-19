@@ -9,33 +9,85 @@ import {
     TableCell,
 } from "@nextui-org/table";
 
+import { Pagination } from "@nextui-org/pagination";
 import { motion } from 'framer-motion'
 import { User } from "@prisma/client";
-import React, { useState } from 'react'
-import { Button, ButtonGroup } from '@nextui-org/button'
+import React, { useEffect, useState } from 'react'
+import { Button } from '@nextui-org/button'
 import { DeleteIcon, EditIcon } from "../icons";
 import { RoleAvailable } from "@/types/data_type";
-import Searchbar from "../searchbar";
 import { useSession } from "next-auth/react";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { Divider } from "@nextui-org/divider";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { Input } from '@nextui-org/input'
+import AdminSearchbar from "./adminSearchbar";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
 
-export default function UserTable({ data }: { data: User[] }) {
+export default function UserTable() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isOpen2, setOpen2] = useState<boolean>(false);
     const [roleType, setRoleType] = useState<string>(RoleAvailable.User);
-    const [usersData, setUsersData] = useState<User[] | null>([]);
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+    const [usersData, setUsersData] = useState<User[] | null>(null);
+    const [allUser, setAllUser] = useState<User[] | null>(null);
     const [mapData, setMapData] = useState<User | null>();
     const [outputRole, setOutputRole] = useState<string>("");
     const [onLoad, setOnLoad] = useState<boolean>(true);
     const [outputName, setOutputName] = useState<string>("");
     const [outputEmail, setOutputEmail] = useState<string>("");
-
+    const [search, setSearch] = useState<string>("");
     const { data: session, status } = useSession();
+    const rowsPerPage = 20;
 
-    if (data && onLoad) {
+    useEffect(() => {
+        const fetchData = async () => {
+            setOnLoad(true)
+            try {
+                setAllUser(null)
+                const res = await fetch('/api/admin/user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ searchText: search }),
+                });
+                const output = await res.json();
+                setAllUser(output)
+            } catch (error) {
+                console.error('Error GET user:', error);
+            }
+        };
+        fetchData();
+    }, [search]);
+
+    const changePage = (input: number) => {
+        if (allUser != null) {
+            const start = (input - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            setPage(input)
+            setUsersData(allUser.slice(start, end))
+        }
+    }
+
+    const roleSelection = (role: string) => {
+        if (allUser != null && allUser) {
+            const filtered = allUser.filter((item: User) => (item.role == role && session?.user.id != item.id))
+            const dataLength = filtered.length
+            const start = 0;
+            const end = start + rowsPerPage;
+            setPage(1)
+            setUsersData(filtered.slice(start, end))
+
+            setLastPage(Math.ceil(dataLength / rowsPerPage));
+            setRoleType(role)
+        }
+    };
+
+
+    if (allUser && allUser != null && onLoad) {
+        roleSelection(RoleAvailable.User)
         setOnLoad(false)
     }
 
@@ -45,10 +97,6 @@ export default function UserTable({ data }: { data: User[] }) {
 
     const onClose2 = () => {
         setOpen2(false)
-    };
-
-    const roleSelection = (role: string) => {
-        setRoleType(role)
     };
 
     const deleteClick = (item: User) => {
@@ -74,7 +122,7 @@ export default function UserTable({ data }: { data: User[] }) {
         let user_id: string = returnID();
         try {
             const res = await fetch('/api/admin/user', {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -105,7 +153,7 @@ export default function UserTable({ data }: { data: User[] }) {
     };
 
     return (
-        <div className="flex flex-col items-center gap-5">
+        <div className="flex flex-col w-full items-end gap-5">
 
             <Modal backdrop={"blur"} isOpen={isOpen2} onClose={onClose2}>
                 <ModalContent>
@@ -127,10 +175,10 @@ export default function UserTable({ data }: { data: User[] }) {
                                             onValueChange={setOutputRole}
                                         >
                                             {Object.values(RoleAvailable).map((item: string) => (
-                                                <Radio value={item}>{item}</Radio>
+                                                <Radio value={item} className="uppercase">{item}</Radio>
                                             ))}
                                         </RadioGroup>
-                                        <p className="text-default-500 text-small">New Role : {outputRole}</p>
+                                        <p className="text-default-500 text-small">New Role : <span className="uppercase">{outputRole}</span></p>
                                     </div>
                                 </motion.div>
                             </ModalBody>
@@ -172,19 +220,53 @@ export default function UserTable({ data }: { data: User[] }) {
                 </ModalContent>
             </Modal>
 
-            {!onLoad && (
+            {!onLoad && usersData != null && (
                 <>
-                    <ButtonGroup className="w-1/3">
-                        {Object.values(RoleAvailable).map((item: string) => (
-                            <Button className="w-1/3 capitalize" variant="bordered" onClick={() => roleSelection(item)}>{item}</Button>
-                        ))}
-                    </ButtonGroup>
-
-                    <div className="w-full">
-                        <Searchbar />
+                    <div className="flex justify-between items-center w-2/3 gap-5 px-10">
+                        <AdminSearchbar searchText={search} setSearchText={setSearch} />
+                        
+                        <Dropdown placement="bottom-end">
+                            <DropdownTrigger>
+                                <Button
+                                    variant="bordered"
+                                    className="px-8 uppercase"
+                                >
+                                    {roleType}
+                                </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                                aria-label="Year Selection"
+                                variant="flat"
+                                disallowEmptySelection
+                                selectionMode="single"
+                                onAction={(key) => { roleSelection(key.toString()) }}
+                            >
+                                {Object.values(RoleAvailable).map((item: string) => (
+                                    <DropdownItem key={item} className="uppercase">{item}</DropdownItem>
+                                ))}
+                            </DropdownMenu>
+                        </Dropdown>
                     </div>
 
-                    <Table className="p-8" selectionMode="single" color="default" >
+                    <Table
+                        className="p-8"
+                        selectionMode="single"
+                        color="default"
+                        aria-label="Table"
+                        bottomContent={
+                            <div className="flex w-full justify-center">
+                                <Pagination
+                                    isCompact
+                                    showControls
+                                    showShadow
+                                    color="primary"
+                                    page={page}
+                                    total={lastPage}
+                                    onChange={(page) => changePage(page)}
+                                />
+                            </div>
+                        }
+                    >
                         <TableHeader>
                             <TableColumn align="center">NAME</TableColumn>
                             <TableColumn align="center">EMAIL</TableColumn>
@@ -193,12 +275,12 @@ export default function UserTable({ data }: { data: User[] }) {
                             <TableColumn align="center">STATUS</TableColumn>
                         </TableHeader>
                         <TableBody emptyContent={"No Data for Display."}>
-                            {data.filter((item: User) => (item.role == roleType && session?.user.id != item.id)).map((item: User) => (
+                            {usersData.map((item: User) => (
                                 <TableRow key={item.id}>
                                     <TableCell>{item.name}</TableCell>
                                     <TableCell>{item.email}</TableCell>
                                     <TableCell>{item.mobile}</TableCell>
-                                    <TableCell>{item.role}</TableCell>
+                                    <TableCell className="uppercase">{item.role}</TableCell>
                                     <TableCell>
                                         <div className="flex justify-center gap-2 w-full">
                                             <span className="text-lg text-default-400 cursor-pointer active:opacity-50">

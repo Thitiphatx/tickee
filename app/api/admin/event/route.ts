@@ -1,5 +1,5 @@
 
-import { deleteEvent } from '@/app/admin/event/fetch';
+import { deleteEvent, getSelectedEvent } from '@/app/admin/event/fetch';
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -19,3 +19,20 @@ export async function DELETE(req: NextRequest) {
         });
     }
 }
+
+export async function POST(req: NextRequest) {
+    try {
+      const { searchText } = await req.json();
+      if (typeof searchText === 'string') {
+        const data = await getSelectedEvent(searchText)
+        if (data) {
+            return NextResponse.json(data);
+        } else {
+          throw Error
+        }
+      }
+    } catch (error) {
+        console.error('Error Get User Data', error);
+        return null
+    }
+  }

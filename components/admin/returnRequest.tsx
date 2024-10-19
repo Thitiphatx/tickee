@@ -16,6 +16,7 @@ import { DeleteIcon, EditIcon } from "../icons";
 import { ReceiptStatus } from "@/types/data_type";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { Divider } from "@nextui-org/divider";
+import { Pagination } from "@nextui-org/pagination";
 
 interface Seat extends Seat_Type {
     event_seat: Event,
@@ -33,8 +34,23 @@ export default function ReturnRequest({ data }: { data: any[] }) {
     const [isOpen2, setOpen2] = useState<boolean>(false);
     const [orderID, setOrderID] = useState<number>(0);
     const [onLoad, setOnLoad] = useState<boolean>(true);
+    const [page, setPage] = React.useState(1);
+    const [lastPage, setLastPage] = React.useState(1);
+    const [recOnPage, setRecOnPage] = useState<any[] | null>([]);
+    const rowsPerPage = 40;
+
+    const changePage = (input: number) => {
+        if (data != null) {
+            const start = (input - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            setLastPage(Math.ceil(data.length / rowsPerPage));
+            setPage(input)
+            setRecOnPage(data.slice(start, end))
+        }
+    }
 
     if (data && onLoad) {
+        changePage(1)
         setOnLoad(false)
     }
 
@@ -158,7 +174,25 @@ export default function ReturnRequest({ data }: { data: any[] }) {
             </Modal>
 
             {!onLoad && (
-                <Table className="p-8" selectionMode="single" color="default" >
+                <Table 
+                className="p-8" 
+                selectionMode="single" 
+                color="default"
+                aria-label="Table"
+                bottomContent={
+                    <div className="flex w-full justify-center">
+                        <Pagination
+                            isCompact
+                            showControls
+                            showShadow
+                            color="primary"
+                            page={page}
+                            total={lastPage}
+                            onChange={(page) => changePage(page)}
+                        />
+                    </div>
+                } 
+                >
                     <TableHeader>
                         <TableColumn align="center">USER</TableColumn>
                         <TableColumn align="center">EMAIL</TableColumn>

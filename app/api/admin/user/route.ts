@@ -3,7 +3,7 @@ import { deleteUser, editUser, getSelectedUser } from '@/app/admin/user/fetch';
 import { revalidatePath } from 'next/cache';
 
 
-export async function POST(req: NextRequest) {
+export async function PUT(req: NextRequest) {
   try {
     const { id, outputName, outputEmail, outputRole } = await req.json();
     // console.log({ id, outputName, outputEmail, outputRole })
@@ -18,11 +18,11 @@ export async function POST(req: NextRequest) {
       await revalidatePath(`/admin/user`);
     }
     return NextResponse.json({
-      message: 'Delete User successfully',
+      message: 'Edit User successfully',
   });
   } catch (error) {
     return NextResponse.json({
-      message: 'Delete User Failed',
+      message: 'Edit User Failed',
   });
   }
 }
@@ -45,7 +45,7 @@ export async function DELETE(req: NextRequest) {
 }
 
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
     const { searchText } = await req.json();
     if (typeof searchText === 'string') {
