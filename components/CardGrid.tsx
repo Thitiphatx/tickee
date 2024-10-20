@@ -12,7 +12,7 @@ export default function CardGrid({ items }: { items: Event[] }) {
             {items.map((event, index) => {
                 const address: Address = JSON.parse(event.event_location);
                 return (
-                    <a href={`event/${event.event_id}`} key={index}>
+                    <a href={`editevent/${event.event_id}`} key={index}>
                     <Card>
                         <Image alt={event.event_name}  src={event.event_images} className="relative" width={"100%"} />
                         <CardBody className="overflow-visible py-2">

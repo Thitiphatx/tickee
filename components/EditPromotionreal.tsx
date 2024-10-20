@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Textarea, Button, DatePicker, DateValue } from '@nextui-org/react';
+import { useRouter } from 'next/navigation'; // Import useRouter
 
 interface SeatType {
   seat_id: number;
@@ -26,6 +27,7 @@ interface PromotionFormProps {
 }
 
 const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionTypes, promotionId }) => {
+  const router = useRouter();
   const initialPromotionType = promotionTypes.length > 0 ? promotionTypes[0].id.toString() : '';
 
   const [formData, setFormData] = useState({
@@ -37,6 +39,14 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
     event_id: events[0]?.event_id.toString() || '',
     pro_type: promotionTypes[0]?.id.toString() || '', // Default to the first promotion type
   });
+
+
+  useEffect(() => {
+    // If the promotion type is 'Free Gift' (id: 3), set discount to 0 and disable the input
+    if (formData.pro_type === '3') {
+      setFormData((prev) => ({ ...prev, pro_discount: '0' }));
+    }
+  }, [formData.pro_type]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -75,6 +85,7 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
   
       const result = await response.json();
       console.log('Promotion updated successfully:', result);
+      window.location.href = `/editpromotion/${formData.event_id}`;
     } catch (error) {
       console.error('Error updating promotion:', error);
     }
