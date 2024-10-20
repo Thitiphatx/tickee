@@ -12,9 +12,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 
-export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) {
+export default function AddEventForm({ eventType }: { eventType: Event_Type[] }) {
     const router = useRouter();
-    const {data: session} = useSession();
+    const { data: session } = useSession();
     const [event_name, setevent_name] = useState('');
     const [event_intro, setevent_intro] = useState('');
     const [event_description, setevent_description] = useState('');
@@ -182,6 +182,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) 
     };
 
     const handleChangeCountry = (e: React.ChangeEvent<HTMLInputElement>) => {
+
         if (!eventlocationcountryReg.test(e.target.value)) {
             setiseventlocationcountryReg_Invalid(true);
             setEvent_CerrorMessage('ต้องการอักษระ 4 ตัวขึ้นไปสำหรับประเทศและไม่ใช่ตัวเลข');
@@ -203,6 +204,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) 
     };
 
     const addtodb = async () => {
+        setIsLoading(true);
 
         console.log("name :", event_name)
         console.log("intro :", event_intro)
@@ -277,6 +279,9 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) 
         } catch (error) {
             console.error('Error creating eventandseat:', error);
         }
+        finally {
+            setIsLoading(false); // Hide loading modal and revert button label
+        }
     }
 
     const [selectedeventTypeValue, setselectedeventTypeValue] = useState("1");
@@ -317,18 +322,22 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) 
 
 
     const [isFormValid, setIsFormValid] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Add loading state
 
     useEffect(() => {
         const isValid =
-            event_name &&
-            event_location.address &&
-            event_location.city &&
-            event_location.country &&
-            seat.every(item => item.seat_name && item.seat_price > 0 && item.seat_max > 0);
+            (event_name && !isInvalid) && // ตรวจสอบว่า event_name ไม่ invalid
+            (event_location.address && !iseventA_Invalid) && // ตรวจสอบว่า address ไม่ invalid
+            (event_location.city && !iseventlocationProvince_Invalid) && // ตรวจสอบว่า province ไม่ invalid
+            (event_location.country && !iseventlocationcountryReg_Invalid) && // ตรวจสอบว่า country ไม่ invalid
+            seat.every((item, index) => (
+                item.seat_name && !invalidSeatName[index] &&  // ตรวจสอบชื่อที่นั่ง
+                item.seat_price > 0 && !invalidseatprice[index] &&  // ตรวจสอบราคาที่นั่ง
+                item.seat_max > 0 && !invalidseatMax[index]  // ตรวจสอบจำนวนที่นั่งสูงสุด
+            ));
 
-        setIsFormValid(isValid); // อัปเดตค่าของ isFormValid
-    }, [event_name, event_location, seat]); // ตรวจสอบการเปลี่ยนแปลงในค่าต่างๆ
-
+        setIsFormValid(isValid); // อัปเดตค่าของ isFormValid เป็น true เมื่อข้อมูลถูกต้อง
+    }, [event_name, isInvalid, event_location, iseventA_Invalid, iseventlocationProvince_Invalid, iseventlocationcountryReg_Invalid, seat, invalidSeatName, invalidseatprice, invalidseatMax]);
 
 
     return (
@@ -515,53 +524,54 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) 
             <TextEditor setContent={setevent_description} maxLength={30000} />
             <p className="mt-3 text-sm leading-6 text-gray-400">เขียนรายละเอียดเกี่ยวกับตั๋วและโปรโมชั่น</p>
 
-            {isFormValid && (<Button className="bg-sky-500 hover:bg-sky-700 rounded-large text-white font-bold" onClick={addtodb} disabled={!isFormValid} >Submit</Button>)}
+            {isFormValid && (<Button className="bg-sky-500 hover:bg-sky-700 rounded-large text-white font-bold" onClick={addtodb} disabled={!isFormValid} > {isLoading ? "Adding Event..." : "Submit"} </Button>)}
 
 
-            {!event_name && (
+
+            {(!event_name || isInvalid) && (
                 <div className="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
                     <svg className="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 1 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                     </svg>
                     <span className="sr-only">Info</span>
                     <div>
-                        <span className="font-medium">กรุณากรอกชื่อ event</span>
+                        <span className="font-medium">กรุณากรอกชื่อ event ให้ถูกต้อง</span>
                     </div>
                 </div>
             )}
 
-            {!event_location.address && (
+            {(!event_location.address || iseventA_Invalid) && (
                 <div className="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
                     <svg className="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 1 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                     </svg>
                     <span className="sr-only">Info</span>
                     <div>
-                        <span className="font-medium">กรุณากรอกสถานที่จัดงาน</span>
+                        <span className="font-medium">กรุณากรอกที่อยู่จัดงาน</span>
                     </div>
                 </div>
             )}
 
-            {!event_location.city && (
+            {(!event_location.city || iseventlocationProvince_Invalid) && (
                 <div className="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
                     <svg className="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 1 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                     </svg>
                     <span className="sr-only">Info</span>
                     <div>
-                        <span className="font-medium">กรุณากรอกเมืองที่จัดงาน</span>
+                        <span className="font-medium">กรุณากรอกเมือง</span>
                     </div>
                 </div>
             )}
 
-            {!event_location.country && (
+            {(!event_location.country || iseventlocationcountryReg_Invalid) && (
                 <div className="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
                     <svg className="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 1 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                     </svg>
                     <span className="sr-only">Info</span>
                     <div>
-                        <span className="font-medium">กรุณากรอกประเทศที่จัดงาน</span>
+                        <span className="font-medium">กรุณากรอกประเทศ</span>
                     </div>
                 </div>
             )}
@@ -569,7 +579,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) 
             {seat.some(item => !item.seat_name || item.seat_price <= 0 || item.seat_max <= 0) && (
                 <div className="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
                     <svg className="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 1 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                     </svg>
                     <span className="sr-only">Info</span>
                     <div>

@@ -198,30 +198,21 @@ const content = `
 <blockquote>Wow, that’s amazing. Good work! 👏</blockquote>
 `
 
-const TextEditor = ({
-    setContent,
-    initialContent = ''
-}: {
-    setContent: (content: string) => void;  // Explicitly type setContent
-    initialContent?: string;  // initialContent is optional and a string
-    max_range: 200;
-    
-}) => {
+const TextEditor = ({ setContent , maxLength = 200 ,contents=content}) => {
     const editor = useEditor({
         extensions,
-        content: initialContent,  // Set initial content
+        content: contents,  // Set initial content
         onUpdate: ({ editor }) => {
             const html = editor.getHTML(); // Get the HTML content
-            setContent(initialContent); // Update the parent state with the content
+            if (html.length <= maxLength) {
+                setContent(html); // Update the parent state with the content
+            } else {
+                const truncatedHtml = html.substring(0, maxLength); // Truncate the content
+                editor.commands.setContent(truncatedHtml); // Update the editor content
+                alert(`Content exceeds maximum length of ${maxLength} characters.`);
+            }
         },
     })
-
-    // Update editor content when `initialContent` changes
-    useEffect(() => {
-        if (editor && initialContent !== editor.getHTML()) {
-            editor.commands.setContent(content);
-        }
-    }, [initialContent, editor])
 
     return (
         <div>

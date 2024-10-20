@@ -13,7 +13,7 @@ export async function POST(req: Request) {
                 rec_date: rec_date,
                 rec_quantity: rec_quantity,
                 rec_customer: {
-                    connect: { id: 'cm25q58op000012nm01ry1d1l' }, // เชื่อมโยงกับ User
+                    connect: { id: rec_customer_id }, // เชื่อมโยงกับ User
                 },
                 rec_seat: {
                     connect: { seat_id: rec_seat_id }, // เชื่อมโยงกับ Seat_Type
