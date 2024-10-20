@@ -394,16 +394,10 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                                 placeholder="จำนวนที่เปิดขาย"
                             />
                         </div>
-                        {index > 0 && (
-                            <Button isIconOnly color="danger" type="button" onClick={() => removeSeat(index)}>
-                                <DeleteIcon width="1rem" height="1rem" />
-                            </Button>
-                        )}
+                        
                     </div>
                 ))}
-                <div className='flex items-center justify-between mt-5'>
-                    <Button color="primary" onClick={addseatfields}>เพิ่มอีก</Button>
-                </div>
+                
             </div>
             <label className="block mb-2 text-sm font-medium leading-6 ">
                 Event description
