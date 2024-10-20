@@ -89,6 +89,7 @@ export default function ReturnRequest({ data }: { data: any[] }) {
         } catch (error) {
             console.error('Error Accept:', error);
         }
+        onClose()
     };
 
     const handleReject = async (e: React.FormEvent) => {
@@ -107,6 +108,7 @@ export default function ReturnRequest({ data }: { data: any[] }) {
         } catch (error) {
             console.error('Error Accept:', error);
         }
+        onClose2()
     };
 
     return (
