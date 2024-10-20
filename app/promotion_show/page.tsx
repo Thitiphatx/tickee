@@ -28,9 +28,10 @@ export default async function PromotionPage() {
     event.Seat_Type.some(seat => seat.Promotion) // Check if any seat has a promotion
   );
 
-  const eventsWithoutPromotions = events.filter(event =>
-    event.Seat_Type.every(seat => !seat.Promotion) // Check if all seats have no promotions
+  const eventsWithSeatsNoPromotion = events.filter(event => 
+    event.Seat_Type.some(seat => !seat.Promotion) // Check if any seat has no promotion
   );
+  
 
   // Format events with promotions
   const formattedEventsWithPromotions = eventsWithPromotions.map(event => ({
@@ -52,7 +53,7 @@ export default async function PromotionPage() {
   }));
 
   // Format events without promotions
-  const formattedEventsWithoutPromotions = eventsWithoutPromotions.map(event => ({
+  const formattedEventsWithSeatsNoPromotion = eventsWithSeatsNoPromotion.map(event => ({
     event_id: event.event_id,
     event_name: event.event_name,
     event_intro: event.event_intro,
@@ -66,13 +67,14 @@ export default async function PromotionPage() {
       seat_price: seat.seat_price,
       seat_create_date: seat.seat_create_date,
       seat_due_date: seat.seat_due_date,
-    })), // Only seat details, no promotion since it's already filtered
+      hasPromotion: !!seat.Promotion // Add a flag indicating whether the seat has a promotion
+    })), // Only seat details
   }));
 
   return (
     <div>
       <h1>Your Events Without Promotions</h1>
-      <Promotion events={formattedEventsWithoutPromotions} />
+      <Promotion events={formattedEventsWithSeatsNoPromotion} />
 
       <h1>Your Events with Promotions (EDIT ZONE)</h1>
       <Promotion_seat events={formattedEventsWithPromotions} />

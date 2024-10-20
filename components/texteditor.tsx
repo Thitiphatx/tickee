@@ -210,14 +210,14 @@ const TextEditor = ({
         content: initialContent,  // Set initial content
         onUpdate: ({ editor }) => {
             const html = editor.getHTML(); // Get the HTML content
-            setContent(html); // Update the parent state with the content
+            setContent(initialContent); // Update the parent state with the content
         },
     })
 
     // Update editor content when `initialContent` changes
     useEffect(() => {
         if (editor && initialContent !== editor.getHTML()) {
-            editor.commands.setContent(initialContent);
+            editor.commands.setContent(content);
         }
     }, [initialContent, editor])
 

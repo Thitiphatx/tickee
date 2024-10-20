@@ -268,7 +268,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
     const formattedLastDate = endDate.toISOString().slice(0, 10);
     console.log(formattedLastDate);
 
-    console.log(eventData.Seat_Type)
+    console.log(eventData)
     return (
         <div className="space-y-8">
             <Select
