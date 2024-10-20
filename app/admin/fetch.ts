@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { ReceiptStatus } from "@/types/data_type";
 
 export async function getReceiptDate() {
     let output;
@@ -11,6 +12,9 @@ export async function getReceiptDate() {
     let period = false
     try {
         output = await prisma.receipt.findMany({
+            // where: {
+            //     rec_status: ReceiptStatus.Expired
+            // },
             include: {
                 rec_seat: true
             },
@@ -28,7 +32,6 @@ export async function getReceiptDate() {
                 yearArray.push(year)
                 period = true
             } else if (
-                // index - 1 >= 0 &&
                 new Date(output[index].rec_date).getFullYear() != year &&
                 yearCount <= 5
             ) {
@@ -71,13 +74,12 @@ export async function getReceiptDate() {
                 weeklyOrders++
             }
         }
-
+        
         const data = {
             datasets: yearListData.map((item: { x: string; y: number }[], index) => ({
                 label: `Year ${new Date().getFullYear() - index}`,
                 borderColor: `rgba(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, 1)`,
-                backgroundColor: `rgba(${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, ${Math.round(Math.random() * 255)}, 0.2)`,
-                fill: true,
+                backgroundColor: `rgba(255, 255, 255, 0.2)`,
                 data: item
             }))
         };

@@ -1,20 +1,18 @@
-import { Button } from "@nextui-org/button";
 import { getSelectedEvent } from "./fetch";
 import { notFound } from "next/navigation";
-import { Card, CardBody } from "@nextui-org/card";
 import AdminEventCard from "@/components/admin/adminEventCard";
+import { getCurrentSession } from "@/utils/getCurrentSession";
+import { RoleAvailable } from "@/types/data_type";
+import { redirectingByRole } from "@/utils/function";
 
 export default async function AllEvent() {
-    let input = ""
-    const res = await getSelectedEvent(input);
-    if (!res) {
-        notFound()
-    }
-    const foundedEvent = res
-
+    const session = await getCurrentSession();
+    if (session?.user.role != RoleAvailable.Admin || !session) {
+        redirectingByRole(session)
+    } 
     return (
         <div className="flex flex-wrap gap-5 h-2/3">
-            <AdminEventCard data={foundedEvent}/>
+            <AdminEventCard />
         </div>
     )
 }
