@@ -9,9 +9,11 @@ import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { DeleteIcon } from "./icons";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 
 export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) {
+    const router = useRouter();
     const {data: session} = useSession();
     const [event_name, setevent_name] = useState('');
     const [event_intro, setevent_intro] = useState('');
@@ -183,6 +185,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[]}) 
                     console.log('seat created successfully:', result);
                 })
             );
+            router.push("/event-organizer");
 
         } catch (error) {
             console.error('Error creating eventandseat:', error);

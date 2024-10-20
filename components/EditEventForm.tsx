@@ -8,6 +8,7 @@ import { Button, DateRangePicker } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
 import { CalendarDate, CalendarDateTime, parseZonedDateTime, ZonedDateTime } from "@internationalized/date";
 import { DeleteIcon } from "./icons";
+import { useRouter } from "next/navigation";
 
 interface EventData {
     event_id: number;
@@ -55,6 +56,7 @@ interface EventLocation {
 }
 
 export default function EditEventForm({ eventData, eventType }: EditEventFormProps) {
+    const router = useRouter();
     const { data: session } = useSession();
     const [event_name, setEventName] = useState("");
 
@@ -207,6 +209,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                 },
                 body: JSON.stringify(data),
             });
+            
 
             if (!response.ok) {
                 throw new Error('Failed to create event');
@@ -245,6 +248,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                     console.log('seat created successfully:', result);
                 })
             );
+            router.push("/event-organizer")
 
         } catch (error) {
             console.error('Error creating eventandseat:', error);
