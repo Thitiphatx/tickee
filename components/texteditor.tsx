@@ -204,6 +204,8 @@ const TextEditor = ({
 }: {
     setContent: (content: string) => void;  // Explicitly type setContent
     initialContent?: string;  // initialContent is optional and a string
+    max_range: 200;
+    
 }) => {
     const editor = useEditor({
         extensions,
