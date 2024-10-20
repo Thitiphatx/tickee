@@ -31,12 +31,14 @@ export default function RootLayout({
 }: {
     children: React.ReactNode;
 }) {
+
     return (
         <html suppressHydrationWarning lang="en">
             <head />
             <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable,)}>
                 <SessionProvider>
                 <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+                    
                     <div className="relative flex flex-col h-screen">
                         <Navbar />
                         <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">

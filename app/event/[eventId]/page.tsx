@@ -28,7 +28,7 @@ export default async function EventLanding({ params }: { params: { eventId: stri
     )
     else {
         return (
-            <>wow</>
+            <>This event is not existed</>
         )
     }
 }

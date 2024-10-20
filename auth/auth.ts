@@ -49,45 +49,88 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async jwt({ token, user, account, profile }) {
-            if (account?.provider === "google") {
-                let existedUser = await prisma.user.findFirst({
-                    where: { email: profile?.email }
-                });
-
-                if (!existedUser) {
-                    existedUser = await prisma.user.create({
-                        data: {
-                            id: profile?.sub!,
-                            email: profile?.email!,
-                            name: profile?.name!,
-                            provider: "google"
-                        }
-                    });
-                }
-
-                token.id = existedUser.id;
-                token.role = existedUser.role;
-            }
             if (user) {
-                return {
-                    ...token,
-                    id: user.id,
-                    role: user.role
-                }
+                // If a new user signs in, assign token from user object
+                token.id = user.id;
+                token.name = user.name;
+                token.role = user.role;
             }
-            return token
-        },
-        async session({ session, token }: { session: any; token: any }) {
-            if (token) {
-                session.user.role = token.role;
-                session.user.email = token.email;
-                session.user.id = token.id;
-                session.user.name = token.name;
+
+            if (account?.provider == "google") {
+                token.id = profile?.sub!,
+                token.email = profile?.email!,
+                token.name = profile?.name!,
+                token.provider = "google"
             }
             
+            // Fetch fresh user data from the database every time the token is requested
+            const dbUser = await prisma.user.findFirst({
+                where: { id: token.id as string }
+            });
+
+    
+            if (dbUser) {
+                token.name = dbUser.name;
+                token.role = dbUser.role;
+                token.email = dbUser.email;
+            }
+    
+            return token;
+        },
+        async session({ session, token }: { session: any; token: any }) {
+            // Sync session with updated token data
+            if (token) {
+                session.user.id = token.id;
+                session.user.name = token.name;
+                session.user.email = token.email;
+                session.user.role = token.role;
+            }
+    
             return session;
         }
     },
+    // callbacks: {
+    //     async jwt({ token, user, account, profile, trigger }) {
+    //         if (user) {
+    //             return {
+    //                 ...token,
+    //                 id: user.id,
+    //                 name: user.name,
+    //                 role: user.role
+    //             }
+    //         }
+    //         if (account?.provider === "google") {
+    //                 let existedUser = await prisma.user.findFirst({
+    //                     where: { email: profile?.email }
+    //                 });
+    
+    //                 if (!existedUser) {
+    //                     existedUser = await prisma.user.create({
+    //                         data: {
+    //                             id: profile?.sub!,
+    //                             email: profile?.email!,
+    //                             name: profile?.name!,
+    //                             provider: "google"
+    //                         }
+    //                     });
+    //                 }
+    
+    //                 token.id = existedUser.id;
+    //                 token.role = existedUser.role;
+    //         }
+    //         return token
+    //     },
+    //     async session({ session, token }: { session: any; token: any }) {
+    //         if (token) {
+    //             session.user.role = token.role;
+    //             session.user.email = token.email;
+    //             session.user.id = token.id;
+    //             session.user.name = token.name;
+    //         }
+            
+    //         return session;
+    //     }
+    // },
     pages: {
         signIn: "/signin"
     },

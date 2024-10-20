@@ -16,6 +16,7 @@ export default function SigninForm() {
         email: "test@test.com",
         password: "123",
     });
+    const [passwordInput, setPasswordInput] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
     const handleSignIn = async ()=> {
@@ -26,14 +27,15 @@ export default function SigninForm() {
                 redirect: false,
                 callbackUrl: "/"
             })
-            console.log(response)
             if (response?.error) {
                 setError("Invalid email or password");
+                setPasswordInput(true);
             } else {
                 router.push("/")
             }
         } catch (e) {
-            setError("Something went wrong!!")
+            setError("Something went wrong!!");
+            setPasswordInput(true);
         }
         
     }
@@ -45,9 +47,12 @@ export default function SigninForm() {
                 animate={{ y: 0, opacity: 1 }}
             >
                 <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, email: e.target.value})} value={data.email} type="email" label="Email" />
-                <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, password: e.target.value})} value={data.password} type="password" label="Password" />
+                <Input isInvalid={passwordInput} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setData({...data, password: e.target.value});
+                    setPasswordInput(false);
+                }} value={data.password} type="password" label="Password" />
                 <span className="auth-error">{error}</span>
-                <Button onClick={handleSignIn} color='primary' variant='shadow' className="uppercase w-full" radius="full">sign in</Button>
+                <Button isDisabled={passwordInput} onClick={handleSignIn} color='primary' variant='shadow' className="uppercase w-full" radius="full">sign in</Button>
 
                 <Divider className="my-3" />
                 <Button onClick={() => signIn("google")} className="bg-white text-black w-full" radius='full'><IconGoogle />Sign in with Google</Button>

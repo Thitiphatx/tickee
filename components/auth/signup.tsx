@@ -10,6 +10,7 @@ import { useState } from "react";
 
 export default function SignupForm() {
     const [error, setError] = useState<string | null>(null);
+    const [passwordErrors, setPasswordErrors] = useState(false);
     const [data, setData] = useState<signUpType>({
         email: "",
         password: "",
@@ -21,6 +22,7 @@ export default function SignupForm() {
         e.preventDefault();
 
         if (data.password !== data.repass) {
+            setPasswordErrors(true);
             setError("Password does not matching")
             return;
         }
@@ -48,12 +50,12 @@ export default function SignupForm() {
                 animate={{ y: 0, opacity: 1 }}
             >
                 <form onSubmit={signUpUser} className="space-y-2">
-                    <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, email: e.target.value})} value={data.email} type="email" label="Email" />
-                    <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, password: e.target.value})} value={data.password} type="text" label="Password" />
-                    <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, repass: e.target.value})} value={data.repass} type="text" label="Re-password" />
-                    <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, name: e.target.value})} value={data.name} type="text" label="Name" />
+                <Input isRequired onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, name: e.target.value})} value={data.name} type="text" label="Name" />
+                    <Input isRequired onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, email: e.target.value})} value={data.email} type="email" label="Email" />
+                    <Input isInvalid={passwordErrors} isRequired onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, password: e.target.value})} value={data.password} type="text" label="Password" />
+                    <Input isInvalid={passwordErrors} isRequired onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, repass: e.target.value})} value={data.repass} type="text" label="Re-password" />
                     <span className="auth-error">{error}</span>
-                    <Button type="submit" color='primary' variant='shadow' className="uppercase w-full" radius="full" >sign in</Button>
+                    <Button isDisabled={passwordErrors} type="submit" color='primary' variant='shadow' className="uppercase w-full" radius="full" >sign in</Button>
                     <Divider className="my-3" />
                     <Button onClick={() => signIn("google")} className="bg-white text-black w-full" radius='full'><IconGoogle />Sign in with Google</Button>
                 </form>

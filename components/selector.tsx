@@ -24,7 +24,7 @@ export default function Selector({ children, setCurrentTab, currentTab ,onTabCha
                     return (
                         <li
                             key={seatId} // Use seatId as key
-                            className={`cursor-pointer rounded-xl ring-foreground-900 ${currentTab === seatId ? "ring-1" : ""}`}
+                            className={`cursor-pointer rounded-xl ring-foreground-900 ${currentTab === seatId ? "ring-4" : ""}`}
                             onClick={() => {
                                 console.log('กดเลือก card:', seatId); // Log the selected seatId
                                 handleClick(seatId); // Pass the seatId directly to the parent

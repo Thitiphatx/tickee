@@ -2,7 +2,7 @@
 import React from 'react'
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Card, CardBody } from '@nextui-org/card';
+import { Card, CardBody, CardHeader } from '@nextui-org/card';
 import { Image } from '@nextui-org/image';
 import { motion } from "framer-motion"
 import { Event } from '@prisma/client';
@@ -50,8 +50,8 @@ export default function CardSwiper({ title, items, fullPage }: { title?: string,
                         return (
                             <SwiperSlide key={index}>
                                 <a href={`event/${event.event_id}`} key={index}>
-                                    <Card>
-                                        <Image alt={event.event_name} className="rounded-xl" style={{width: "100%"}} src={event.event_images} width={320} />
+                                    <Card className="min-h-96">
+                                        <Image alt={event.event_name} className="object-cover rounded-xl h-80"  src={event.event_images} width={"320px"} />
                                         <CardBody className="overflow-visible py-2">
                                             <p className="text-tiny uppercase">{event.event_start_date.toLocaleDateString('en-US', { day: 'numeric', month: 'long'})}</p>
                                             <p className="text-tiny uppercase font-bold">{event.event_name}</p>

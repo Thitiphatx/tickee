@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";
 import { Seat_Type } from '@/types/data_type';
+import { ModalBody, ModalFooter, ModalHeader } from "@nextui-org/modal";
 
 // สร้าง PaymentPage component
 
@@ -30,7 +31,6 @@ export default function TicketInformation({ currentTab, onBookingClick }: { curr
 
 
     useEffect(() => {
-        console.log("currentTab changed to:", currentTab);
         const fetchSeatData = async () => {
             try {
                 const response = await fetch(`/api/getseatData?seatId=${currentTab}`);
@@ -73,54 +73,52 @@ export default function TicketInformation({ currentTab, onBookingClick }: { curr
     const totalPrice = quantity * (unitPrice ?? 0);
 
     return (
-        <div>
-
-            <Card className="max-w-4xl mx-auto  p-8 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold mb-6">Ticket Information</h2>
-
-                <div className="grid grid-cols-2 gap-y-4 text-lg">
-
-
-                    <span>วันเริ่มงาน</span>
-                    <span className="font-medium">{formattedstartDate}</span>
-                    <span>วันจบงาน</span>
-                    <span className="font-medium">{formattedendDate}</span>
-
-                    <span>Zone</span>
-                    <span className="font-medium">{seatData?.seat_name}</span>
-                    
-                    <span>Quantity</span>
-                    <div className="flex items-center space-x-4">
-                        <button
-                            className="px-4 py-2 rounded hover:bg-gray-400"
-                            onClick={decreaseQuantity}
-                        >
-                            -
-                        </button>
-                        <span className="font-medium">{quantity}</span>
-                        <button
-                            className="px-4 py-2 rounded hover:bg-gray-400"
-                            onClick={increaseQuantity}
-                        >
-                            +
-                        </button>
+        <>
+            <ModalHeader className="flex flex-col gap-1">Ticket Information</ModalHeader>
+            <ModalBody>
+                <div className="space-y-4">
+                    <div className="grid grid-cols-2">
+                        <h5 className="text-primary-800">วันเริ่มงาน</h5>
+                        <small>{formattedstartDate}</small>
+                    </div>
+                    <div className="grid grid-cols-2">
+                        <h5 className="text-primary-800">วันจบงาน</h5>
+                        <small>{formattedendDate}</small>
+                    </div>
+                    <div className="grid grid-cols-2">
+                        <h5 className="text-primary-800">โซน</h5>
+                        <small>{seatData?.seat_name}</small>
+                    </div>
+                    <div className="grid grid-cols-2">
+                        <h5 className="text-primary-800">Quantity</h5>
+                        <small>
+                            <div className="flex items-center space-x-4">
+                                <Button size="sm" onClick={decreaseQuantity} isIconOnly>
+                                    -
+                                </Button>
+                                <small>{quantity}</small>
+                                <Button size="sm" onClick={increaseQuantity} isIconOnly>
+                                    +
+                                </Button>
+                            </div>
+                        </small>
                     </div>
 
-                    <span>Unit Price (Baht)</span>
-                    <span className="font-medium">{unitPrice?.toLocaleString()}</span>
-
-                    <span>Total Price (Baht)</span>
-                    <span className="font-medium">
-                        {(quantity * (unitPrice ?? 0)).toLocaleString()}
-                    </span>
+                    <div className="grid grid-cols-2">
+                        <h5 className="text-primary-800">ราคาต่อที่</h5>
+                        <small>{unitPrice?.toLocaleString()}</small>
+                    </div>
+                    <div className="grid grid-cols-2">
+                        <h5 className="text-primary-800">ราคารวม</h5>
+                        <small>{(quantity * (unitPrice ?? 0)).toLocaleString()}</small>
+                    </div>
                 </div>
+            </ModalBody>
+            <ModalFooter>
+                <Button>Back</Button>
+                <Button color="primary" onClick={() => onBookingClick(quantity, seatData)} >Booking</Button>
+            </ModalFooter>
+        </>
 
-                <div className="flex justify-between mt-8">
-                    <Button>Back</Button>
-                    {/* คลิก Booking แล้วแสดงหน้า Payment */}
-                    <Button color="primary" onClick={() => onBookingClick(quantity,seatData)} >Booking</Button>
-                </div>
-            </Card>
-        </div>
     );
 }

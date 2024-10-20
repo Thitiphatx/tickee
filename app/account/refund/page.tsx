@@ -32,7 +32,7 @@ export default async function AccountProfile() {
     const userData = await prisma.user.findUnique({
         where: {
             id: session.user.id, // Fetch user by session ID
-        }
+        },
     });
 
     // For security, you might want to nullify sensitive information like the password
