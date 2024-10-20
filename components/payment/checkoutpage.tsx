@@ -69,7 +69,7 @@ export default function Checkoutpage({ amount ,quantity ,seatdata}: { amount: nu
             })
             .then((response) => {
                 if (!response.ok) {
-                    alert('Failed to create receipt.');
+                    alert('จ่ายเงินไม่สำเร็จ! กรุณาลองใหม่อีกครั้ง');
                     throw new Error("Failed to create receipt.");
                 }
                 return response.json();

@@ -1,7 +1,11 @@
+import EventOrganizerCard from "@/components/EventOrganizerCard";
 import Eventpage from "@/components/Eventpage";
 import { prisma } from '@/lib/prisma';
+import { getCurrentSession } from "@/utils/getCurrentSession";
 
 export default async function EventLanding({ params }: { params: { eventId: string }}) {
+    const session = await getCurrentSession();
+
     const details = await prisma.event.findFirst( {
         include: {
             event_type: true,
@@ -23,6 +27,9 @@ export default async function EventLanding({ params }: { params: { eventId: stri
     if (details)
     return(
         <div>
+            {session?.user.role == "organizer" && (
+                <EventOrganizerCard />
+            )}
             <Eventpage eventDetails={details}/>
         </div>
     )

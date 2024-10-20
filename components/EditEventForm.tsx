@@ -298,7 +298,11 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                     Introduction
                 </label>
                 {/* Pass event_intro as a prop to TextEditor */}
+<<<<<<< HEAD
                 <TextEditor setContent={setevent_intro} initialContent={eventData?.event_intro || ""} max_range={200} />
+=======
+                <TextEditor setContent={setevent_intro} contents={eventData?.event_intro || ""} />
+>>>>>>> cf7463ade85f67c1249a7de5b964fd3930143bf1
                 <p className="mt-3 text-sm leading-6 text-gray-400">
                     เขียนเชิญชวนผู้มาเข้างาน
                 </p>
@@ -406,7 +410,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
             <label className="block mb-2 text-sm font-medium leading-6 ">
                 Event description
             </label>
-            <TextEditor setContent={setevent_description} initialContent={eventData?.event_description || ""}/>
+            <TextEditor setContent={setevent_description} contents={eventData?.event_description || ""}/>
             <p className="mt-3 text-sm leading-6 text-gray-400">เขียนรายละเอียดเกี่ยวกับตั๋วและโปรโมชั่น</p>
 
             <Button onClick={addtodb}>Submit</Button>
