@@ -10,7 +10,7 @@ import Image from '@tiptap/extension-image'
 import Paragraph from '@tiptap/extension-paragraph'
 import Text from '@tiptap/extension-text'
 import { Image as TipTapImage } from '@tiptap/extension-image'
-import React from 'react'
+import React, { useEffect } from 'react'
 import TextAlign from '@tiptap/extension-text-align'; // Import TextAlign extension
 import { Button } from '@nextui-org/button'
 import { IconAlignCenter, IconAlignLeft, IconAlignRight, IconArrowBackOutline, IconArrowForwardOutline, IconBold, IconBxImageAdd, IconFontColors, IconFormatItalic, IconFormatListBulleted, IconHr, IconImageResizeLandscape, IconItalic, IconOrderedList, IconReturnDownForwardSharp } from '@/styles/icon'
@@ -198,25 +198,37 @@ const content = `
 <blockquote>Wow, that’s amazing. Good work! 👏</blockquote>
 `
 
-const TextEditor = ({ setContent }) => {
+const TextEditor = ({
+    setContent,
+    initialContent = ''
+}: {
+    setContent: (content: string) => void;  // Explicitly type setContent
+    initialContent?: string;  // initialContent is optional and a string
+    max_range: 200;
+    
+}) => {
     const editor = useEditor({
         extensions,
-        content,
+        content: initialContent,  // Set initial content
         onUpdate: ({ editor }) => {
             const html = editor.getHTML(); // Get the HTML content
-            setContent(html); // Update the parent state with the content
+            setContent(initialContent); // Update the parent state with the content
         },
     })
 
+    // Update editor content when `initialContent` changes
+    useEffect(() => {
+        if (editor && initialContent !== editor.getHTML()) {
+            editor.commands.setContent(content);
+        }
+    }, [initialContent, editor])
+
     return (
-
-
         <div>
             <MenuBar editor={editor} />
             <EditorContent editor={editor} />
         </div>
-
     )
 }
 
-export default TextEditor
+export default TextEditor;

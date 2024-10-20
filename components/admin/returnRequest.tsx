@@ -12,9 +12,11 @@ import {
 import { Receipt, Seat_Dispatch, Seat_Type, User, Event } from "@prisma/client";
 import React, { useState } from 'react'
 import { Button } from '@nextui-org/button'
-import { Card, CardBody, CardHeader } from '@nextui-org/card'
 import { DeleteIcon, EditIcon } from "../icons";
 import { ReceiptStatus } from "@/types/data_type";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/modal";
+import { Divider } from "@nextui-org/divider";
+import { Pagination } from "@nextui-org/pagination";
 
 interface Seat extends Seat_Type {
     event_seat: Event,
@@ -28,34 +30,48 @@ interface ReturnOrder extends Receipt {
 
 
 export default function ReturnRequest({ data }: { data: any[] }) {
-    const [reject, setReject] = useState(false);
-    const [accept, setAccept] = useState(false);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [isOpen2, setOpen2] = useState<boolean>(false);
     const [orderID, setOrderID] = useState<number>(0);
     const [onLoad, setOnLoad] = useState<boolean>(true);
+    const [page, setPage] = React.useState(1);
+    const [lastPage, setLastPage] = React.useState(1);
+    const [recOnPage, setRecOnPage] = useState<any[] | null>([]);
+    const rowsPerPage = 40;
+
+    const changePage = (input: number) => {
+        if (data != null) {
+            const start = (input - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            setLastPage(Math.ceil(data.length / rowsPerPage));
+            setPage(input)
+            setRecOnPage(data.slice(start, end))
+        }
+    }
 
     if (data && onLoad) {
+        changePage(1)
         setOnLoad(false)
     }
 
-    const rejectOrder = (id: number) => {
-        setOrderID(id)
-        setReject(true);
+    const onOpen2 = () => {
+        setOpen2(true)
     };
 
-    const rejectOrderClose = () => {
-        setOrderID(0)
-        setReject(false);
+    const onClose2 = () => {
+        setOpen2(false)
+    };
+
+    const rejectOrder = (id: number) => {
+        setOrderID(id)
+        onOpen2()
     };
 
     const acceptOrder = (id: number) => {
         setOrderID(id)
-        setAccept(true);
+        onOpen()
     };
 
-    const acceptOrderClose = () => {
-        setOrderID(0)
-        setAccept(false);
-    };
 
     const handleAccept = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -73,6 +89,7 @@ export default function ReturnRequest({ data }: { data: any[] }) {
         } catch (error) {
             console.error('Error Accept:', error);
         }
+        onClose()
     };
 
     const handleReject = async (e: React.FormEvent) => {
@@ -91,61 +108,93 @@ export default function ReturnRequest({ data }: { data: any[] }) {
         } catch (error) {
             console.error('Error Accept:', error);
         }
+        onClose2()
     };
 
     return (
         <>
-            {accept && (
+            <Modal backdrop={"blur"} isOpen={isOpen} onClose={onClose}>
                 <form onSubmit={handleAccept}>
-                    <button
-                        className="absolute z-10 bg-white opacity-30 size-full  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
-                        onClick={acceptOrderClose}
-                    />
-                    <Card className="absolute z-20 w-1/3 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
-                        <CardHeader className="bg-foreground bg-opacity-10">
-                            <h1 className="mx-auto text-3xl font-bold uppercase">Returning</h1>
-                        </CardHeader>
-                        <CardBody className="overflow-hidden">
-                            <div className="flex flex-col justify-center items-center gap-2 p-5 w-full h-56">
-                                <span className="uppercase font-semibold text-xl">Accept Returning</span>
-                                <p className="text-danger text-lg">
-                                    <span>Receipt ID </span>
-                                    {orderID}
-                                    <span> Returning Success?</span>
+                    <ModalContent>
+                        <>
+                            <ModalHeader className="flex flex-col gap-1 text-2xl text-center ">Returning</ModalHeader>
+                            <Divider />
+                            <ModalBody className="px-10 py-6 gap-3">
+                                <span className="uppercase font-semibold text-danger text-lg">Accept Returning</span>
+                                <p className="text-md capitalize">
+                                    <span>Receipt ID  </span>
+                                    <span className="underline underline-offset-2 text-danger">{orderID}</span>
+                                    <span> Returning will be Success?</span>
                                 </p>
-                            </div>
-                            <Button color='primary' variant='shadow' className="uppercase w-full" radius="full" type="submit">confirm</Button>
-                        </CardBody>
-                    </Card>
+                                <p className="text-md capitalize">
+                                    <span>No Return after this point</span>
+                                </p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="default" variant="light" onPress={onClose}>
+                                    Close
+                                </Button>
+                                <Button color="primary" variant='shadow' type="submit">
+                                    Confirm
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    </ModalContent>
                 </form>
-            )}
+            </Modal>
 
-            {reject && (
+            <Modal backdrop={"blur"} isOpen={isOpen2} onClose={onClose2}>
                 <form onSubmit={handleReject}>
-                    <button
-                        className="absolute z-10 bg-white opacity-30 size-full  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
-                        onClick={rejectOrderClose}
-                    />
-                    <Card className="absolute z-20 w-1/3 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
-                        <CardHeader className="bg-foreground bg-opacity-10">
-                            <h1 className="mx-auto text-3xl font-bold uppercase">Returning</h1>
-                        </CardHeader>
-                        <CardBody className="overflow-hidden">
-                            <div className="flex flex-col justify-center items-center gap-2 p-5 w-full h-56">
-                                <span className="uppercase font-semibold text-xl">Reject Returning</span>
-                                <p className="text-danger text-lg">
-                                    <span>Receipt ID </span>
-                                    {orderID}
-                                    <span>Unable to Return?</span>
-                                </p>
-                            </div>
-                            <Button color='primary' variant='shadow' className="uppercase w-full" radius="full" type="submit">confirm</Button>
-                        </CardBody>
-                    </Card>
+                    <ModalContent>
+                        {(onClose2) => (
+                            <>
+                                <ModalHeader className="flex flex-col gap-1 text-2xl text-center ">Returning</ModalHeader>
+                                <Divider />
+                                <ModalBody className="px-10 py-6 gap-3">
+                                    <span className="uppercase font-semibold text-danger text-lg">Reject Returning</span>
+                                    <p className="text-md capitalize">
+                                        <span>Receipt ID  </span>
+                                        <span className="underline underline-offset-2 text-danger">{orderID}</span>
+                                        <span> Unable to Return?</span>
+                                    </p>
+                                    <p className="text-md capitalize">
+                                        <span>No Return after this point</span>
+                                    </p>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button color="default" variant="light" onPress={onClose2}>
+                                        Close
+                                    </Button>
+                                    <Button color="danger" variant='solid' type="submit">
+                                        Confirm
+                                    </Button>
+                                </ModalFooter>
+                            </>
+                        )}
+                    </ModalContent>
                 </form>
-            )}
+            </Modal>
+
             {!onLoad && (
-                <Table className="p-8" selectionMode="single" color="default" >
+                <Table 
+                className="p-8" 
+                selectionMode="single" 
+                color="default"
+                aria-label="Table"
+                bottomContent={
+                    <div className="flex w-full justify-center">
+                        <Pagination
+                            isCompact
+                            showControls
+                            showShadow
+                            color="primary"
+                            page={page}
+                            total={lastPage}
+                            onChange={(page) => changePage(page)}
+                        />
+                    </div>
+                } 
+                >
                     <TableHeader>
                         <TableColumn align="center">USER</TableColumn>
                         <TableColumn align="center">EMAIL</TableColumn>

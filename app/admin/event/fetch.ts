@@ -2,13 +2,23 @@ import { prisma } from "@/lib/prisma";
 
 export async function getSelectedEvent(input: string) {
     let output;
+    const currentDate = new Date();
+
     if (input == "") {
         try {
             output = await prisma.event.findMany({
+                where: {
+                    event_last_date: {
+                        lt: currentDate,
+                    },
+                },
                 include: {
                     event_type: true,
-                    Seat_Type:true
-                }
+                    Seat_Type: true
+                },
+                orderBy: {
+                    event_last_date: "asc"
+                },
             })
         } catch (error) {
             console.log("getSelectedEvent1 Error")
@@ -20,13 +30,19 @@ export async function getSelectedEvent(input: string) {
             output = await prisma.event.findMany({
                 include: {
                     event_type: true,
-                    Seat_Type:true
+                    Seat_Type: true
                 }
-                , where: {
+                ,
+                where: {
                     event_name: {
                         contains: input
-                    }
-
+                    },
+                    event_last_date: {
+                        lt: currentDate,
+                    },
+                },
+                orderBy: {
+                    event_last_date: "asc"
                 }
             })
         } catch (error) {
@@ -45,7 +61,7 @@ export async function deleteEvent(id: number) {
             }
         })
     } catch (error) {
-        console.log("deleteEvent error")
+        console.log("deleteEvent error\n", error)
         return null
     }
 }

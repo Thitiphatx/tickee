@@ -1,10 +1,7 @@
 "use client"
 
-import { Receipt, Seat_Type } from "@prisma/client";
 import { notFound } from "next/navigation";
-
 import { Line } from 'react-chartjs-2';
-
 import { Chart as ChartJS, TimeScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { Key, useEffect, useState } from "react";
@@ -12,11 +9,6 @@ import { Button } from "@nextui-org/button";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
 
 ChartJS.register(TimeScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
-
-interface RecSeat extends Receipt {
-    rec_seat: Seat_Type
-}
 
 export default function Graph() {
     const [recdata, setrecdata] = useState<any | null>(null);
@@ -49,7 +41,6 @@ export default function Graph() {
         setOnLoad(true)
         try {
             setSelectYear(Number(key))
-            console.log(Number(key), key)
             let seperate = JSON.parse(JSON.stringify(recdata))
             seperate.datasets = [recdata.datasets[Number(key)]]
             setInYearData(seperate)
@@ -64,7 +55,7 @@ export default function Graph() {
         <>
             <h1 className="font-bold text-inherit uppercase text-3xl">Graph</h1>
             {!onLoad && (
-                <div className="relative w-full px-36">
+                <div className="relative w-full px-32">
                     <Dropdown placement="bottom-end">
                         <DropdownTrigger>
                             <Button

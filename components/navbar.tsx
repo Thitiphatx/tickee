@@ -28,7 +28,7 @@ export const Navbar = () => {
 
     useEffect(() => {
         if (status !== "loading") {
-            setLoading(false); // Session data is loaded
+            setLoading(false); 
         }
     }, [status]);
 
@@ -100,6 +100,14 @@ export const Navbar = () => {
                                         startContent={<IconDoorOpenFill width="1.5rem" height="1.5rem" />}
                                     >
                                         Backend
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        key="Promotion"
+                                        href="/promotion_show"
+                                        description="ระบบจัดการ Promotion"
+                                        startContent={<IconDoorOpenFill width="1.5rem" height="1.5rem" />}
+                                    >
+                                        Backend Promotion of Organizer
                                     </DropdownItem>
                                     <DropdownItem
                                         key="logout"

@@ -18,6 +18,9 @@ export default async function editpromotion({ params }: { params: IParams }) {
   const allSeats = await prisma.seat_Type.findMany({
     where: {
       event_seat_id: eventId, // Use the correct field to filter
+      NOT: {
+        Promotion: null
+      }
     },
     include: {
       Promotion: true, // Include promotion details if needed

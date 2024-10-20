@@ -12,7 +12,11 @@ export default async function PromotionPage({ params }: { params: IParams }) {
   const eventDetails = await prisma.event.findUnique({
     include: {
       event_type: true,
-      Seat_Type: true, // Include seat types
+      Seat_Type: {
+        include: {
+          Promotion: true,
+        }
+      }
     },
     where: {
       event_id: parseInt(params.promotionId || '0'), // Ensure event_id is a number

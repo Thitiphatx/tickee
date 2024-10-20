@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
-import { BusinessData, SignInData, SignUpData } from "../types/data_type";
+import { BusinessData, RoleAvailable, SignInData, SignUpData } from "../types/data_type";
 import { Admin_Data, Event_Type, Promotion_Type } from "@prisma/client";
+import { redirect } from "next/navigation";
+import { Session } from "next-auth";
 
 export async function searchEventwithTag(input: string) {
     let output;
@@ -112,58 +114,12 @@ export async function updateBusinessData(newImages: string[], newFee: number, ne
     }
 }
 
-// old signup and signin manually
-
-// export async function userSignIn(input:SignInData) {
-//     let output;
-//     try {
-//         output = await prisma.user.findFirst({
-//             where:{
-//                 AND: [
-//                     {
-//                         user_email:input.email
-//                     },
-//                     {
-//                         user_password:input.password
-//                     },
-//                 ],
-//             }
-//         })
-//     } catch (error) {
-//         console.log("userSignIn Error")
-//         return null
-//     }
-//     return output
-// }
-
-// export async function userSignUp(input:SignUpData) {
-//     let role;
-//     try {
-//         role = await prisma.role.findFirst({
-//             where:{
-//                 role_name:"User"
-//             }
-//         })
-//     } catch (error) {
-//         console.log("findRole Error")
-//         return null
-//     }
-
-//     try {
-//         let output = await prisma.user.create({
-//             data: {
-//                 user_email:input.email,
-//                 user_name:input.name,
-//                 user_surname:input.surname,
-//                 user_password: input.password,
-//                 user_IDcard: input.idcard,
-//                 user_birthdate:input.birthdate,
-//                 user_phone:input.phone,
-//                 user_role_id:role?.role_id || 0,
-//             }
-//         })
-//     } catch (error) {
-//         console.log("userSignIn Error")
-//         return null
-//     }
-// }
+export function redirectingByRole(session: Session | null) {
+    if (session?.user.role == RoleAvailable.User || !session) {
+        redirect("/")
+    } else if (session?.user.role == RoleAvailable.Admin) {
+        redirect("/admin")
+    } else if (session?.user.role == RoleAvailable.Organizer) {
+        redirect("/organizer")
+    }
+}
