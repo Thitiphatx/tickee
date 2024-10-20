@@ -7,7 +7,6 @@ import SignupForm from './signup'
 
 export default function AuthForm() {
     
-
     return (
         <Card className="max-w-md mx-auto">
             <CardHeader className="bg-foreground bg-opacity-10">

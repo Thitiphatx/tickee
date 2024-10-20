@@ -19,6 +19,8 @@ import { signOut, useSession } from "next-auth/react";
 import Searchbar from "./searchbar";
 import { IconCalendarEventFill, IconDoorOpenFill, IconLogout, IconTicket, IconUser } from "@/styles/icon";
 import { useState, useEffect } from 'react'
+import { Input } from "@nextui-org/input";
+import { Divider } from "@nextui-org/divider";
 
 export const Navbar = () => {
     const { data: session, status } = useSession();
@@ -48,12 +50,14 @@ export const Navbar = () => {
             </NavbarContent>
 
             <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
-                <Searchbar />
+                <NavbarItem>
+                    <ThemeSwitch />
+                </NavbarItem>
                 <NavbarItem className="hidden md:flex space-x-5">
                     {loading ? (
                         // Loading indicator while session is being fetched
                         <div className="animate-pulse">
-                            <div className="w-10 h-10 bg-gray-200 rounded-full" />
+                            <Button className="bg-gray-200"></Button>
                         </div>
                     ) : session ? (
                         <>
@@ -63,7 +67,7 @@ export const Navbar = () => {
                                         variant="bordered"
                                     >
                                         {session.user.name}
-                                    </Button>
+                                    </Button>   
                                 </DropdownTrigger>
                                 <DropdownMenu variant="faded" aria-label="Dropdown menu with description">
                                     <DropdownItem
@@ -133,11 +137,17 @@ export const Navbar = () => {
                 <div className="mx-4 mt-2 flex flex-col gap-2">
                     {siteConfig.navMenuItems.map((item, index) => (
                         <NavbarMenuItem key={`${item}-${index}`}>
-                            <Link color={"foreground"} href="#" size="lg">
+                            <Link color={"foreground"} href={item.href} size="lg">
                                 {item.label}
                             </Link>
                         </NavbarMenuItem>
                     ))}
+                    <Divider />
+                    <NavbarMenuItem>
+                        <Link color={"danger"} size="lg" onClick={() => signOut()}>
+                            Logout
+                        </Link>
+                    </NavbarMenuItem>
                 </div>
             </NavbarMenu>
         </NextUINavbar>
