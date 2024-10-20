@@ -25,9 +25,9 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     const [showTicketInfo, setShowTicketInfo] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [showPaymentPage, setShowPaymentPage] = useState(false);
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [seatPerOrder, setSeatPerOrder] = useState<number>(0);
 
-    const handlePaymentClick = () => {
+    const handlePaymentClick = (input:number) => {
         if (currentTab == 0) {
             setShowAlert(true);
         }
@@ -35,6 +35,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
             console.log("Buying ticket for tab:", currentTab);
             onOpen();
             setShowTicketInfo(true);
+            setSeatPerOrder(input)
         }
     };
     const handleTabChange = () => {
@@ -77,7 +78,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                             {eventDetails.Seat_Type.map((seat) => (
                                 <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300" seatId={seat.seat_id} >
                                     <CardHeader className='flex flex-col items-start' >
-                                        <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง ({seat.Seat_Dispatch?.sd_max}/{seat.Seat_Dispatch?.sd_current})</h4>
+                                        <h4 className="font-bold">{seat.seat_name} เหลือ {(seat.Seat_Dispatch?.sd_max || 0) - (seat.Seat_Dispatch?.sd_current || 0)} ที่นั่ง ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})</h4>
 
                                         <div className='flex flex-col'>
                                             {seat.Promotion?.pro_type?.pt_id === 1 ? (
@@ -115,7 +116,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
 
                         </Selector>
 
-                        <Button radius="full" color="primary" size="lg" className="w-full" onClick={handlePaymentClick} >Buy</Button>
+                        <Button radius="full" color="primary" size="lg" className="w-full" onClick={()=>handlePaymentClick(eventDetails.event_seat_per_order)} >Buy</Button>
                     </div>
                     {showAlert && (
                             <Card role="alert" isPressable onPress={() => setShowAlert(false)} className="ring-1 ring-warning-500 w-full">
@@ -136,7 +137,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick} />
+                            <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick} seatPerOrder={seatPerOrder}/>
                         </>
                     )}
                 </ModalContent>
