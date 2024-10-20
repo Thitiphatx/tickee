@@ -122,7 +122,10 @@ export default function AccountMyticketCard() {
     }, [status])
     // แบ่งข้อมูลเป็น upcoming และ past events
     const now = new Date();
-    const upcomingEvents = receipts.filter(receipt => new Date(receipt.rec_seat.event_seat.event_last_date) > now);
+    const upcomingEvents = receipts.filter(receipt => 
+        new Date(receipt.rec_seat.event_seat.event_last_date) > now && // Check if the event is upcoming
+        receipt.rec_status === 0 // Check if rec_status is 0
+    );
     const pastEvents = receipts.filter(receipt => new Date(receipt.rec_seat.event_seat.event_last_date) <= now);
 
     return (

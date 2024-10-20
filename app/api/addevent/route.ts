@@ -32,11 +32,7 @@ export async function POST(req: Request) {
                 event_last_date: new Date(event_last_date),
                 event_location: event_location,
                 event_seat_per_order: event_seat_per_order,
-<<<<<<< HEAD
                 producer_id: producer_id,
-=======
-                producer_id: "cm1yuiuxn0000vku17f87pyah",
->>>>>>> cf7463ade85f67c1249a7de5b964fd3930143bf1
                 event_type_id: event_type_id,
             },
         });
