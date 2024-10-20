@@ -1,6 +1,19 @@
 import React from 'react';
 
 const RefundTable = ({ receipts }: any) => {
+  const getStatusMessage = (status: number) => {
+    switch (status) {
+      case 3:
+        return 'กำลังดำเนินการ'; // "In Progress"
+      case 2:
+        return 'ปฏิเสธดำเนินการ'; // "Operation Denied"
+      case 4:
+        return 'คืนเงินเสร็จสิ้น'; // "Refund Completed"
+      default:
+        return 'Unknown Status'; // Fallback for any other status
+    }
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full border-collapse border border-gray-200">
@@ -21,7 +34,7 @@ const RefundTable = ({ receipts }: any) => {
                 <td className="border border-gray-300 p-2">{new Date(receipt.rec_date).toLocaleDateString()}</td>
                 <td className="border border-gray-300 p-2">{receipt.rec_quantity}</td>
                 <td className="border border-gray-300 p-2">{receipt.rec_seat.seat_name}</td>
-                <td className="border border-gray-300 p-2">{receipt.rec_status}</td>
+                <td className="border border-gray-300 p-2">{getStatusMessage(receipt.rec_status)}</td>
               </tr>
             ))
           ) : (
