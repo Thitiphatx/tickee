@@ -20,6 +20,7 @@ export default function BusinessAdjustment() {
     const [promotionType, setPromotionType] = useState<Promotion_Type[]>([]);
     const [insertPromotionType, setInsertPromotionType] = useState<string[] | null>([]);
     const [onLoad, setOnLoad] = useState<boolean>(true);
+    const defaultImage:string = ""
 
     const deleteClick = (idx: number) => {
         if (banner != null) {
@@ -29,10 +30,10 @@ export default function BusinessAdjustment() {
     };
 
     const setErrorNewBanner = (e: React.SyntheticEvent<HTMLImageElement, Event>, index: number) => {
-        e.currentTarget.src = "https://atkmedia.allticket.com/assets/content/21176/Maleehuana_30082024_SlideBanner.jpg"
+        e.currentTarget.src = defaultImage
         if (banner != null) {
             const newArray = [...banner]
-            newArray[index] = "https://atkmedia.allticket.com/assets/content/21176/Maleehuana_30082024_SlideBanner.jpg"
+            newArray[index] = defaultImage
             setBanner(newArray)
         }
     };
@@ -41,14 +42,28 @@ export default function BusinessAdjustment() {
         setDisplay(true);
     };
 
+    function checkImage(url:string) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(true); 
+            img.onerror = () => resolve(false);
+            img.src = url;
+            img.src += (img.src.includes('?') ? '&' : '?') + 'cache_bust=' + new Date().getTime();
+        });
+    }
+    
     const updateNewBanner = () => {
-        if (banner != null) {
-            const newArray = [...banner]
-            newArray.push(newImage)
-            setBanner(newArray)
-            setNewImage("")
-            setDisplay(false);
-        }
+        checkImage(newImage).then(isAvailable => {
+            if (isAvailable && banner != null) {
+                const newArray = [...banner]
+                newArray.push(newImage)
+                setBanner(newArray)
+                setNewImage("")
+                setDisplay(false);
+            } else {
+                setNewImage("")
+            }
+        });
     };
 
     const updateNewEvent = () => {
@@ -105,7 +120,7 @@ export default function BusinessAdjustment() {
 
     const filteringBanner = () => {
         if (banner != null) {
-            return banner.filter((item: string) => item != "https://atkmedia.allticket.com/assets/content/21176/Maleehuana_30082024_SlideBanner.jpg")
+            return banner.filter((item: string) => item != defaultImage)
         }
         return [];
     };
@@ -127,7 +142,6 @@ export default function BusinessAdjustment() {
         } catch (error) {
             console.error('Error Upload banner:', error);
         }
-        // setOnUpdateLoad(false)
     };
 
     useEffect(() => {
