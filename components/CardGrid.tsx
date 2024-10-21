@@ -32,8 +32,9 @@ export default function CardGrid({ items }: { items: Event[] }) {
         )
     } else {
         return (
-            <div className="w-full min-h-1.5 flex justify-center items-center">
-                <h5 className="text-center">No event available now <IconFaceSadTear width="5rem" height="5rem" /></h5>
+            <div className="w-full min-h-1.5 flex flex-col justify-center items-center">
+                <IconFaceSadTear width="5rem" height="5rem" />
+                <h5 className="text-center mt-5">No event available now</h5>
             </div>
             
         )
