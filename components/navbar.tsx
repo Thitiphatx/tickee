@@ -102,14 +102,6 @@ export const Navbar = () => {
                                         Backend
                                     </DropdownItem>
                                     <DropdownItem
-                                        key="Promotion"
-                                        href="/promotion_show"
-                                        description="ระบบจัดการ Promotion"
-                                        startContent={<IconDoorOpenFill width="1.5rem" height="1.5rem" />}
-                                    >
-                                        Backend Promotion of Organizer
-                                    </DropdownItem>
-                                    <DropdownItem
                                         key="logout"
                                         onClick={() => signOut()}
                                         className="text-danger"
