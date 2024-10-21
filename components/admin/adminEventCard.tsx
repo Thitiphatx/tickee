@@ -196,11 +196,10 @@ export default function AdminEventCard() {
                 <>
                     <div className="flex flex-wrap gap-5 w-full h-fit my-10">
                         {eventOnPage.map((event: EventOutput) => (
-                            <Card className="w-72 flex-shrink-0 overflow-hidden p-2" key={event.event_id}>
-                                <span className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(event)}>
+                            <Card isPressable className="w-72 flex-shrink-0 overflow-hidden p-2" key={event.event_id} onPress={() => eventDetailClick(event)}>
+                                <Button className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(event)}>
                                     <DeleteIcon />
-                                </span>
-                                <div onClick={() => eventDetailClick(event)}>
+                                </Button>
                                     <Image alt="Card background" className="object-fill w-full z-0" src={event.event_images} height={250} />
                                     <CardBody className="overflow-visible py-2 gap-3" >
                                         <div className="flex w-full justify-around items-center uppercase font-bold">
@@ -219,7 +218,6 @@ export default function AdminEventCard() {
                                         <p className="text-lg uppercase font-bold">{event.event_name}</p>
                                         <small className="text-default-500 truncate">{event.event_location}</small>
                                     </CardBody>
-                                </div>
                             </Card>
                         ))}
                     </div>

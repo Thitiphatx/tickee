@@ -7,6 +7,7 @@ import { Input } from "@nextui-org/input";
 import { Event_Type, Promotion_Type } from '@prisma/client';
 import { BusinessData } from '@/types/data_type';
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/table';
+import { Card } from '@nextui-org/card';
 
 export default function BusinessAdjustment() {
     const [display, setDisplay] = useState(false);
@@ -228,9 +229,9 @@ export default function BusinessAdjustment() {
                     <div className="flex flex-col items-center gap-2 w-full my-10 p-10 bg-opacity-20 bg-gray-600 rounded-2xl">
                         {banner?.map((src, index) => (
                             <div key={index} className='relative'>
-                                <span className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(index)}>
+                                <Button className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(index)}>
                                     <DeleteIcon />
-                                </span>
+                                </Button>
                                 <img
                                     src={src}
                                     style={{
@@ -241,7 +242,7 @@ export default function BusinessAdjustment() {
                                 />
                             </div>
                         ))}
-                        <div onClick={insertNewBanner} className='flex justify-center h-1/3 w-3/4 p-5'>
+                        <Card isPressable onPress={insertNewBanner} className='flex justify-center h-1/3 w-3/4 p-5'>
                             {!display && (
                                 <PlusIcon className='size-52' />
                             )}
@@ -252,7 +253,7 @@ export default function BusinessAdjustment() {
                                     <Button onClick={updateNewBanner} color='primary' variant='shadow' className="uppercase w-full" radius="full">insert</Button>
                                 </div>
                             )}
-                        </div>
+                        </Card>
                     </div>
 
                     <div className="flex flex-col items-center gap-5 w-2/5">

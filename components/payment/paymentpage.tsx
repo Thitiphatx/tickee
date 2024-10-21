@@ -41,7 +41,7 @@ export default function Payment({ quantity, seatData, eventname }: { quantity: n
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">ราคา/price</h5>
                 </div>
                 <div className="flow-root">
-                    <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
+                    <ul className="divide-y divide-gray-200 dark:divide-gray-700">
                         <li className="pt-3 pb-0 sm:pt-4">
                             <div className="flex items-center">
                                 <div className="flex-1 min-w-0 ms-4">
