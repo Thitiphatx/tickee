@@ -247,10 +247,10 @@ export default function AccountMyticketCard() {
                     <ModalHeader>Receipt Details</ModalHeader>
                     <ModalBody>
                         <div>
-                            {/* <h3 className="font-bold text-lg">Event Name: {receipts[ticketinfo].rec_seat.event_seat.event_name}</h3> */}
-                            {/* <p>Date: {new Date(receipts[ticketinfo].rec_date).toLocaleString('th-TH', options2).replace(',', '')}</p> */}
-                            {/* <p>Tickets: {receipts[ticketinfo].rec_quantity}</p> */}
-                            {/* <p>Location: {JSON.parse(receipts[ticketinfo].seatType.event_seat.event_location).address}, {JSON.parse(receipts[ticketinfo].seatType.event_seat.event_location).city}</p> */}
+                            {/* <h3 className="font-bold text-lg">Event Name: {receipts[ticketinfo].rec_seat.event_seat.event_name}</h3>
+                            <p>Date: {new Date(receipts[ticketinfo].rec_date).toLocaleString('th-TH', options2).replace(',', '')}</p>
+                            <p>Tickets: {receipts[ticketinfo].rec_quantity}</p>
+                            <p>Location: {JSON.parse(receipts[ticketinfo].seatType.event_seat.event_location).address}, {JSON.parse(receipts[ticketinfo].seatType.event_seat.event_location).city}</p> */}
                         </div>
                     </ModalBody>
                     <ModalFooter>

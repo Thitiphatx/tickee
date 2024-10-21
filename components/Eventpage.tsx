@@ -80,48 +80,43 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                     </div>
 
                     <div>
-                        <h2 className="uppercase font-bold">Select Ticket</h2>
-                        <Selector setCurrentTab={setCurrentTab} currentTab={currentTab} onTabChange={handleTabChange} >
-                            {eventDetails.Seat_Type.filter(isSeatAvailable).map((seat) => (
-                                <Card key={seat.seat_id} className="w-full cursor-pointer" seatId={seat.seat_id} >
-                                    <CardHeader className='flex flex-col items-start' >
-                                        <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง ({seat.Seat_Dispatch?.sd_max}/{seat.Seat_Dispatch?.sd_current})</h4>
-                                        
-                                        <div className='flex flex-col'>
+                    <h2 className="uppercase font-bold">Select Ticket</h2>
+                        {eventDetails.Seat_Type.filter((seat:Seat_Type) => isSeatAvailable(seat)).map((seat) => (
+                            <Card isPressable key={seat.seat_id} className={`w-full cursor-pointer ring-2 ${currentTab == seat.seat_id ? "ring-primary-500" : "ring-foreground-300"}`} onPress={()=> setCurrentTab(seat.seat_id)} >
+                                <CardHeader className='flex flex-col items-start' >
+                                    <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง {(seat.Seat_Dispatch?.sd_max||0) - (seat.Seat_Dispatch?.sd_current||0) } ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})</h4>
+                                    <div className='flex flex-col'>
                                         {seat.Promotion?.pro_type?.pt_id === 1 ? (
                                             <>
-                                                <h4 className="font-bold ml-2 text-green-900">
+                                                <h4 className="font-bold ml-2 text-warning-500">
                                                     โปรโมชั่น {seat.Promotion.pro_type.pt_name}  ลด {seat.Promotion.pro_discount} %
                                                 </h4>
-                                              
+
                                             </>
-                                        ) : seat.Promotion?.pro_type?.pt_id === 2 ? (
-                                            <>
-                                                <h4 className="font-bold ml-2 text-blue-900">
-                                                    โปรโมชั่น {seat.Promotion.pro_type.pt_name}  ลด {seat.Promotion.pro_discount} บาท
-                                                </h4>
-                                            </>
-                                        ) :seat.Promotion?.pro_type?.pt_id === 3 ? (
-                                            <>
-                                                <h4 className="font-bold ml-2 text-red-900">
+                                        ) : seat.Promotion?.pro_type?.pt_id === 2 ? (<>
+                                            <h4 className="font-bold ml-2 text-blue-900">
+                                                โปรโมชั่น {seat.Promotion.pro_type.pt_name}  ลด {seat.Promotion.pro_discount} บาท
+                                            </h4>
+                                        </>
+                                    ) : seat.Promotion?.pro_type?.pt_id === 3 ? (
+                                        <>
+                                            <h4 className="font-bold ml-2 text-red-900">
                                                 โปรโมชั่น {seat.Promotion?.pro_type.pt_name}  แจก {seat.Promotion?.pro_description}
-                                                </h4>
+                                            </h4>
 
-                                            </>
-                                        ): null}
-                                        </div>
+                                        </>
+                                    ) : null}
+                                </div>
 
-                                    </CardHeader>
-                                    <CardBody className="flex flex-row justify-between items-center">
-                                        <div>
+                            </CardHeader>
+                            <CardBody className="flex flex-row justify-between items-center">
+                                <div>
 
-                                            <p>฿ {seat.seat_price}</p>
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            ))}
-
-                        </Selector>
+                                    <p>฿ {seat.seat_price}</p>
+                                </div>
+                            </CardBody>
+                        </Card>
+                    ))}
 
                         <Button radius="full" color="primary" size="lg" className="w-full" onClick={handlePaymentClick} >Buy</Button>
                         {showAlert && (
