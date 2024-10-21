@@ -167,7 +167,7 @@ export default function BusinessAdjustment() {
     }
 
     return (
-        <div className='flex flex-col items-center py-10'>
+        <div className='flex flex-col items-center w-full py-10 px-10'>
             {!onLoad && (
                 <>
                     <div className="flex flex-col items-center gap-5 w-full">
@@ -242,13 +242,13 @@ export default function BusinessAdjustment() {
                                 />
                             </div>
                         ))}
-                        <Card isPressable onPress={insertNewBanner} className='flex justify-center h-1/3 w-3/4 p-5'>
+                        <Card isPressable onPress={insertNewBanner} className='p-5'>
                             {!display && (
                                 <PlusIcon className='size-52' />
                             )}
 
                             {display && (
-                                <div className='flex flex-col items-center gap-3 size-full'>
+                                <div className='flex flex-col items-center gap-3 h-full w-[700px]'>
                                     <Input onChange={handleImageInputChange} value={newImage} type="text" label="Image URL" />
                                     <Button onClick={updateNewBanner} color='primary' variant='shadow' className="uppercase w-full" radius="full">insert</Button>
                                 </div>

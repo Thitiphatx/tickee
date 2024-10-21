@@ -96,7 +96,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                         <h2 className="uppercase font-bold">Select Ticket</h2>
                         <Selector setCurrentTab={setCurrentTab} currentTab={currentTab} onTabChange={handleTabChange} >
                             {eventDetails.Seat_Type.filter((seat:Seat_Type) => isSeatAvailable(seat)).map((seat) => (
-                                <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300" seatId={seat.seat_id} >
+                                <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300" >
                                     <CardHeader className='flex flex-col items-start' >
                                         <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง {(seat.Seat_Dispatch?.sd_max||0) - (seat.Seat_Dispatch?.sd_current||0) } ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})</h4>
 

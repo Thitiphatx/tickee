@@ -20,14 +20,14 @@ export default function Selector({ children, setCurrentTab, currentTab ,onTabCha
         <div>
             <div className="space-y-2 p-5">
                 {React.Children.map(children, (child) => {
-                    const { seatId } = (child as React.ReactElement).props; // Get the seatId from child props
+                    const {key}  = (child as React.ReactElement); // Get the seatId from child props
                     return (
                         <button
-                            key={seatId} // Use seatId as key
-                            className={`cursor-pointer rounded-xl ring-foreground-900 ${currentTab === seatId ? "ring-4" : ""}`}
+                            key={key} // Use seatId as key
+                            className={`cursor-pointer rounded-xl ring-foreground-900 ${currentTab === Number(key) ? "ring-4" : ""}`}
                             onClick={() => {
-                                console.log('กดเลือก card:', seatId); // Log the selected seatId
-                                handleClick(seatId); // Pass the seatId directly to the parent
+                                console.log('กดเลือก card:', key); // Log the selected seatId
+                                handleClick(Number(key)); // Pass the seatId directly to the parent
                             }}
                         >
                             {child}
