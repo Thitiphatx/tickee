@@ -9,45 +9,13 @@ import { parseDate } from "@internationalized/date";
 import { CalendarDate, CalendarDateTime, parseZonedDateTime, ZonedDateTime } from "@internationalized/date";
 import { DeleteIcon } from "./icons";
 import { useRouter } from "next/navigation";
-
-interface EventData {
-    event_id: number;
-    event_name: string;
-    event_intro: string;
-    event_description: string;
-    event_images: string;
-    event_start_date: Date;
-    event_last_date: Date;
-    event_location: string;
-    event_type: {
-        et_id: number;
-        et_name: string;
-    }
-    Seat_Type: {
-        seat_id: number;
-        seat_name: string;
-        seat_price: number;
-        seat_create_date: Date;
-        seat_due_date: Date;
-        event_seat_id: number;
-        Seat_Dispatch: {
-          st_id: number; // Change st_di to st_id here
-          seat_type_id: number;
-          sd_max: number;
-          sd_current: number;
-        } | null;
-      }[];
-}
+import { Prisma } from "@prisma/client";
 
 interface Event_Type {
     et_id: number;
     et_name: string;
 }
 
-interface EditEventFormProps {
-    eventData: EventData;
-    eventType: Event_Type[];
-}
 
 interface EventLocation {
     address: string;
@@ -55,7 +23,18 @@ interface EventLocation {
     country: string;
 }
 
-export default function EditEventForm({ eventData, eventType }: EditEventFormProps) {
+type EditEventFormProps = Prisma.EventGetPayload<{
+    include: {
+        event_type: true,
+        Seat_Type: {
+            include: {
+                Seat_Dispatch: true,
+            }
+        }
+    },
+}>
+
+export default function EditEventForm({ eventData, eventType }: { eventData: EditEventFormProps, eventType: Event_Type}) {
     const router = useRouter();
     const { data: session } = useSession();
     const [event_name, setEventName] = useState("");
@@ -169,7 +148,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
       );
 
 
-    const handleseatInputChange = (e, index, field) => {
+    const handleseatInputChange = (e: any, index: number, field: any) => {
         let value = field === 'seat_price' || field === 'seat_max' ? parseInt(e.target.value) : e.target.value;
 
         const updatedSeats = [...seat];
@@ -344,9 +323,9 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                 required
             />
             <div>
-                <label className="block mb-2 text-sm font-medium leading-6">
+                <p className="block mb-2 text-sm font-medium leading-6">
                     Introduction
-                </label>
+                </p>
                 {/* Pass event_intro as a prop to TextEditor */}
                 <TextEditor setContent={setevent_intro} contents={eventData?.event_intro || ""} max_range={200} />
                 <p className="mt-3 text-sm leading-6 text-gray-400">
@@ -354,15 +333,14 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                 </p>
             </div>
             <div>
-                <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 ">
+                <p className="block text-sm font-medium leading-6 ">
                     Event photo
-                </label>
+                </p>
                 <div className="mt-2 flex justify-center rounded-lg border border-dashed border-foreground-200 px-6 py-6" >
                     {eventData?.event_images ? (
                         <div className="relative">
                             <img src={eventimageURL} alt="Event" className="max-w-full h-auto" />
-                            <label
-                                htmlFor="url-change"
+                            <p
                                 className="absolute bottom-0 right-0 cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500"
                             >
                                 <Input
@@ -372,7 +350,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                                     placeholder="Change image URL"
                                     onChange={(e) => seteventimageURL(e.target.value)} // Add your URL change logic
                                 />
-                            </label>
+                            </p>
 
                         </div>
 
@@ -464,9 +442,9 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                 ))}
 
             </div>
-            <label className="block mb-2 text-sm font-medium leading-6 ">
+            <p className="block mb-2 text-sm font-medium leading-6 ">
                 Event description
-            </label>
+            </p>
             <TextEditor setContent={setevent_description} contents={eventData?.event_description || ""} />
             <p className="mt-3 text-sm leading-6 text-gray-400">เขียนรายละเอียดเกี่ยวกับตั๋วและโปรโมชั่น</p>
 

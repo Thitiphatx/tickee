@@ -49,20 +49,34 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async jwt({ token, user, account, profile }) {
+            if (account?.provider == "google") {
+                token.id = profile?.sub!,
+                token.email = profile?.email!,
+                token.name = profile?.name!,
+                token.provider = "google"
+
+                let existedUser = await prisma.user.findFirst({
+                    where: { id: token.id as string }
+                });
+
+                if (!existedUser) {
+                    existedUser = await prisma.user.create({
+                        data: {
+                            id: profile?.sub!,
+                            email: profile?.email!,
+                            name: profile?.name!,
+                            provider: "google"
+                        }
+                    });
+                }
+
+            }
             if (user) {
                 // If a new user signs in, assign token from user object
                 token.id = user.id;
                 token.name = user.name;
                 token.role = user.role;
             }
-
-            if (account?.provider == "google") {
-                token.id = profile?.sub!,
-                token.email = profile?.email!,
-                token.name = profile?.name!,
-                token.provider = "google"
-            }
-            
             // Fetch fresh user data from the database every time the token is requested
             const dbUser = await prisma.user.findFirst({
                 where: { id: token.id as string }

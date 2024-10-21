@@ -393,23 +393,22 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
             />
 
             <div>
-                <label className="block mb-2 text-sm font-medium leading-6 ">
+                <p className="block mb-2 text-sm font-medium leading-6 ">
                     Introduction
-                </label>
+                </p>
                 <TextEditor setContent={setevent_intro} maxLength={5000} />
                 <p className="mt-3 text-sm leading-6 text-gray-400 ">เขียนเชิญชวนผู้มาเข้างาน</p>
             </div>
 
             <div>
-                <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 ">
+                <p className="block text-sm font-medium leading-6 ">
                     Event photo
-                </label>
+                </p>
                 <div className="mt-2 flex justify-center rounded-lg border border-dashed border-foreground-200 px-6 py-6" >
                     {eventimageURL ? (
                         <div className="relative">
                             <img src={eventimageURL} alt="Event" className="max-w-full h-auto" />
-                            <label
-                                htmlFor="url-change"
+                            <p
                                 className="absolute bottom-0 right-0 cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500"
                             >
                                 <Input
@@ -419,7 +418,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                                     placeholder="Change image URL"
                                     onChange={(e) => seteventimageURL(e.target.value)} // Add your URL change logic
                                 />
-                            </label>
+                            </p>
 
                         </div>
 
@@ -446,7 +445,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                 />
             </div>
 
-            <label>Event location</label>
+            <p>Event location</p>
             <div className="flex flex-row gap-5">
                 <Input
                     type="text"
@@ -566,9 +565,9 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                 </div>
             </div>
 
-            <label className="block mb-2 text-sm font-medium leading-6 ">
+            <p className="block mb-2 text-sm font-medium leading-6 ">
                 Event description
-            </label>
+            </p>
             <TextEditor setContent={setevent_description} maxLength={30000} />
             <p className="mt-3 text-sm leading-6 text-gray-400">เขียนรายละเอียดเกี่ยวกับตั๋วและโปรโมชั่น</p>
 

@@ -7,6 +7,6 @@ export async function GET() {
         return NextResponse.json(data);
     } catch (error) {
         console.error('Error Get Receipt Data', error);
-        return null
+        return NextResponse.json({ error: "Data not found" }, { status: 404 });
     }
 }
