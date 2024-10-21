@@ -228,9 +228,9 @@ export default function BusinessAdjustment() {
                     <div className="flex flex-col items-center gap-2 w-full my-10 p-10 bg-opacity-20 bg-gray-600 rounded-2xl">
                         {banner?.map((src, index) => (
                             <div key={index} className='relative'>
-                                <span className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(index)}>
+                                <button className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(index)}>
                                     <DeleteIcon />
-                                </span>
+                                </button>
                                 <img
                                     src={src}
                                     style={{
