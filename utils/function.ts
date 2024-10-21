@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { BusinessData, RoleAvailable, SignInData, SignUpData } from "../types/data_type";
+import { BusinessData, ReceiptStatus, RoleAvailable, SignInData, SignUpData } from "../types/data_type";
 import { Admin_Data, Event_Type, Promotion_Type } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { Session } from "next-auth";
@@ -52,7 +52,7 @@ export async function fetchEvent() {
     return {
         event
     }
-  }
+}
 
 
 export async function getBusinessData(): Promise<BusinessData | null> {
@@ -121,5 +121,47 @@ export function redirectingByRole(session: Session | null) {
         redirect("/admin")
     } else if (session?.user.role == RoleAvailable.Organizer) {
         redirect("/organizer")
+    }
+}
+
+export async function autoChangeReceiptStatus() {
+    let output;
+    let today = new Date()
+    try {
+        output = await prisma.receipt.findMany({
+            where: {
+                rec_seat: {
+                    event_seat: {
+                        event_last_date: {
+                            lt: today, 
+                        },
+                    },
+                },
+            },
+            select: {
+                rec_id: true,
+            },
+        });
+
+        if (!output) {
+            throw Error
+        }
+
+        const receiptIds = output.map((receipt) => receipt.rec_id);
+
+        await prisma.receipt.updateMany({
+            where: {
+                rec_id: {
+                    in: receiptIds,
+                },
+            },
+            data: {
+                rec_status:ReceiptStatus.Expired
+            }
+        })
+        return output
+    } catch (error) {
+        console.log("update ReceiptStatus Crontab Error")
+        return null
     }
 }

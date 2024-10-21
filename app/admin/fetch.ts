@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { ReceiptStatus } from "@/types/data_type";
 
 export async function getReceiptDate() {
     let output;

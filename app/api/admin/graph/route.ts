@@ -5,7 +5,6 @@ export async function GET() {
     try {
         const data = await getReceiptDate();
         
-        // ตรวจสอบว่ามีข้อมูลหรือไม่
         if (data) {
             return NextResponse.json(data);
         } else {
