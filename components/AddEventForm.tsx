@@ -21,12 +21,10 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
     const [event_description, setevent_description] = useState('');
     const [eventimageURL, seteventimageURL] = useState('');
 
-
     const [dateRange, setDateRange] = useState({
-        start: parseZonedDateTime("2024-04-01T00:45[Asia/Bangkok]"),
-        end: parseZonedDateTime("2024-04-08T11:15[Asia/Bangkok]"),
+        start: parseZonedDateTime(`${new Date().toISOString().split('T')[0]}T00:00[Asia/Bangkok]`),
+        end: parseZonedDateTime(`${new Date().toISOString().split('T')[0]}T23:59[Asia/Bangkok]`),
     });
-
 
     interface EventLocation {
         address: string;
@@ -440,7 +438,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                     hideTimeZone
                     visibleMonths={2}
                     onChange={handleDateChange}
-                    defaultValue={dateRange}
+                    value={dateRange}
                 />
             </div>
 
