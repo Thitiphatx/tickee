@@ -53,7 +53,7 @@ export async function getReceiptDate() {
                         processedData.unshift(
                             {
                                 x: dateString.toISOString(),
-                                y: (sum / weeklyOrders)
+                                y: (sum)
                             })
                         sum = 0
                         weeklyOrders = 1
