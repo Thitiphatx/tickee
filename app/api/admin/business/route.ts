@@ -27,6 +27,6 @@ export async function GET() {
         }
     } catch (error) {
         console.error('Error Get Business Data', error);
-        return null
+        return NextResponse.json({ error: "Data not found" }, { status: 404 });
     }
 }
