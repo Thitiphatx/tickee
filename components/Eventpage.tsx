@@ -28,9 +28,9 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     const [showTicketInfo, setShowTicketInfo] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [showPaymentPage, setShowPaymentPage] = useState(false);
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [seatPerOrder, setSeatPerOrder] = useState<number>(0);
 
-    const handlePaymentClick = () => {
+    const handlePaymentClick = (input:number) => {
         console.log(eventDetails)
         if (currentTab == 0) {
             setShowAlert(true);
@@ -38,6 +38,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
         else {
             onOpen();
             setShowTicketInfo(true);
+            setSeatPerOrder(input)
         }
     };
     const handleTabChange = () => {
@@ -58,9 +59,10 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     }
 
     const isSeatAvailable = (seat: Seat_Type) => {
-        const currentDate = new Date();
-        const seatCreateDate = new Date(seat.seat_create_date);
-        return currentDate >= seatCreateDate;
+        const currentDate = new Date().getTime();
+        const seatCreateDate = new Date(seat.seat_create_date).getTime();
+        const seatLastDate = new Date(seat.seat_due_date).getTime();
+        return ((currentDate >= seatCreateDate) && (currentDate <= seatLastDate));
     };
     
     return (
@@ -96,13 +98,8 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                             {eventDetails.Seat_Type.filter((seat:Seat_Type) => isSeatAvailable(seat)).map((seat) => (
                                 <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300" seatId={seat.seat_id} >
                                     <CardHeader className='flex flex-col items-start' >
-                                        <div className="flex flex-row justify-between w-full">
-                                            <h4 className="font-bold">{seat.seat_name}</h4>
-                                            {status == "authenticated" && session.user.role == "organizer" && session.user.id == eventDetails.producer_id && (
-                                                <Chip color="warning" variant="dot">จองไปแล้ว ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})</Chip>
-                                            )}
-                                        </div>
-                                       
+                                        <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง {(seat.Seat_Dispatch?.sd_max||0) - (seat.Seat_Dispatch?.sd_current||0) } ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})</h4>
+
                                         <div className='flex flex-col'>
                                             {seat.Promotion?.pro_type?.pt_id === 1 ? (
                                                 <>
@@ -139,7 +136,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
 
                         </Selector>
 
-                        <Button radius="full" color="primary" size="lg" className="w-full" onClick={handlePaymentClick} >Buy</Button>
+                        <Button radius="full" color="primary" size="lg" className="w-full" onClick={()=>handlePaymentClick(eventDetails.event_seat_per_order)} >Buy</Button>
                     </div>
                     {showAlert && (
                             <Card role="alert" isPressable onPress={() => setShowAlert(false)} className="ring-1 ring-warning-500 w-full">
@@ -160,7 +157,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick} />
+                            <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick} seatPerOrder={seatPerOrder}/>
                         </>
                     )}
                 </ModalContent>

@@ -43,7 +43,7 @@ export async function getReceiptDate() {
             if ((
                 index - 1 >= 0 &&
                 yearCount <= 5 &&
-                getWeekStartDate(new Date(output[index].rec_date)) != getWeekStartDate(new Date(output[index - 1].rec_date))) ||
+                getWeekStartDate(new Date(output[index].rec_date)) !== getWeekStartDate(new Date(output[index - 1].rec_date))) ||
                 index == 0
             ) {
                 temp = weeklyOrders
@@ -83,7 +83,6 @@ export async function getReceiptDate() {
                 data: item
             }))
         };
-
         return { data, yearArray }
     } catch (error) {
         console.log("getReceiptDateToPlot Error\n", error)
@@ -96,5 +95,5 @@ function getWeekStartDate(date: Date) {
     const firstDayOfWeek = day.getDate() - day.getDay();
     const weekStartDate = new Date(day.setDate(firstDayOfWeek));
     weekStartDate.setHours(0, 0, 0, 0);
-    return weekStartDate;
+    return weekStartDate.getTime();
 };
