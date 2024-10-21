@@ -1,9 +1,9 @@
 "use server"
 
 import CardGrid from "@/components/CardGrid"
+import { IconPlusCircle } from "@/components/icons";
 import { prisma } from "@/prisma/seed";
 import { getCurrentSession } from "@/utils/getCurrentSession";
-import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { redirect } from "next/navigation";
 
@@ -20,8 +20,11 @@ export default async function EventManagement() {
     })
     return (
         <div>
-            Event organizer
-            <Link href="/addevent">Add event</Link>
+            <div className="flex flex-row justify-between mb-10">
+                <h1 className="font-bold text-3xl">Event organizer</h1>
+                <Link color="success" href="/addevent" isBlock> <IconPlusCircle className="mr-2"/> Add event</Link>
+            </div>
+            
             <CardGrid items={items} />
         </div>
     )

@@ -1,9 +1,10 @@
 "use server"
 import CardGrid from "@/components/CardGrid";
+import { IconFaceSadTear } from "@/components/icons";
 import { prisma } from "@/prisma/seed";
 
 export default async function Concert() {
-    const concert = await prisma.event.findMany({
+    const data = await prisma.event.findMany({
         include: {
             event_type: true,
             producer: true,
@@ -21,7 +22,7 @@ export default async function Concert() {
     return (
         <div>
             <h1 className="font-bold text-3xl mb-10">Concert</h1>
-            <CardGrid items={concert}/>
+            <CardGrid items={data}/>
         </div>
     )
 };
