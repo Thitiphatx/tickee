@@ -27,8 +27,8 @@ interface EventData {
         seat_id: number;
         seat_name: string;
         seat_price: number;
-        seat_create_date: Date;
-        seat_due_date: Date;
+        seat_create_date: string;
+        seat_due_date: string;
         event_seat_id: number;
         Seat_Dispatch: {
             st_di: number;
@@ -77,8 +77,10 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
     const formattedEndDate1 = endDate1.toISOString().slice(0, 10);
     console.log("Second of all of all ", formattedEndDate1);
 
+
+
     // 
-    
+
     const [selectedeventTypeValue, setSelectedEventTypeValue] = useState<string>(eventData?.event_type?.et_id.toString() || "1");
     const [dateRange, setDateRange] = useState({
         start: parseZonedDateTime(`${formattedStartDate1}${defaultTime}`),
@@ -89,6 +91,10 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
     const parsedEventLocation: EventLocation = JSON.parse(eventData.event_location);
 
     const [event_location, setEventLocation] = useState<EventLocation>(parsedEventLocation);
+
+    
+
+
 
     useEffect(() => {
         if (eventData) {
@@ -136,6 +142,8 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
         seat_name: string;
         seat_price: number;
         seat_max: number;
+        seat_create_date?: string;  // Add this
+        seat_due_date?: string;     // Add this
     }
 
 
@@ -147,25 +155,11 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
             seat_name: s.seat_name,
             seat_price: s.seat_price,
             seat_max: s.Seat_Dispatch.sd_max,
+            seat_create_date: s.seat_create_date,
+            seat_due_date: s.seat_due_date,
         }))
     );
 
-    const removeSeat = (indexToRemove: number) => {
-        const updatedSeats = [...seat];
-        updatedSeats.splice(indexToRemove, 1);
-        setseat(updatedSeats);
-    };
-
-    const addseatfields = () => {
-        setseat([
-            ...seat,
-            {
-                seat_name: "",
-                seat_price: 0,
-                seat_max: 0,
-            }
-        ]);
-    };
 
     const handleseatInputChange = (e, index, field) => {
         let value = field === 'seat_price' || field === 'seat_max' ? parseInt(e.target.value) : e.target.value;
@@ -176,6 +170,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
         setseat(updatedSeats);
     };
 
+
     const addtodb = async () => {
         console.log("name :", event_name)
         console.log("intro :", event_intro)
@@ -185,6 +180,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
         console.log("des:", event_description)
         const startDateTimeISO = dateRange.start.toDate();
         const endDateTimeISO = dateRange.end.toDate();
+        console.log(startDateTimeISO)
 
 
         const data = {
@@ -209,7 +205,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                 },
                 body: JSON.stringify(data),
             });
-            
+
 
             if (!response.ok) {
                 throw new Error('Failed to create event');
@@ -221,14 +217,15 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
 
             const eventId = result.event_id;
             await Promise.all(
-                seat.map(async (seatItem) => {
+                seat.map(async (seatItem,index) => {
+
                     const seatData = {
                         seat_id: seatItem.seat_id,
                         seat_name: seatItem.seat_name,
                         seat_price: seatItem.seat_price,
                         seat_max: seatItem.seat_max,
-                        seat_create_date: startDateTimeISO,
-                        seat_due_date: endDateTimeISO,
+                        seat_create_date: seatDateRanges[index].start.toDate(),
+                        seat_due_date: seatDateRanges[index].end.toDate(),
                         event_seat_id: eventData.event_id
                     };
                     // Send a POST request to insert the seat into the seat table
@@ -268,7 +265,52 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
     const formattedLastDate = endDate.toISOString().slice(0, 10);
     console.log(formattedLastDate);
 
-    console.log(eventData)
+    const formattedSeats2 = eventData.Seat_Type.map((seat, index) => {
+        // Create a date object for the event start date
+        const startDate1 = new Date(eventData.Seat_Type[index].seat_create_date); // Assuming eventData.event_start_date is a valid date string
+        startDate1.setDate(startDate1.getDate() + 1); // Subtract 1 day
+        const formattedStartDate1 = startDate1.toISOString().slice(0, 10);
+        console.log(formattedStartDate1);
+
+        const endDate1 = new Date(eventData.Seat_Type[index].seat_due_date); // Assuming eventData.start is a valid date string
+        endDate1.setDate(endDate1.getDate() + 1)
+        const formattedLastDate1 = endDate1.toISOString().slice(0, 10);
+        console.log(formattedLastDate1);
+
+
+        return {
+            seat_id: seat.seat_id,
+            seat_name: seat.seat_name,
+            seat_price: seat.seat_price,
+            seat_create_date: formattedStartDate1, // YYYY-MM-DD format
+            seat_due_date: formattedLastDate1,       // YYYY-MM-DD format
+            event_seat_id: seat.event_seat_id,
+            Seat_Dispatch: seat.Seat_Dispatch,
+            seat_max: seat.Seat_Dispatch.sd_max
+        };
+    });
+    const [seatDateRanges, setSeatDateRanges] = useState(
+        formattedSeats2.map(seat => ({
+            start: parseZonedDateTime(`${seat.seat_create_date}${defaultTime}`),
+            end: parseZonedDateTime(`${seat.seat_due_date}${defaultTime}`),
+        }))
+    );
+
+    const handleSeatDateChange = (range: any, seatIndex: number) => {
+        // Assuming you have a state variable to hold the date ranges for each seat
+        const newSeatDateRanges = [...seatDateRanges]; // Create a copy of the current date ranges
+    
+        // Update the date range for the specific seat
+        newSeatDateRanges[seatIndex] = range;
+    
+        // Update the state with the new date ranges
+        setSeatDateRanges(newSeatDateRanges);
+    };
+
+    // Log the new array to see the result
+    console.log(formattedSeats2);
+
+    // console.log(eventData.Seat_Type[0])
     return (
         <div className="space-y-8">
             <Select
@@ -298,7 +340,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                     Introduction
                 </label>
                 {/* Pass event_intro as a prop to TextEditor */}
-                <TextEditor setContent={setevent_intro} initialContent={eventData?.event_intro || ""} max_range={200} />
+                <TextEditor setContent={setevent_intro} contents={eventData?.event_intro || ""} max_range={200} />
                 <p className="mt-3 text-sm leading-6 text-gray-400">
                     เขียนเชิญชวนผู้มาเข้างาน
                 </p>
@@ -397,16 +439,27 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                                 onChange={(e) => handleseatInputChange(e, index, 'seat_max')}
                                 placeholder="จำนวนที่เปิดขาย"
                             />
+                            <DateRangePicker
+                                label="Stay duration"
+                                isRequired
+                                defaultValue={{
+                                    start: parseDate(formattedSeats2[index].seat_create_date),
+                                    end: parseDate(formattedSeats2[index].seat_due_date),
+                                }}
+                                visibleMonths={2}
+                                onChange={(range) => handleSeatDateChange(range, index)} // Pass the index of the seat
+                                pageBehavior="single"
+                            />
                         </div>
-                        
+
                     </div>
                 ))}
-                
+
             </div>
             <label className="block mb-2 text-sm font-medium leading-6 ">
                 Event description
             </label>
-            <TextEditor setContent={setevent_description} contents={eventData?.event_description || ""}/>
+            <TextEditor setContent={setevent_description} contents={eventData?.event_description || ""} />
             <p className="mt-3 text-sm leading-6 text-gray-400">เขียนรายละเอียดเกี่ยวกับตั๋วและโปรโมชั่น</p>
 
             <Button onClick={addtodb}>Submit</Button>

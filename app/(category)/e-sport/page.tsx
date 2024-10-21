@@ -1,9 +1,19 @@
 "use server"
 import CardGrid from "@/components/CardGrid";
-import { IconFaceSadTear } from "@/components/icons";
+import PaginationComp from "@/components/PaginationComp";
+import { PAGE_SIZE } from "@/config/site";
 import { prisma } from "@/prisma/seed";
 
-export default async function Esport() {
+export default async function Esport({ searchParams }: { searchParams: { page?: string } }) {
+    const currentPage = parseInt(searchParams.page || '1', 10);
+    const totalEvents = await prisma.event.count({
+        where: {
+            event_type: {
+                et_name: "Esport",
+            },
+        },
+    });
+
     const data = await prisma.event.findMany({
         include: {
             event_type: true,
@@ -11,18 +21,28 @@ export default async function Esport() {
         },
         where: {
             event_type: {
-                et_name: "Esport"
-            }
+                et_name: "Esport",
+            },
         },
         orderBy: {
-            event_last_date: "asc"
-        }
-    })
+            event_last_date: "asc",
+        },
+        skip: (currentPage - 1) * PAGE_SIZE,
+        take: PAGE_SIZE,
+    });
+
+    const totalPages = Math.ceil(totalEvents / PAGE_SIZE);
+
+
 
     return (
         <div>
             <h1 className="font-bold text-3xl mb-10">Esport</h1>
-            <CardGrid items={data}/>
+            <CardGrid items={data} />
+            {currentPage <= totalPages && (
+                <PaginationComp page={currentPage} totalPages={totalPages} />
+            )}
+            
         </div>
     )
 };
