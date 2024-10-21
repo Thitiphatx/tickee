@@ -33,6 +33,6 @@ export async function POST(req: NextRequest) {
       }
     } catch (error) {
         console.error('Error Get User Data', error);
-        return null
+        return NextResponse.json({ error: "Data not found" }, { status: 404 });
     }
   }

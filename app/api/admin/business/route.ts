@@ -27,8 +27,7 @@ export async function GET() {
         }
         return NextResponse.json(null);
     } catch (error) {
-        return NextResponse.json({
-            message: 'Promotion created fail',
-        });
+        console.error('Error Get Business Data', error);
+        return NextResponse.json({ error: "Data not found" }, { status: 404 });
     }
 }
