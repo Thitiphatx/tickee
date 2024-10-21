@@ -9,45 +9,13 @@ import { parseDate } from "@internationalized/date";
 import { CalendarDate, CalendarDateTime, parseZonedDateTime, ZonedDateTime } from "@internationalized/date";
 import { DeleteIcon } from "./icons";
 import { useRouter } from "next/navigation";
-
-interface EventData {
-    event_id: number;
-    event_name: string;
-    event_intro: string;
-    event_description: string;
-    event_images: string;
-    event_start_date: string;
-    event_last_date: string;
-    event_location: string;
-    event_type: {
-        et_id: number;
-        et_name: string;
-    }
-    Seat_Type: Array<{
-        seat_id: number;
-        seat_name: string;
-        seat_price: number;
-        seat_create_date: string;
-        seat_due_date: string;
-        event_seat_id: number;
-        Seat_Dispatch: {
-            st_di: number;
-            seat_type_id: number;
-            sd_max: number;
-            sd_current: number;
-        }
-    }>;
-}
+import { Prisma } from "@prisma/client";
 
 interface Event_Type {
     et_id: number;
     et_name: string;
 }
 
-interface EditEventFormProps {
-    eventData: EventData;
-    eventType: Event_Type[];
-}
 
 interface EventLocation {
     address: string;
@@ -55,7 +23,18 @@ interface EventLocation {
     country: string;
 }
 
-export default function EditEventForm({ eventData, eventType }: EditEventFormProps) {
+type EditEventFormProps = Prisma.EventGetPayload<{
+    include: {
+        event_type: true,
+        Seat_Type: {
+            include: {
+                Seat_Dispatch: true,
+            }
+        }
+    },
+}>
+
+export default function EditEventForm({ eventData, eventType }: { eventData: EditEventFormProps, eventType: Event_Type}) {
     const router = useRouter();
     const { data: session } = useSession();
     const [event_name, setEventName] = useState("");
@@ -161,7 +140,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
     );
 
 
-    const handleseatInputChange = (e, index, field) => {
+    const handleseatInputChange = (e: any, index: number, field: any) => {
         let value = field === 'seat_price' || field === 'seat_max' ? parseInt(e.target.value) : e.target.value;
 
         const updatedSeats = [...seat];
