@@ -13,7 +13,7 @@ import Payment from './payment/paymentpage';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { EventLandingData, Seat_Type } from '@/types/data_type';
+import { EventLandingData } from '@/types/data_type';
 import { IconArrowBackOutline } from '@/styles/icon';
 import { Seat_Type } from '@prisma/client';
 import { Modal, ModalContent, useDisclosure } from '@nextui-org/modal';
@@ -93,7 +93,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                     <div>
                         <h2 className="uppercase font-bold">Select Ticket</h2>
                         <Selector setCurrentTab={setCurrentTab} currentTab={currentTab} onTabChange={handleTabChange} >
-                            {eventDetails.Seat_Type.filter(isSeatAvailable).map((seat) => (
+                            {eventDetails.Seat_Type.filter((seat:Seat_Type) => isSeatAvailable(seat)).map((seat) => (
                                 <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300" seatId={seat.seat_id} >
                                     <CardHeader className='flex flex-col items-start' >
                                         <div className="flex flex-row justify-between w-full">
