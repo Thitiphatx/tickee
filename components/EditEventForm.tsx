@@ -268,12 +268,12 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
     const formattedSeats2 = eventData.Seat_Type.map((seat, index) => {
         // Create a date object for the event start date
         const startDate1 = new Date(eventData.Seat_Type[index].seat_create_date); // Assuming eventData.event_start_date is a valid date string
-        startDate1.setDate(startDate1.getDate() + 1); // Subtract 1 day
+        startDate1.setDate(startDate1.getDate() +1); // Subtract 1 day
         const formattedStartDate1 = startDate1.toISOString().slice(0, 10);
         console.log(formattedStartDate1);
 
         const endDate1 = new Date(eventData.Seat_Type[index].seat_due_date); // Assuming eventData.start is a valid date string
-        endDate1.setDate(endDate1.getDate() + 1)
+        endDate1.setDate(endDate1.getDate() +1)
         const formattedLastDate1 = endDate1.toISOString().slice(0, 10);
         console.log(formattedLastDate1);
 
@@ -336,9 +336,9 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                 required
             />
             <div>
-                <label className="block mb-2 text-sm font-medium leading-6">
+                <p className="block mb-2 text-sm font-medium leading-6">
                     Introduction
-                </label>
+                </p>
                 {/* Pass event_intro as a prop to TextEditor */}
                 <TextEditor setContent={setevent_intro} contents={eventData?.event_intro || ""} max_range={200} />
                 <p className="mt-3 text-sm leading-6 text-gray-400">
@@ -346,15 +346,14 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                 </p>
             </div>
             <div>
-                <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 ">
+                <p className="block text-sm font-medium leading-6 ">
                     Event photo
-                </label>
+                </p>
                 <div className="mt-2 flex justify-center rounded-lg border border-dashed border-foreground-200 px-6 py-6" >
                     {eventData?.event_images ? (
                         <div className="relative">
                             <img src={eventimageURL} alt="Event" className="max-w-full h-auto" />
-                            <label
-                                htmlFor="url-change"
+                            <p
                                 className="absolute bottom-0 right-0 cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500"
                             >
                                 <Input
@@ -364,7 +363,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                                     placeholder="Change image URL"
                                     onChange={(e) => seteventimageURL(e.target.value)} // Add your URL change logic
                                 />
-                            </label>
+                            </p>
 
                         </div>
 
@@ -456,9 +455,9 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                 ))}
 
             </div>
-            <label className="block mb-2 text-sm font-medium leading-6 ">
+            <p className="block mb-2 text-sm font-medium leading-6 ">
                 Event description
-            </label>
+            </p>
             <TextEditor setContent={setevent_description} contents={eventData?.event_description || ""} />
             <p className="mt-3 text-sm leading-6 text-gray-400">เขียนรายละเอียดเกี่ยวกับตั๋วและโปรโมชั่น</p>
 

@@ -47,6 +47,7 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
       setFormData((prev) => ({ ...prev, pro_discount: '0' }));
     }
   }, [formData.pro_type]);
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -67,6 +68,7 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
       pro_discount: formData.pro_type !== '3' ? parseFloat(formData.pro_discount) : 0,
       pro_start_date: formData.pro_start_date,
       pro_last_date: formData.pro_last_date,
+      event_id: parseInt(formData.event_id),
       pro_type: parseInt(formData.pro_type),
     };
   

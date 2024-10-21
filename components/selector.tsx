@@ -18,11 +18,11 @@ export default function Selector({ children, setCurrentTab, currentTab ,onTabCha
 
     return (
         <div>
-            <ul className="space-y-2 p-5">
+            <div className="space-y-2 p-5">
                 {React.Children.map(children, (child) => {
                     const { seatId } = (child as React.ReactElement).props; // Get the seatId from child props
                     return (
-                        <li
+                        <button
                             key={seatId} // Use seatId as key
                             className={`cursor-pointer rounded-xl ring-foreground-900 ${currentTab === seatId ? "ring-4" : ""}`}
                             onClick={() => {
@@ -31,10 +31,10 @@ export default function Selector({ children, setCurrentTab, currentTab ,onTabCha
                             }}
                         >
                             {child}
-                        </li>
+                        </button>
                     );
                 })}
-            </ul>
+            </div>
         </div>
     );
 }
