@@ -1,7 +1,8 @@
 "use client"
 import { useEffect, useState } from "react"
-import { DateRangePicker } from "@nextui-org/date-picker";
+import { DatePicker, DateRangePicker } from "@nextui-org/date-picker";
 import { CalendarDate, CalendarDateTime, parseZonedDateTime, ZonedDateTime } from "@internationalized/date";
+import {now, getLocalTimeZone} from "@internationalized/date";
 import TextEditor from "@/components/texteditor";
 import { Select, SelectItem } from "@nextui-org/select";
 import { Event_Type } from "@prisma/client";
@@ -20,12 +21,10 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
     const [event_description, setevent_description] = useState('');
     const [eventimageURL, seteventimageURL] = useState('');
 
-
     const [dateRange, setDateRange] = useState({
-        start: parseZonedDateTime("2024-04-01T00:45[Asia/Bangkok]"),
-        end: parseZonedDateTime("2024-04-08T11:15[Asia/Bangkok]"),
+        start: parseZonedDateTime(`${new Date().toISOString().split('T')[0]}T00:00[Asia/Bangkok]`),
+        end: parseZonedDateTime(`${new Date().toISOString().split('T')[0]}T23:59[Asia/Bangkok]`),
     });
-
 
     interface EventLocation {
         address: string;
@@ -43,13 +42,18 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
         seat_name: string;
         seat_price: number;
         seat_max: number;
+        start_sellseat: string; // เพิ่มฟิลด์วันที่เปิดขาย
+        end_sellseat: string; // เพิ่มฟิลด์วันที่ปิดการขาย
+
     }
 
     const [seat, setseat] = useState<seatdata[]>(
         [{
             seat_name: "",
             seat_price: 0,
-            seat_max: 0
+            seat_max: 0,
+            start_sellseat: new Date().toISOString(), // ตั้งค่าเริ่มต้นเป็น null
+            end_sellseat: new Date().toISOString(), // ตั้งค่าเริ่มต้นเป็น null
         }]);
 
 
@@ -80,7 +84,9 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
             {
                 seat_name: "",
                 seat_price: 0,
-                seat_max: 0
+                seat_max: 0,
+                start_sellseat: new Date().toISOString(), // ตั้งค่าเริ่มต้นเป็น null
+                end_sellseat: new Date().toISOString(), // ตั้งค่าเริ่มต้นเป็น null
             }
         ]);
     }
@@ -167,7 +173,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
     const handleChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!eventlocationProvinceReg.test(e.target.value)) {
             setiseventlocationProvince_Invalid(true);
-            setEvent_PerrorMessage('ต้องการอักษระ 4 ตัวขึ้นไปสำหรับจังหวัดและไม่ใช่ตัวเลข');
+            setEvent_PerrorMessage('ต้องการอักษระ 2 ตัวขึ้นไปสำหรับจังหวัดและไม่ใช่ตัวเลข');
 
         } else {
             setiseventlocationProvince_Invalid(false);
@@ -200,6 +206,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
     };
     const handleDateChange = (range: any) => {
         // อัปเดตสถานะเมื่อมีการเลือกวันที่ใหม่
+        console.log('eventdurationselected',range)
         setDateRange(range);
     };
 
@@ -214,6 +221,9 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
         console.log("des:", event_description)
         const startDateTimeISO = dateRange.start.toDate().toISOString();
         const endDateTimeISO = dateRange.end.toDate().toISOString();
+
+        console.log('eventstart',startDateTimeISO)
+        console.log('eventend',endDateTimeISO)
 
 
         const data = {
@@ -253,8 +263,8 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                         seat_name: seatItem.seat_name,
                         seat_price: seatItem.seat_price,
                         seat_max: seatItem.seat_max,
-                        seat_create_date: startDateTimeISO,
-                        seat_due_date: endDateTimeISO,
+                        seat_create_date: seatItem.start_sellseat,
+                        seat_due_date: seatItem.end_sellseat,
                         event_seat_id: eventId
                     };
                     // Send a POST request to insert the seat into the seat table
@@ -292,7 +302,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
     };
 
 
-    const eventnameReg = /^[\wก-๙#\[\]\{\}: ]{10,100}$/;
+    const eventnameReg = /^[\wก-๙#\[\]\{\}\\\/: ]{10,100}$/;
     const [isInvalid, setIsInvalid] = useState(true); // สถานะความถูกต้องของ input
     const [errorMessage, setErrorMessage] = useState('กรุณาใส่ตัวเลขหรืออักษรภาษาไทยอังกฤษ { } [ ] # :และช่องว่างเท่านั้นความยาว 10 ตัวอักษร'); // ข้อความแสดงข้อผิดพลาด
 
@@ -304,9 +314,9 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
     const [iseventlocationProvince_Invalid, setiseventlocationProvince_Invalid] = useState(true); // สถานะความถูกต้องของ input
     const [Event_PerrorMessage, setEvent_PerrorMessage] = useState('ต้องการอักษระ 4 ตัวขึ้นไปสำหรับจังหวัดและไม่ใช่ตัวเลข'); // ข้อความแสดงข้อผิดพลาด
 
-    const eventlocationcountryReg = /^[^0-9]{4,100}$/;
+    const eventlocationcountryReg = /^[^0-9]{2,100}$/;
     const [iseventlocationcountryReg_Invalid, setiseventlocationcountryReg_Invalid] = useState(true); // สถานะความถูกต้องของ input
-    const [Event_CerrorMessage, setEvent_CerrorMessage] = useState('ต้องการอักษระ 4 ตัวขึ้นไปสำหรับประเทศและไม่ใช่ตัวเลข'); // ข้อความแสดงข้อผิดพลาด
+    const [Event_CerrorMessage, setEvent_CerrorMessage] = useState('ต้องการอักษระ 2 ตัวขึ้นไปสำหรับประเทศและไม่ใช่ตัวเลข'); // ข้อความแสดงข้อผิดพลาด
 
     const eventseatnameReg = /^.{1,30}$/;
     const [invalidSeatName, setInvalidSeatName] = useState<boolean[]>([true]);
@@ -386,7 +396,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                 <label className="block mb-2 text-sm font-medium leading-6 ">
                     Introduction
                 </label>
-                <TextEditor setContent={setevent_intro} maxLength={1000} />
+                <TextEditor setContent={setevent_intro} maxLength={5000} />
                 <p className="mt-3 text-sm leading-6 text-gray-400 ">เขียนเชิญชวนผู้มาเข้างาน</p>
             </div>
 
@@ -432,7 +442,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                     hideTimeZone
                     visibleMonths={2}
                     onChange={handleDateChange}
-                    defaultValue={dateRange}
+                    value={dateRange}
                 />
             </div>
 
@@ -475,6 +485,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                         <div className='ml-2'>{index + 1}</div>
                         <div className="flex flex-row gap-2 w-full">
                             <Input
+                                style={{ width: '250px' }}
                                 type="text"
                                 value={seat[index].seat_name}
                                 onChange={(e) => handleseatInputChange(e, index, 'seat_name')}
@@ -485,6 +496,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
 
                             <Input
                                 type="number"
+                                style={{ width: '100px' }}
                                 onChange={(e) => handleseatInputChange(e, index, 'seat_price')}
                                 isInvalid={invalidseatprice[index] || false}
                                 errorMessage={seatpriceErrorMessages[index] || ''}
@@ -493,11 +505,47 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
 
                             <Input
                                 type="number"
+                                style={{ width: '100px' }}
                                 onChange={(e) => handleseatInputChange(e, index, 'seat_max')}
                                 isInvalid={invalidseatMax[index] || false}
                                 errorMessage={seatMaxErrorMessages[index] || ''}
                                 placeholder="จำนวนที่เปิดขาย"
                             />
+                            <div className="w-full max-w-xl flex flex-row gap-4">
+                                <DatePicker
+                                    label="วันที่เปิดขาย"
+                                    variant="bordered"
+                                    hideTimeZone
+                                    showMonthAndYearPickers
+                                    defaultValue={now(getLocalTimeZone())}
+                                    onChange={(date) => {
+                                        const newSeats = [...seat];
+                                        newSeats[index].start_sellseat = date.toDate().toISOString(); // แปลง ZonedDateTime เป็น Date
+                                        console.log(date.toDate())
+                                        setseat(newSeats);
+                                        console.log(seat)
+                                    }}
+                                />
+
+                            </div>
+
+                            <div className="w-full max-w-xl flex flex-row gap-4">
+                                <DatePicker
+                                    label="วันที่ปิดการขาย"
+                                    variant="bordered"
+                                    hideTimeZone
+                                    showMonthAndYearPickers
+                                    defaultValue={now(getLocalTimeZone())}
+                                    onChange={(date) => {
+                                        const newSeats = [...seat];
+                                        newSeats[index].end_sellseat = date.toDate().toISOString(); // แปลง ZonedDateTime เป็น Date
+                                        console.log(date.toDate())
+                                        setseat(newSeats);
+                                        console.log(seat)
+                                    }}
+                                />
+                            </div>
+
 
 
                         </div>
