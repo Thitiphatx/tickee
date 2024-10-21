@@ -13,7 +13,7 @@ import Payment from './payment/paymentpage';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { EventLandingData, Seat_Type } from '@/types/data_type';
+import { EventLandingData } from '@/types/data_type';
 import { IconArrowBackOutline } from '@/styles/icon';
 import { Seat_Type } from '@prisma/client';
 import { Modal, ModalContent, useDisclosure } from '@nextui-org/modal';
@@ -30,7 +30,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     const [showPaymentPage, setShowPaymentPage] = useState(false);
     const [seatPerOrder, setSeatPerOrder] = useState<number>(0);
 
-    const handlePaymentClick = () => {
+    const handlePaymentClick = (input:number) => {
         console.log(eventDetails)
         if (currentTab == 0) {
             setShowAlert(true);
@@ -59,8 +59,8 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     }
 
     const isSeatAvailable = (seat: Seat_Type) => {
-        const currentDate = new Date();
-        const seatCreateDate = new Date(seat.seat_create_date);
+        const currentDate = new Date().getTime();
+        const seatCreateDate = new Date(seat.seat_create_date).getTime();
         return currentDate >= seatCreateDate;
     };
     
@@ -94,10 +94,10 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                     <div>
                         <h2 className="uppercase font-bold">Select Ticket</h2>
                         <Selector setCurrentTab={setCurrentTab} currentTab={currentTab} onTabChange={handleTabChange} >
-                            {eventDetails.Seat_Type.filter(isSeatAvailable).map((seat) => (
+                            {eventDetails.Seat_Type.filter((seat:Seat_Type) => isSeatAvailable(seat)).map((seat) => (
                                 <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300" seatId={seat.seat_id} >
                                     <CardHeader className='flex flex-col items-start' >
-                                        <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง ({seat.Seat_Dispatch?.sd_max}/{seat.Seat_Dispatch?.sd_current})</h4>
+                                        <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง {(seat.Seat_Dispatch?.sd_max||0) - (seat.Seat_Dispatch?.sd_current||0) } ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})</h4>
 
                                         <div className='flex flex-col'>
                                             {seat.Promotion?.pro_type?.pt_id === 1 ? (
