@@ -29,7 +29,7 @@ export default function TicketInformation({ currentTab, onBookingClick, seatPerO
     const formattedendDate = seatData?.seat_create_date ? new Date(seatData.seat_due_date).toLocaleString('th-TH', options).replace(',', '')
         : 'ไม่พบข้อมูลวันที่'; // Fallback if date is not available
 
-
+    
     useEffect(() => {
         const fetchSeatData = async () => {
             try {
