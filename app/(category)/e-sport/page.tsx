@@ -1,8 +1,8 @@
 "use server"
 import CardGrid from "@/components/CardGrid";
+import PaginationComp from "@/components/PaginationComp";
 import { PAGE_SIZE } from "@/config/site";
 import { prisma } from "@/prisma/seed";
-import { Pagination } from "@nextui-org/pagination";
 
 export default async function Esport({ searchParams }: { searchParams: { page?: string } }) {
     const currentPage = parseInt(searchParams.page || '1', 10);
@@ -39,7 +39,10 @@ export default async function Esport({ searchParams }: { searchParams: { page?: 
         <div>
             <h1 className="font-bold text-3xl mb-10">Esport</h1>
             <CardGrid items={data} />
-            <Pagination initialPage={currentPage} total={totalPages} />
+            {currentPage <= totalPages && (
+                <PaginationComp page={currentPage} totalPages={totalPages} />
+            )}
+            
         </div>
     )
 };

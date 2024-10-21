@@ -1,8 +1,8 @@
 "use server"
 import CardGrid from "@/components/CardGrid";
+import PaginationComp from "@/components/PaginationComp";
 import { PAGE_SIZE } from "@/config/site";
 import { prisma } from "@/prisma/seed";
-import { Pagination } from "@nextui-org/pagination";
 
 export default async function Concert({ searchParams }: { searchParams: { page?: string } }) {
     const currentPage = parseInt(searchParams.page || '1', 10);
@@ -39,9 +39,10 @@ export default async function Concert({ searchParams }: { searchParams: { page?:
         <div>
             <h1 className="font-bold text-3xl mb-10">Concert</h1>
             <CardGrid items={data} />
-            <div className="items-center bg-red-500">
-                <Pagination initialPage={currentPage} total={totalPages} />
-            </div>
+            {currentPage <= totalPages && (
+                <PaginationComp page={currentPage} totalPages={totalPages} />
+            )}
+            
         </div>
     )
 };
