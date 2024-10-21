@@ -298,11 +298,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                     Introduction
                 </label>
                 {/* Pass event_intro as a prop to TextEditor */}
-<<<<<<< HEAD
                 <TextEditor setContent={setevent_intro} initialContent={eventData?.event_intro || ""} max_range={200} />
-=======
-                <TextEditor setContent={setevent_intro} contents={eventData?.event_intro || ""} />
->>>>>>> cf7463ade85f67c1249a7de5b964fd3930143bf1
                 <p className="mt-3 text-sm leading-6 text-gray-400">
                     เขียนเชิญชวนผู้มาเข้างาน
                 </p>

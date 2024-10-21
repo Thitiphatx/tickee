@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Selector from "@/components/selector";
 import { Button } from "@nextui-org/button";
@@ -17,8 +17,11 @@ import { EventLandingData, Seat_Type } from '@/types/data_type';
 import { IconArrowBackOutline } from '@/styles/icon';
 import { Seat_Type } from '@prisma/client';
 import { Modal, ModalContent, useDisclosure } from '@nextui-org/modal';
+import { IconPencil } from './icons';
+import { useSession } from 'next-auth/react';
 
 export default function Eventpage({ eventDetails }: { eventDetails: EventLandingData }) {
+    const { data: session, status } = useSession();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [currentTab, setCurrentTab] = useState(0);
     const router = useRouter();
@@ -28,11 +31,11 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     const [totalPrice, setTotalPrice] = useState(0);
 
     const handlePaymentClick = () => {
+        console.log(eventDetails)
         if (currentTab == 0) {
             setShowAlert(true);
         }
         else {
-            console.log("Buying ticket for tab:", currentTab);
             onOpen();
             setShowTicketInfo(true);
         }
@@ -45,10 +48,8 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     const [quantity, setQuantity] = useState(1);
 
     const handleBookingClick = (quantity: number, seatData: Seat_Type | null) => {
-        console.log("จำนวนซื้อทั้งหมด :", quantity)
         setQuantity(quantity);
         setSeatData(seatData)
-        console.log("ข้อมูลที่นั่ง:", seatData);
         setShowPaymentPage(true); // Show PaymentPage
     };
 
@@ -65,6 +66,17 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     return (
         <div className="space-y-5">
             <Button onClick={() => router.back()} isIconOnly><IconArrowBackOutline /></Button>
+            
+            {status == "authenticated" && session.user.role == "organizer" && session.user.id == eventDetails.producer_id &&(
+                <Card className="grid grid-cols-1 lg:grid-cols-2">
+                    <CardBody className="flex flex-col justify-between gap-5">
+                        <div className="flex flex-row gap-2">
+                            <Button onClick={()=> router.push(`/editevent/${eventDetails.event_id}`)} startContent={<IconPencil />}>Event information</Button>
+                            <Button onClick={()=> router.push(`/promotion_show`)} startContent={<IconPencil />}>Promotion</Button>
+                        </div>
+                    </CardBody>
+                </Card>
+            )}
 
             <Card className="grid grid-cols-1 lg:grid-cols-2">
                 <CardHeader className="w-full flex justify-center items-start">
@@ -74,23 +86,23 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                     <div className="space-y-3">
                         <h1 className="text-xl font-bold">{eventDetails.event_name}</h1>
                         <div className="flex flex-row">
-                            <Chip size="sm" className="">{eventDetails.event_type.et_name}</Chip>
+                            <Chip size="sm" color='primary'>{eventDetails.event_type.et_name}</Chip>
                         </div>
                         <div className='p-2' dangerouslySetInnerHTML={{ __html: eventDetails.event_intro }} />
                     </div>
                     <div>
                         <h2 className="uppercase font-bold">Select Ticket</h2>
                         <Selector setCurrentTab={setCurrentTab} currentTab={currentTab} onTabChange={handleTabChange} >
-<<<<<<< HEAD
-                            {eventDetails.Seat_Type.map((seat) => (
-                                <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300" seatId={seat.seat_id} >
-=======
                             {eventDetails.Seat_Type.filter(isSeatAvailable).map((seat) => (
-                                <Card key={seat.seat_id} className="w-full cursor-pointer" seatId={seat.seat_id} >
->>>>>>> cf7463ade85f67c1249a7de5b964fd3930143bf1
+                                <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300" seatId={seat.seat_id} >
                                     <CardHeader className='flex flex-col items-start' >
-                                        <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง ({seat.Seat_Dispatch?.sd_max}/{seat.Seat_Dispatch?.sd_current})</h4>
-                                        
+                                        <div className="flex flex-row justify-between w-full">
+                                            <h4 className="font-bold">{seat.seat_name}</h4>
+                                            {status == "authenticated" && session.user.role == "organizer" && session.user.id == eventDetails.producer_id && (
+                                                <Chip color="warning" variant="dot">จองไปแล้ว ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})</Chip>
+                                            )}
+                                        </div>
+                                       
                                         <div className='flex flex-col'>
                                             {seat.Promotion?.pro_type?.pt_id === 1 ? (
                                                 <>
