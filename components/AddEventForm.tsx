@@ -206,6 +206,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
     };
     const handleDateChange = (range: any) => {
         // อัปเดตสถานะเมื่อมีการเลือกวันที่ใหม่
+        console.log('eventdurationselected',range)
         setDateRange(range);
     };
 
@@ -220,6 +221,9 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
         console.log("des:", event_description)
         const startDateTimeISO = dateRange.start.toDate().toISOString();
         const endDateTimeISO = dateRange.end.toDate().toISOString();
+
+        console.log('eventstart',startDateTimeISO)
+        console.log('eventend',endDateTimeISO)
 
 
         const data = {
