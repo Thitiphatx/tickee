@@ -23,10 +23,6 @@ export default async function AccountProfile() {
         }
     });
 
-    // If no relevant receipts found, redirect to the signin page
-    if (!userReceiptsWithStatus3 || userReceiptsWithStatus3.length === 0) {
-        redirect("/signin");
-    }
 
     // Fetch user data (optional, based on your needs)
     const userData = await prisma.user.findUnique({
