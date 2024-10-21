@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useRouter, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import CardGrid from "@/components/CardGrid";
+import Comingsoon from "@/components/comingsoon";
 
 export default async function Sport() {
     const Sport = await prisma.event.findMany({
@@ -25,7 +26,11 @@ export default async function Sport() {
     return (
         <div>
             <h1 className="font-bold text-3xl mb-10">Sport</h1>
-            <CardGrid items={Sport}/>
+            {Sport.length > 0 ? (
+                <CardGrid items={Sport}/>
+            ) : (
+                <Comingsoon/>
+            )}
         </div>
     )
 };

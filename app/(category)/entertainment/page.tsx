@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useRouter, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import CardGrid from "@/components/CardGrid";
+import Comingsoon from "@/components/comingsoon";
 
 export default async function Entertainment() {
     const Entertainment = await prisma.event.findMany({
@@ -24,7 +25,12 @@ export default async function Entertainment() {
     return (
         <div>
             <h1 className="font-bold text-3xl mb-10">Entertainment</h1>
-            <CardGrid items={Entertainment}/>
+            {Entertainment.length > 0 ? (
+                <CardGrid items={Entertainment}/>
+            ) : (
+                <Comingsoon/>
+            )}
+            
         </div>
     )
 };
