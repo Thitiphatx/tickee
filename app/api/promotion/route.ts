@@ -79,6 +79,7 @@ export async function PUT(req: Request) {
         pro_discount: promotionData.pro_discount,
         pro_start_date: startDate,
         pro_last_date: lastDate,
+        pro_type_id: promotionData.pro_type,
       },
     });
 
