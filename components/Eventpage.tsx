@@ -61,7 +61,8 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     const isSeatAvailable = (seat: Seat_Type) => {
         const currentDate = new Date().getTime();
         const seatCreateDate = new Date(seat.seat_create_date).getTime();
-        return currentDate >= seatCreateDate;
+        const seatLastDate = new Date(seat.seat_due_date).getTime();
+        return ((currentDate >= seatCreateDate) && (currentDate <= seatLastDate));
     };
     
     return (
