@@ -10,6 +10,7 @@ import CardGrid from "@/components/CardGrid";
 import Comingsoon from "@/components/comingsoon";
 
 export default async function Sport() {
+    const today = new Date();
     const Sport = await prisma.event.findMany({
         include:{
             event_type:true,
@@ -17,6 +18,9 @@ export default async function Sport() {
         },where: {
             event_type:{
                 et_name:"Sport"
+            },
+            event_last_date: {
+                gt: today, // Filter events where event_last_date is greater than today
             }
         },orderBy : {
             event_last_date:"asc"

@@ -9,6 +9,7 @@ import CardGrid from "@/components/CardGrid";
 import Comingsoon from "@/components/comingsoon";
 
 export default async function Entertainment() {
+    const today = new Date();
     const Entertainment = await prisma.event.findMany({
         include:{
             event_type:true,
@@ -16,6 +17,9 @@ export default async function Entertainment() {
         },where: {
             event_type:{
                 et_name:"Entertainment"
+            },
+            event_last_date: {
+                gt: today, // Filter events where event_last_date is greater than today
             }
         },orderBy : {
             event_last_date:"asc"

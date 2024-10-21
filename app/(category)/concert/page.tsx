@@ -4,6 +4,7 @@ import Comingsoon from "@/components/comingsoon";
 import { prisma } from "@/prisma/seed";
 
 export default async function Concert() {
+    const today = new Date();
     const concert = await prisma.event.findMany({
         include: {
             event_type: true,
@@ -12,6 +13,9 @@ export default async function Concert() {
         where: {
             event_type: {
                 et_name: "Concert"
+            },
+            event_last_date: {
+                gt: today, // Filter events where event_last_date is greater than today
             }
         },
         orderBy: {
