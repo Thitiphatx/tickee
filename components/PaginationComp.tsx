@@ -11,7 +11,7 @@ export default function PaginationComp({page, totalPages}: {page: number, totalP
         router.push(`?page=${newPage}`);
     }
     return (
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center items-center mt-5">
         <Pagination
           total={totalPages}
           page={currentPage}
