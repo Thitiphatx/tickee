@@ -4,17 +4,19 @@ import { useEffect, useState } from "react";
 import { Select, SelectItem } from "@nextui-org/select";
 import { Input } from "@nextui-org/input";
 import TextEditor from "@/components/texteditor";
-import { Button, DateRangePicker } from "@nextui-org/react";
+// import { Button, DateRangePicker } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
 import { CalendarDate, CalendarDateTime, parseZonedDateTime, ZonedDateTime } from "@internationalized/date";
 import { DeleteIcon } from "./icons";
 import { useRouter } from "next/navigation";
-import { Prisma } from "@prisma/client";
+import { Event_Type, Prisma } from "@prisma/client";
+import { DateRangePicker } from "@nextui-org/date-picker";
+import { Button } from "@nextui-org/button";
 
-interface Event_Type {
-    et_id: number;
-    et_name: string;
-}
+// interface Event_Type {
+//     et_id: number;
+//     et_name: string;
+// }
 
 
 interface EventLocation {
@@ -121,19 +123,17 @@ export default function EditEventForm({ eventData, eventType }: { eventData: Edi
         seat_name: string;
         seat_price: number;
         seat_max: number;
-        seat_create_date?: string;  // Add this
-        seat_due_date?: string;     // Add this
+        seat_create_date?: Date;  // Add this
+        seat_due_date?: Date;     // Add this
     }
 
 
-
-
     const [seat, setseat] = useState<seatdata[]>(
-        eventData.Seat_Type.map((s) => ({
+        eventData.Seat_Type.filter(seat => seat.Seat_Dispatch).map((s) => ({
             seat_id: s.seat_id,
             seat_name: s.seat_name,
             seat_price: s.seat_price,
-            seat_max: s.Seat_Dispatch.sd_max,
+            seat_max: s.Seat_Dispatch?.sd_max || 0,
             seat_create_date: s.seat_create_date,
             seat_due_date: s.seat_due_date,
         }))
@@ -265,7 +265,7 @@ export default function EditEventForm({ eventData, eventType }: { eventData: Edi
             seat_due_date: formattedLastDate1,       // YYYY-MM-DD format
             event_seat_id: seat.event_seat_id,
             Seat_Dispatch: seat.Seat_Dispatch,
-            seat_max: seat.Seat_Dispatch.sd_max
+            seat_max: seat.Seat_Dispatch?.sd_max
         };
     });
     const [seatDateRanges, setSeatDateRanges] = useState(
