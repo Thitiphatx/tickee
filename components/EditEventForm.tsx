@@ -16,27 +16,27 @@ interface EventData {
     event_intro: string;
     event_description: string;
     event_images: string;
-    event_start_date: string;
-    event_last_date: string;
+    event_start_date: Date;
+    event_last_date: Date;
     event_location: string;
     event_type: {
         et_id: number;
         et_name: string;
     }
-    Seat_Type: Array<{
+    Seat_Type: {
         seat_id: number;
         seat_name: string;
         seat_price: number;
-        seat_create_date: string;
-        seat_due_date: string;
+        seat_create_date: Date;
+        seat_due_date: Date;
         event_seat_id: number;
         Seat_Dispatch: {
-            st_di: number;
-            seat_type_id: number;
-            sd_max: number;
-            sd_current: number;
-        }
-    }>;
+          st_id: number; // Change st_di to st_id here
+          seat_type_id: number;
+          sd_max: number;
+          sd_current: number;
+        } | null;
+      }[];
 }
 
 interface Event_Type {
@@ -142,8 +142,8 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
         seat_name: string;
         seat_price: number;
         seat_max: number;
-        seat_create_date?: string;  // Add this
-        seat_due_date?: string;     // Add this
+        seat_create_date?: Date;  // Add this
+        seat_due_date?: Date;     // Add this
     }
 
 
@@ -151,14 +151,22 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
 
     const [seat, setseat] = useState<seatdata[]>(
         eventData.Seat_Type.map((s) => ({
-            seat_id: s.seat_id,
-            seat_name: s.seat_name,
-            seat_price: s.seat_price,
-            seat_max: s.Seat_Dispatch.sd_max,
-            seat_create_date: s.seat_create_date,
-            seat_due_date: s.seat_due_date,
+          seat_id: s.seat_id,
+          seat_name: s.seat_name,
+          seat_price: s.seat_price,
+          seat_max: s.Seat_Dispatch?.sd_max || 0,
+          seat_create_date: s.seat_create_date,
+          seat_due_date: s.seat_due_date,
+          Seat_Dispatch: s.Seat_Dispatch
+            ? {
+                st_di: s.Seat_Dispatch.st_di, // Renaming st_id to st_di here
+                seat_type_id: s.Seat_Dispatch.seat_type_id,
+                sd_max: s.Seat_Dispatch.sd_max,
+                sd_current: s.Seat_Dispatch.sd_current,
+              }
+            : null,
         }))
-    );
+      );
 
 
     const handleseatInputChange = (e, index, field) => {
@@ -189,8 +197,8 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
             event_intro: event_intro,
             event_description: event_description,
             event_images: eventimageURL,
-            event_start_date: startDateTimeISO,
-            event_last_date: endDateTimeISO,
+            event_start_date: startDateTimeISO.toISOString(),
+            event_last_date: endDateTimeISO.toISOString(),
             event_location: JSON.stringify(event_location),
             event_seat_per_order: 5,
             producer_id: session?.user.id,
@@ -224,8 +232,8 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                         seat_name: seatItem.seat_name,
                         seat_price: seatItem.seat_price,
                         seat_max: seatItem.seat_max,
-                        seat_create_date: seatDateRanges[index].start.toDate(),
-                        seat_due_date: seatDateRanges[index].end.toDate(),
+                        seat_create_date: seatDateRanges[index].start.toDate().toISOString(),
+                        seat_due_date: seatDateRanges[index].end.toDate().toISOString(),
                         event_seat_id: eventData.event_id
                     };
                     // Send a POST request to insert the seat into the seat table
@@ -286,7 +294,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
             seat_due_date: formattedLastDate1,       // YYYY-MM-DD format
             event_seat_id: seat.event_seat_id,
             Seat_Dispatch: seat.Seat_Dispatch,
-            seat_max: seat.Seat_Dispatch.sd_max
+            seat_max: seat.Seat_Dispatch?.sd_max
         };
     });
     const [seatDateRanges, setSeatDateRanges] = useState(
