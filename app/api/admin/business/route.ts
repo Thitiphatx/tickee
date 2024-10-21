@@ -21,13 +21,18 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
     try {
-        const data = await getBusinessData()
+        const data = await getBusinessData();
         if (data) {
             return NextResponse.json(data);
         }
-        return NextResponse.json(null);
-    } catch (error) {
-        console.error('Error Get Business Data', error);
-        return NextResponse.json({ error: "Data not found" }, { status: 404 });
+        // หากไม่พบข้อมูล ให้คืนค่าเป็น response ที่ว่างหรือสถานะ 404
+        return NextResponse.json({ message: 'ไม่พบข้อมูล' }, { status: 404 });
+    } catch (error:any) {
+        console.error('เกิดข้อผิดพลาดในการดึงข้อมูลธุรกิจ', error);
+        // คืนค่าเป็น response แทนที่จะเป็น null
+        return NextResponse.json({
+            message: 'เกิดข้อผิดพลาดในการดึงข้อมูลธุรกิจ',
+            error: error.message, // รวมข้อความข้อผิดพลาดตามความจำเป็น
+        }, { status: 500 });
     }
 }

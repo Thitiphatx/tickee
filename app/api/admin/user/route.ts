@@ -42,17 +42,22 @@ export async function DELETE(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { searchText } = await req.json();
-    if (typeof searchText === 'string') {
-      const data = await getSelectedUser(searchText)
-      if (data) {
-          return NextResponse.json(data);
+      const { searchText } = await req.json();
+      if (typeof searchText === 'string') {
+          const data = await getSelectedUser(searchText);
+          if (data) {
+              return NextResponse.json(data);
+          } else {
+              return NextResponse.json({ message: 'No user found' }, { status: 404 });
+          }
       } else {
-        throw Error
+          return NextResponse.json({ message: 'Invalid search text' }, { status: 400 });
       }
-    }
-  } catch (error) {
-      console.error('Error Get User Data', error);
-      return NextResponse.json({ error: "Data not found" }, { status: 404 });
+  } catch (error:any) {
+      console.error('Error fetching user data:', error);
+      return NextResponse.json({
+          message: 'Error fetching user data',
+          error: error.message,
+      }, { status: 500 });
   }
 }

@@ -13,12 +13,12 @@ import { Image as TipTapImage } from '@tiptap/extension-image'
 import React, { useEffect } from 'react'
 import TextAlign from '@tiptap/extension-text-align'; // Import TextAlign extension
 import { Button } from '@nextui-org/button'
-import { IconAlignCenter, IconAlignLeft, IconAlignRight, IconArrowBackOutline, IconArrowForwardOutline, IconBold, IconBxImageAdd, IconFontColors, IconFormatItalic, IconFormatListBulleted, IconHr, IconImageResizeLandscape, IconItalic, IconOrderedList, IconReturnDownForwardSharp } from '@/styles/icon'
+import { IconAlignCenter, IconAlignLeft, IconAlignRight, IconArrowBackOutline, IconArrowForwardOutline, IconBold, IconBxImageAdd, IconFontColors,  IconFormatListBulleted, IconHr, IconImageResizeLandscape, IconItalic, IconOrderedList} from '@/styles/icon'
 import { Tooltip } from '@nextui-org/tooltip'
 
 
 
-const MenuBar = ({ editor }) => {
+const MenuBar = ({ editor}:any) => {
     if (!editor) return null
 
     const addImage = () => {
@@ -159,7 +159,7 @@ const ResizableImage = TipTapImage.extend({
 })
 
 // ฟังก์ชันนี้ใช้เพื่อเพิ่มรูปภาพพร้อมขนาดที่กำหนดโดยผู้ใช้
-const addImageWithSize = (editor) => {
+const addImageWithSize = (editor:any) => {
     const url = window.prompt('URL ของรูปภาพ')
     const width = window.prompt('ความกว้าง (px)')
     const height = window.prompt('ความสูง (px)')
@@ -171,7 +171,6 @@ const addImageWithSize = (editor) => {
 
 const extensions = [
     Color.configure({ types: [TextStyle.name, ListItem.name] }),
-    TextStyle.configure({ types: [ListItem.name] }),
     StarterKit.configure({
         bulletList: { keepMarks: true, keepAttributes: false },
         orderedList: { keepMarks: true, keepAttributes: false },
@@ -186,7 +185,13 @@ const extensions = [
 
 ]
 
-const content = `
+interface TextEditorProps {
+    setContent: (content: string) => void;
+    maxLength?: number;
+    contents?: string;  // ทำให้ optional โดยใส่เครื่องหมาย ?
+}
+
+const defaultcontent = `
 <h2>Hi there,</h2>
 <p>This is a <em>basic</em> example of <strong>Tiptap</strong>. Sure, there are all kinds of basic text styles you’d probably expect from a text editor. But wait until you see the lists:</p>
 <ul>
@@ -198,7 +203,11 @@ const content = `
 <blockquote>Wow, that’s amazing. Good work! 👏</blockquote>
 `
 
-const TextEditor = ({ setContent , maxLength = 200 ,contents=content}) => {
+const TextEditor = ({
+    setContent, 
+    maxLength = 200, 
+    contents = defaultcontent   // ตั้งค่า default เป็น content
+}: TextEditorProps) => {
     const editor = useEditor({
         extensions,
         content: contents,  // Set initial content

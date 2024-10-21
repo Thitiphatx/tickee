@@ -18,23 +18,23 @@ export default function Selector({ children, setCurrentTab, currentTab ,onTabCha
 
     return (
         <div>
-            <div className="space-y-2 p-5">
+            <ul className="space-y-2 p-5">
                 {React.Children.map(children, (child) => {
-                    const {key}  = (child as React.ReactElement); // Get the seatId from child props
+                    const { key } = (child as React.ReactElement); // Get the seatId from child props
                     return (
-                        <button
-                            key={key} // Use seatId as key
+                        <li
+                            key={key} // Use key as key
                             className={`cursor-pointer rounded-xl ring-foreground-900 ${currentTab === Number(key) ? "ring-4" : ""}`}
                             onClick={() => {
-                                console.log('กดเลือก card:', key); // Log the selected seatId
+                                console.log('กดเลือก card:', key); // Log the selected key
                                 handleClick(Number(key)); // Pass the seatId directly to the parent
                             }}
                         >
                             {child}
-                        </button>
+                        </li>
                     );
                 })}
-            </div>
+            </ul>
         </div>
     );
 }

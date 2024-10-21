@@ -1,5 +1,5 @@
 import { prisma } from "@/prisma/seed";
-import { compare, hashSync } from "bcrypt";
+import { compare } from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -24,15 +24,14 @@ export async function POST(req: NextRequest) {
     if (!matched) {
         return NextResponse.json({ error: 'Incorrect password' });
     }
-    const hashedPassword = await hashSync(body.password.new1, 10);
-    
+
     try {
         await prisma.user.update({
             where: {
                 id: body.id
             },
             data: {
-                password: hashedPassword
+                password: body.password.new1
             }
         });
 

@@ -4,20 +4,51 @@ import { useEffect, useState } from "react";
 import { Select, SelectItem } from "@nextui-org/select";
 import { Input } from "@nextui-org/input";
 import TextEditor from "@/components/texteditor";
-// import { Button, DateRangePicker } from "@nextui-org/react";
+import { Button, DateRangePicker } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
 import { CalendarDate, CalendarDateTime, parseZonedDateTime, ZonedDateTime } from "@internationalized/date";
 import { DeleteIcon } from "./icons";
 import { useRouter } from "next/navigation";
-import { Event_Type, Prisma } from "@prisma/client";
-import { DateRangePicker } from "@nextui-org/date-picker";
-import { Button } from "@nextui-org/button";
+import { kMaxLength } from "buffer";
 
-// interface Event_Type {
-//     et_id: number;
-//     et_name: string;
-// }
+interface EventData {
+    event_id: number;
+    event_name: string;
+    event_intro: string;
+    event_description: string;
+    event_images: string;
+    event_start_date: Date;
+    event_last_date: Date;
+    event_location: string;
+    event_type: {
+        et_id: number;
+        et_name: string;
+    }
+    Seat_Type: {
+        seat_id: number;
+        seat_name: string;
+        seat_price: number;
+        seat_create_date: Date;
+        seat_due_date: Date;
+        event_seat_id: number;
+        Seat_Dispatch: {
+          st_id: number; // Change st_di to st_id here
+          seat_type_id: number;
+          sd_max: number;
+          sd_current: number;
+        } | null;
+      }[];
+}
 
+interface Event_Type {
+    et_id: number;
+    et_name: string;
+}
+
+interface EditEventFormProps {
+    eventData: EventData;
+    eventType: Event_Type[];
+}
 
 interface EventLocation {
     address: string;
@@ -25,18 +56,7 @@ interface EventLocation {
     country: string;
 }
 
-type EditEventFormProps = Prisma.EventGetPayload<{
-    include: {
-        event_type: true,
-        Seat_Type: {
-            include: {
-                Seat_Dispatch: true,
-            }
-        }
-    },
-}>
-
-export default function EditEventForm({ eventData, eventType }: { eventData: EditEventFormProps, eventType: Event_Type}) {
+export default function EditEventForm({ eventData, eventType }: EditEventFormProps) {
     const router = useRouter();
     const { data: session } = useSession();
     const [event_name, setEventName] = useState("");
@@ -128,19 +148,29 @@ export default function EditEventForm({ eventData, eventType }: { eventData: Edi
     }
 
 
+
+
     const [seat, setseat] = useState<seatdata[]>(
-        eventData.Seat_Type.filter(seat => seat.Seat_Dispatch).map((s) => ({
-            seat_id: s.seat_id,
-            seat_name: s.seat_name,
-            seat_price: s.seat_price,
-            seat_max: s.Seat_Dispatch?.sd_max || 0,
-            seat_create_date: s.seat_create_date,
-            seat_due_date: s.seat_due_date,
+        eventData.Seat_Type.map((s) => ({
+          seat_id: s.seat_id,
+          seat_name: s.seat_name,
+          seat_price: s.seat_price,
+          seat_max: s.Seat_Dispatch?.sd_max || 0,
+          seat_create_date: s.seat_create_date,
+          seat_due_date: s.seat_due_date,
+          Seat_Dispatch: s.Seat_Dispatch
+            ? {
+                st_di: s.Seat_Dispatch.st_id, // Renaming st_id to st_di here
+                seat_type_id: s.Seat_Dispatch.seat_type_id,
+                sd_max: s.Seat_Dispatch.sd_max,
+                sd_current: s.Seat_Dispatch.sd_current,
+              }
+            : null,
         }))
-    );
+      );
 
 
-    const handleseatInputChange = (e: any, index: number, field: any) => {
+    const handleseatInputChange = (e:any, index:any, field:any) => {
         let value = field === 'seat_price' || field === 'seat_max' ? parseInt(e.target.value) : e.target.value;
 
         const updatedSeats = [...seat];
@@ -168,8 +198,8 @@ export default function EditEventForm({ eventData, eventType }: { eventData: Edi
             event_intro: event_intro,
             event_description: event_description,
             event_images: eventimageURL,
-            event_start_date: startDateTimeISO,
-            event_last_date: endDateTimeISO,
+            event_start_date: startDateTimeISO.toISOString(),
+            event_last_date: endDateTimeISO.toISOString(),
             event_location: JSON.stringify(event_location),
             event_seat_per_order: 5,
             producer_id: session?.user.id,
@@ -203,8 +233,8 @@ export default function EditEventForm({ eventData, eventType }: { eventData: Edi
                         seat_name: seatItem.seat_name,
                         seat_price: seatItem.seat_price,
                         seat_max: seatItem.seat_max,
-                        seat_create_date: seatDateRanges[index].start.toDate(),
-                        seat_due_date: seatDateRanges[index].end.toDate(),
+                        seat_create_date: seatDateRanges[index].start.toDate().toISOString(),
+                        seat_due_date: seatDateRanges[index].end.toDate().toISOString(),
                         event_seat_id: eventData.event_id
                     };
                     // Send a POST request to insert the seat into the seat table
@@ -315,24 +345,25 @@ export default function EditEventForm({ eventData, eventType }: { eventData: Edi
                 required
             />
             <div>
-                <p className="block mb-2 text-sm font-medium leading-6">
+                <label className="block mb-2 text-sm font-medium leading-6">
                     Introduction
-                </p>
+                </label>
                 {/* Pass event_intro as a prop to TextEditor */}
-                <TextEditor setContent={setevent_intro} contents={eventData?.event_intro || ""} max_range={200} />
+                <TextEditor setContent={setevent_intro} contents={eventData?.event_intro || ""} maxLength={5000}/>
                 <p className="mt-3 text-sm leading-6 text-gray-400">
                     เขียนเชิญชวนผู้มาเข้างาน
                 </p>
             </div>
             <div>
-                <p className="block text-sm font-medium leading-6 ">
+                <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 ">
                     Event photo
-                </p>
+                </label>
                 <div className="mt-2 flex justify-center rounded-lg border border-dashed border-foreground-200 px-6 py-6" >
                     {eventData?.event_images ? (
                         <div className="relative">
                             <img src={eventimageURL} alt="Event" className="max-w-full h-auto" />
-                            <p
+                            <label
+                                htmlFor="url-change"
                                 className="absolute bottom-0 right-0 cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500"
                             >
                                 <Input
@@ -342,7 +373,7 @@ export default function EditEventForm({ eventData, eventType }: { eventData: Edi
                                     placeholder="Change image URL"
                                     onChange={(e) => seteventimageURL(e.target.value)} // Add your URL change logic
                                 />
-                            </p>
+                            </label>
 
                         </div>
 
@@ -434,10 +465,10 @@ export default function EditEventForm({ eventData, eventType }: { eventData: Edi
                 ))}
 
             </div>
-            <p className="block mb-2 text-sm font-medium leading-6 ">
+            <label className="block mb-2 text-sm font-medium leading-6 ">
                 Event description
-            </p>
-            <TextEditor setContent={setevent_description} contents={eventData?.event_description || ""} />
+            </label>
+            <TextEditor setContent={setevent_description} contents={eventData?.event_description || ""} maxLength={50000}/>
             <p className="mt-3 text-sm leading-6 text-gray-400">เขียนรายละเอียดเกี่ยวกับตั๋วและโปรโมชั่น</p>
 
             <Button onClick={addtodb}>Submit</Button>

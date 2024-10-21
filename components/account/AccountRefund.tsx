@@ -30,7 +30,7 @@ const RefundTable = ({ receipts }: any) => {
         </thead>
         <tbody>
           {receipts.length > 0 ? (
-            receipts.map(receipt => (
+            receipts.map((receipt:any) => (
               <tr key={receipt.rec_id}>
                 <td className="border border-gray-300 p-2">{receipt.rec_id}</td>
                 <td className="border border-gray-300 p-2">{new Date(receipt.rec_date).toLocaleDateString()}</td>

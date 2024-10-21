@@ -28,7 +28,7 @@ export default async function PromotionPage({ params }: { params: IParams }) {
   if (!detail) {
     return (
       <div>
-        <h1>Seat&apos;s Promotion not found</h1>
+        <h1>Seats Promotion not found</h1>
         <p>The seat with ID {params.eprorealId} does not exist.</p>
       </div>
     );

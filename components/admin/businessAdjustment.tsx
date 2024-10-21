@@ -7,7 +7,6 @@ import { Input } from "@nextui-org/input";
 import { Event_Type, Promotion_Type } from '@prisma/client';
 import { BusinessData } from '@/types/data_type';
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/table';
-import { Card } from '@nextui-org/card';
 
 export default function BusinessAdjustment() {
     const [display, setDisplay] = useState(false);
@@ -167,7 +166,7 @@ export default function BusinessAdjustment() {
     }
 
     return (
-        <div className='flex flex-col items-center w-full py-10 px-10'>
+        <div className='flex flex-col items-center py-10'>
             {!onLoad && (
                 <>
                     <div className="flex flex-col items-center gap-5 w-full">
@@ -229,9 +228,9 @@ export default function BusinessAdjustment() {
                     <div className="flex flex-col items-center gap-2 w-full my-10 p-10 bg-opacity-20 bg-gray-600 rounded-2xl">
                         {banner?.map((src, index) => (
                             <div key={index} className='relative'>
-                                <Button className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(index)}>
+                                <span className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(index)}>
                                     <DeleteIcon />
-                                </Button>
+                                </span>
                                 <img
                                     src={src}
                                     style={{
@@ -242,18 +241,18 @@ export default function BusinessAdjustment() {
                                 />
                             </div>
                         ))}
-                        <Card isPressable onPress={insertNewBanner} className='p-5'>
+                        <div onClick={insertNewBanner} className='flex justify-center h-1/3 w-3/4 p-5'>
                             {!display && (
                                 <PlusIcon className='size-52' />
                             )}
 
                             {display && (
-                                <div className='flex flex-col items-center gap-3 h-full w-[700px]'>
+                                <div className='flex flex-col items-center gap-3 size-full'>
                                     <Input onChange={handleImageInputChange} value={newImage} type="text" label="Image URL" />
                                     <Button onClick={updateNewBanner} color='primary' variant='shadow' className="uppercase w-full" radius="full">insert</Button>
                                 </div>
                             )}
-                        </Card>
+                        </div>
                     </div>
 
                     <div className="flex flex-col items-center gap-5 w-2/5">

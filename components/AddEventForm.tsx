@@ -90,7 +90,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
             }
         ]);
     }
-    const handleseatInputChange = (e, index, field) => {
+    const handleseatInputChange = (e:any, index:any, field:any) => {
         let value;
 
         if (field === 'seat_name') {
@@ -331,7 +331,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
     const [seatMaxErrorMessages, setSeatMaxErrorMessages] = useState<string[]>(['ต้องเป็นตัวเลขเท่านั้น']);
 
 
-    const [isFormValid, setIsFormValid] = useState(false);
+    const [isFormValid, setIsFormValid] = useState<boolean | string>(false);
     const [isLoading, setIsLoading] = useState(false); // Add loading state
 
     useEffect(() => {
@@ -408,7 +408,8 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                     {eventimageURL ? (
                         <div className="relative">
                             <img src={eventimageURL} alt="Event" className="max-w-full h-auto" />
-                            <p
+                            <label
+                                htmlFor="url-change"
                                 className="absolute bottom-0 right-0 cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500"
                             >
                                 <Input
@@ -418,7 +419,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                                     placeholder="Change image URL"
                                     onChange={(e) => seteventimageURL(e.target.value)} // Add your URL change logic
                                 />
-                            </p>
+                            </label>
 
                         </div>
 

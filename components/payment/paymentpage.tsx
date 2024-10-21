@@ -4,6 +4,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import Checkoutpage from "./checkoutpage";
 import { Seat_Type } from "@/types/data_type";
 import { useState } from "react";
+import { notFound } from "next/navigation";
 
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
@@ -12,8 +13,11 @@ if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
-export default function Payment({ quantity, seatData, eventname }: { quantity: number, seatData: Seat_Type, eventname: String }) {
+export default function Payment({ quantity, seatData, eventname }: { quantity: number, seatData: Seat_Type|null, eventname: String }) {
 
+    if(seatData==null){
+        return (<>not found</>)
+    }
     console.log("จำนวนซื้อทั้งหมด (payment):", quantity)
     console.log("ข้อมูลที่นั่ง (payment):", seatData);
 
@@ -41,7 +45,7 @@ export default function Payment({ quantity, seatData, eventname }: { quantity: n
                     <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">ราคา/price</h5>
                 </div>
                 <div className="flow-root">
-                    <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                    <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
                         <li className="pt-3 pb-0 sm:pt-4">
                             <div className="flex items-center">
                                 <div className="flex-1 min-w-0 ms-4">
