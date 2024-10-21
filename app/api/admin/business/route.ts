@@ -25,8 +25,10 @@ export async function GET() {
         if (data) {
             return NextResponse.json(data);
         }
+        return NextResponse.json(null);
     } catch (error) {
-        console.error('Error Get Business Data', error);
-        return null
+        return NextResponse.json({
+            message: 'Promotion created fail',
+        });
     }
 }
