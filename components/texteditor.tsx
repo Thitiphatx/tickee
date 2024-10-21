@@ -10,7 +10,7 @@ import Image from '@tiptap/extension-image'
 import Paragraph from '@tiptap/extension-paragraph'
 import Text from '@tiptap/extension-text'
 import { Image as TipTapImage } from '@tiptap/extension-image'
-import React from 'react'
+import React, { useEffect } from 'react'
 import TextAlign from '@tiptap/extension-text-align'; // Import TextAlign extension
 import { Button } from '@nextui-org/button'
 import { IconAlignCenter, IconAlignLeft, IconAlignRight, IconArrowBackOutline, IconArrowForwardOutline, IconBold, IconBxImageAdd, IconFontColors, IconFormatItalic, IconFormatListBulleted, IconHr, IconImageResizeLandscape, IconItalic, IconOrderedList, IconReturnDownForwardSharp } from '@/styles/icon'
@@ -198,25 +198,28 @@ const content = `
 <blockquote>Wow, that’s amazing. Good work! 👏</blockquote>
 `
 
-const TextEditor = ({ setContent }) => {
+const TextEditor = ({ setContent , maxLength = 200 ,contents=content}) => {
     const editor = useEditor({
         extensions,
-        content,
+        content: contents,  // Set initial content
         onUpdate: ({ editor }) => {
             const html = editor.getHTML(); // Get the HTML content
-            setContent(html); // Update the parent state with the content
+            if (html.length <= maxLength) {
+                setContent(html); // Update the parent state with the content
+            } else {
+                const truncatedHtml = html.substring(0, maxLength); // Truncate the content
+                editor.commands.setContent(truncatedHtml); // Update the editor content
+                alert(`Content exceeds maximum length of ${maxLength} characters.`);
+            }
         },
     })
 
     return (
-
-
         <div>
             <MenuBar editor={editor} />
             <EditorContent editor={editor} />
         </div>
-
     )
 }
 
-export default TextEditor
+export default TextEditor;
