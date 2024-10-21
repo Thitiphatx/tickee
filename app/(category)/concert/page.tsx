@@ -36,7 +36,7 @@ export default async function Concert({ searchParams }: { searchParams: { page?:
 
 
     return (
-        <div>
+            <div>
             <h1 className="font-bold text-3xl mb-10">Concert</h1>
             <CardGrid items={data} />
             {currentPage <= totalPages && (
@@ -45,4 +45,5 @@ export default async function Concert({ searchParams }: { searchParams: { page?:
             
         </div>
     )
+
 };

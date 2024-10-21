@@ -268,12 +268,12 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
     const formattedSeats2 = eventData.Seat_Type.map((seat, index) => {
         // Create a date object for the event start date
         const startDate1 = new Date(eventData.Seat_Type[index].seat_create_date); // Assuming eventData.event_start_date is a valid date string
-        startDate1.setDate(startDate1.getDate() + 1); // Subtract 1 day
+        startDate1.setDate(startDate1.getDate() +1); // Subtract 1 day
         const formattedStartDate1 = startDate1.toISOString().slice(0, 10);
         console.log(formattedStartDate1);
 
         const endDate1 = new Date(eventData.Seat_Type[index].seat_due_date); // Assuming eventData.start is a valid date string
-        endDate1.setDate(endDate1.getDate() + 1)
+        endDate1.setDate(endDate1.getDate() +1)
         const formattedLastDate1 = endDate1.toISOString().slice(0, 10);
         console.log(formattedLastDate1);
 

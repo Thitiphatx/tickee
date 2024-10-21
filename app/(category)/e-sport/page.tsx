@@ -44,5 +44,5 @@ export default async function Esport({ searchParams }: { searchParams: { page?: 
             )}
             
         </div>
-    )
+    );
 };
