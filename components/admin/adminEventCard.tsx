@@ -194,7 +194,7 @@ export default function AdminEventCard() {
 
             {(!onLoad && eventOnPage != null && eventOnPage.length != 0) ? (
                 <>
-                    <div className="w-full h-fit my-10">
+                    <div className="flex flex-wrap gap-5 w-full h-fit my-10">
                         {eventOnPage.map((event: EventOutput) => (
                             <Card className="w-72 flex-shrink-0 overflow-hidden p-2" key={event.event_id}>
                                 <span className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(event)}>
