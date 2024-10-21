@@ -4,6 +4,7 @@ import { signUpType } from "@/types";
 import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 import { Input } from "@nextui-org/input";
+import { Spinner } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
@@ -11,6 +12,7 @@ import { useState } from "react";
 export default function SignupForm() {
     const [error, setError] = useState<string | null>(null);
     const [passwordErrors, setPasswordErrors] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [data, setData] = useState<signUpType>({
         email: "",
         password: "",
@@ -20,6 +22,7 @@ export default function SignupForm() {
 
     const signUpUser = async (e:React.ChangeEvent<HTMLFormElement>)=> {
         e.preventDefault();
+        setLoading(true);
 
         if (data.password !== data.repass) {
             setPasswordErrors(true);
@@ -40,6 +43,10 @@ export default function SignupForm() {
             setError(result.error);
         } else {
             setError(null);
+            signIn("credentials", {
+                email: data.email,
+                password: data.password,
+            });
         }
     }
 
@@ -55,7 +62,9 @@ export default function SignupForm() {
                     <Input isInvalid={passwordErrors} isRequired onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, password: e.target.value})} value={data.password} type="text" label="Password" />
                     <Input isInvalid={passwordErrors} isRequired onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({...data, repass: e.target.value})} value={data.repass} type="text" label="Re-password" />
                     <span className="auth-error">{error}</span>
-                    <Button isDisabled={passwordErrors} type="submit" color='primary' variant='shadow' className="uppercase w-full" radius="full" >sign in</Button>
+                    <Button isLoading={loading} spinner={
+                        <Spinner />
+                    } isDisabled={passwordErrors} type="submit" color='primary' variant='shadow' className="uppercase w-full" radius="full" >sign in</Button>
                     <Divider className="my-3" />
                     <Button onClick={() => signIn("google")} className="bg-white text-black w-full" radius='full'><IconGoogle />Sign in with Google</Button>
                 </form>

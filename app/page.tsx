@@ -1,10 +1,8 @@
-"use server"
-
 import { prisma } from '@/prisma/seed';
 import ImageSlider from '../components/slider'
 import CardSwiper from '@/components/CardSwiper';
 
-
+export const revalidate = 0
 export default async function Home() {
     const latest = await prisma.event.findMany({
         take: 10
