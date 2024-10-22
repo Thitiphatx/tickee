@@ -70,7 +70,7 @@ export default function Graph() {
         <>
             <h1 className="font-bold text-inherit uppercase text-3xl">Graph</h1>
             <div className="relative h-[450px] w-full px-32">
-                {!onLoad && recdata != null && (
+                {(!onLoad && recdata != null) && (
                     <>
                         <Dropdown placement="bottom-end">
                             <DropdownTrigger>
@@ -94,7 +94,7 @@ export default function Graph() {
                             </DropdownMenu>
                         </Dropdown>
                         <Line
-                            className="size-full"
+                            className="size-full mx-auto"
                             data={inYearData}
                             options={{
                                 maintainAspectRatio: true,
@@ -124,6 +124,11 @@ export default function Graph() {
                                 }
                             }} />
                     </>
+                )}
+                {!(!onLoad && recdata != null) && (
+                    <div className="flex justify-center items-center size-full border-1 border-default">
+                        <p className="text-3xl text-default">No Data For Display</p>
+                    </div>
                 )}
             </div>
         </>
