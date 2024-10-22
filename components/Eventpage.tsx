@@ -29,8 +29,9 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     const [showAlert, setShowAlert] = useState(false);
     const [showPaymentPage, setShowPaymentPage] = useState(false);
     const [seatPerOrder, setSeatPerOrder] = useState<number>(0);
+    const [serviceFee, setServiceFee] = useState<number>(0);
 
-    const handlePaymentClick = (input:number) => {
+    const handlePaymentClick = (input: number) => {
         console.log(eventDetails)
         if (currentTab == 0) {
             setShowAlert(true);
@@ -54,8 +55,25 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
         setShowPaymentPage(true); // Show PaymentPage
     };
 
+    useEffect(() => {
+        const fecthData = async () => {
+            try {
+                const response = await fetch('/api/webConfigData');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch fee');
+                }
+                const data = await response.json();
+                setServiceFee(data.fee);
+            }
+            catch (error) {
+                console.error('Error fetching fee:', error);
+            }
+        }
+        fecthData();
+    }, []);
+
     if (showPaymentPage) {
-        return <Payment quantity={quantity} seatData={seatData} eventname={eventDetails.event_name} />;
+        return <Payment quantity={quantity} seatData={seatData} eventname={eventDetails.event_name} serviceFee={serviceFee}/>;
     }
 
     const isSeatAvailable = (seat: Seat_Type) => {
@@ -64,17 +82,17 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
         const seatLastDate = new Date(seat.seat_due_date).getTime();
         return ((currentDate >= seatCreateDate) && (currentDate <= seatLastDate));
     };
-    
+
     return (
         <div className="space-y-5">
             <Button onClick={() => router.back()} isIconOnly><IconArrowBackOutline /></Button>
-            
-            {status == "authenticated" && session.user.role == "organizer" && session.user.id == eventDetails.producer_id &&(
+
+            {status == "authenticated" && session.user.role == "organizer" && session.user.id == eventDetails.producer_id && (
                 <Card className="grid grid-cols-1 lg:grid-cols-2">
                     <CardBody className="flex flex-col justify-between gap-5">
                         <div className="flex flex-row gap-2">
-                            <Button onClick={()=> router.push(`/editevent/${eventDetails.event_id}`)} startContent={<IconPencil />}>Event information</Button>
-                            <Button onClick={()=> router.push(`/promotion_show`)} startContent={<IconPencil />}>Promotion</Button>
+                            <Button onClick={() => router.push(`/editevent/${eventDetails.event_id}`)} startContent={<IconPencil />}>Event information</Button>
+                            <Button onClick={() => router.push(`/promotion_show`)} startContent={<IconPencil />}>Promotion</Button>
                         </div>
                     </CardBody>
                 </Card>
@@ -95,10 +113,10 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                     <div>
                         <h2 className="uppercase font-bold">Select Ticket</h2>
                         <Selector setCurrentTab={setCurrentTab} currentTab={currentTab} onTabChange={handleTabChange} >
-                            {eventDetails.Seat_Type.filter((seat:Seat_Type) => isSeatAvailable(seat)).map((seat) => (
+                            {eventDetails.Seat_Type.filter((seat: Seat_Type) => isSeatAvailable(seat)).map((seat) => (
                                 <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300">
                                     <CardHeader className='flex flex-col items-start' >
-                                        <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง {(seat.Seat_Dispatch?.sd_max||0) - (seat.Seat_Dispatch?.sd_current||0) } ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})</h4>
+                                        <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง {(seat.Seat_Dispatch?.sd_max || 0) - (seat.Seat_Dispatch?.sd_current || 0)} ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})</h4>
 
                                         <div className='flex flex-col'>
                                             {seat.Promotion?.pro_type?.pt_id === 1 ? (
@@ -136,16 +154,16 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
 
                         </Selector>
 
-                        <Button radius="full" color="primary" size="lg" className="w-full" onClick={()=>handlePaymentClick(eventDetails.event_seat_per_order)} >Buy</Button>
+                        <Button radius="full" color="primary" size="lg" className="w-full" onClick={() => handlePaymentClick(eventDetails.event_seat_per_order)} >Buy</Button>
                     </div>
                     {showAlert && (
-                            <Card role="alert" isPressable onPress={() => setShowAlert(false)} className="ring-1 ring-warning-500 w-full">
-                                <CardBody>
-                                    <div className="text-center">
-                                        <span className="font-medium">โปรดเลือกที่นั่งก่อนทำการซื้อ !</span> กรุณาเลือก zone ที่นั่งก่อน
-                                    </div>
-                                </CardBody>
-                            </Card>
+                        <Card role="alert" isPressable onPress={() => setShowAlert(false)} className="ring-1 ring-warning-500 w-full">
+                            <CardBody>
+                                <div className="text-center">
+                                    <span className="font-medium">โปรดเลือกที่นั่งก่อนทำการซื้อ !</span> กรุณาเลือก zone ที่นั่งก่อน
+                                </div>
+                            </CardBody>
+                        </Card>
                     )}
                 </CardBody>
             </Card>
@@ -157,7 +175,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick} seatPerOrder={seatPerOrder}/>
+                            <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick} seatPerOrder={seatPerOrder} />
                         </>
                     )}
                 </ModalContent>

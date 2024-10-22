@@ -58,11 +58,7 @@ export async function fetchEvent() {
 export async function getBusinessData(): Promise<BusinessData | null> {
     let admin: Admin_Data | null, eventType: Event_Type[], promotionType: Promotion_Type[];
     try {
-        admin = await prisma.admin_Data.findFirst({
-            where: {
-                ad_id: 1
-            }
-        })
+        admin = await prisma.admin_Data.findFirst({})
 
         eventType = await prisma.event_Type.findMany({})
 
