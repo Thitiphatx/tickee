@@ -1,20 +1,16 @@
-import { getReceiptDate } from '@/app/admin/fetch';
+import { getLastCalculationResult } from '@/utils/server';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
     try {
-        const data = await getReceiptDate();
+        const data = await getLastCalculationResult();
         
         if (data) {
             return NextResponse.json(data);
         } else {
-            return NextResponse.json({ message: 'ไม่พบข้อมูลใบเสร็จ' }, { status: 404 });
+            return NextResponse.json({ status: 404 , message: 'Return Data = Null' });
         }
-    } catch (error:any) {
-        console.error('เกิดข้อผิดพลาดในการดึงข้อมูลใบเสร็จ', error);
-        return NextResponse.json({
-            message: 'เกิดข้อผิดพลาดในการดึงข้อมูลใบเสร็จ',
-            error: error.message, // ส่งข้อความข้อผิดพลาด
-        }, { status: 500 });
+    } catch (error) {
+        return NextResponse.json({ status: 500, message: 'Internal Server Error' });
     }
 }

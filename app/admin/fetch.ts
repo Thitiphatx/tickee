@@ -84,7 +84,7 @@ export async function getReceiptDate() {
         };
         return { data, yearArray }
     } catch (error) {
-        console.log("getReceiptDateToPlot Error\n", error)
+        console.log("getReceiptDateToPlot Error\n")
         return null
     }
 }

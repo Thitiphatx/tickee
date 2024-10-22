@@ -22,13 +22,28 @@ export default function Graph() {
             setOnLoad(true)
             try {
                 const res = await fetch('/api/admin/graph');
+                if (!res.ok) {
+                    const errorResponse = await res.json();
+                    console.warn('API Error:', errorResponse.message || 'Unknown error');
+                    setrecdata(null);
+                    setYearArray([]);
+                    console.log("error client")
+                    throw Error
+                }
                 const { data, yearArray } = await res.json();
-                setrecdata(data)
-                setYearArray(yearArray)
+                if (data && Array.isArray(yearArray)) {
+                    setrecdata(data);
+                    setYearArray(yearArray);
 
-                let seperate = JSON.parse(JSON.stringify(data));
-                seperate.datasets = [data.datasets[selectYear]]
-                setInYearData(seperate)
+                    let seperate = JSON.parse(JSON.stringify(data));
+                    seperate.datasets = [data.datasets[selectYear]]
+                    setInYearData(seperate)
+                    console.log("working set client")
+                } else {
+                    setrecdata(null);
+                    setYearArray([]);
+                    console.log("working null client")
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -54,61 +69,63 @@ export default function Graph() {
     return (
         <>
             <h1 className="font-bold text-inherit uppercase text-3xl">Graph</h1>
-            {!onLoad && (
-                <div className="relative w-full px-32">
-                    <Dropdown placement="bottom-end">
-                        <DropdownTrigger>
-                            <Button
-                                variant="bordered"
-                                className="capitalize absolute z-30 top-3 right-36"
+            <div className="relative h-[450px] w-full px-32">
+                {!onLoad && recdata != null && (
+                    <>
+                        <Dropdown placement="bottom-end">
+                            <DropdownTrigger>
+                                <Button
+                                    variant="bordered"
+                                    className="capitalize absolute z-30 top-3 right-36"
+                                >
+                                    {yearArray[selectYear]}
+                                </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                                aria-label="Year Selection"
+                                variant="flat"
+                                disallowEmptySelection
+                                selectionMode="single"
+                                onAction={(key) => { yearChangeAction(key) }}
                             >
-                                {yearArray[selectYear]}
-                            </Button>
-                        </DropdownTrigger>
-                        <DropdownMenu
-                            aria-label="Year Selection"
-                            variant="flat"
-                            disallowEmptySelection
-                            selectionMode="single"
-                            onAction={(key) => { yearChangeAction(key) }}
-                        >
-                            {yearArray.map((item: number, index) => (
-                                <DropdownItem key={index}>{item}</DropdownItem>
-                            ))}
-                        </DropdownMenu>
-                    </Dropdown>
-                    <Line
-                        className="size-full"
-                        data={inYearData}
-                        options={{
-                            maintainAspectRatio: true,
-                            plugins: {
-                                title: {
-                                    text: 'Profit / Year',
-                                    display: true,
-                                },
-                            },
-                            scales: {
-                                x: {
-                                    type: "time",
-                                    time: {
-                                        unit: 'month'
-                                    },
+                                {yearArray.map((item: number, index) => (
+                                    <DropdownItem key={index}>{item}</DropdownItem>
+                                ))}
+                            </DropdownMenu>
+                        </Dropdown>
+                        <Line
+                            className="size-full"
+                            data={inYearData}
+                            options={{
+                                maintainAspectRatio: true,
+                                plugins: {
                                     title: {
+                                        text: 'Profit / Year',
                                         display: true,
-                                        text: 'Time',
                                     },
                                 },
-                                y: {
-                                    title: {
-                                        display: true,
-                                        text: 'Value',
+                                scales: {
+                                    x: {
+                                        type: "time",
+                                        time: {
+                                            unit: 'month'
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Time',
+                                        },
                                     },
-                                },
-                            }
-                        }} />
-                </div>
-            )}
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: 'Value',
+                                        },
+                                    },
+                                }
+                            }} />
+                    </>
+                )}
+            </div>
         </>
     )
 };
