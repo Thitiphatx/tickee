@@ -181,7 +181,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick} seatPerOrder={seatPerOrder} closing={onClose}/>
+                            <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick} seatPerOrder={seatPerOrder}/>
                         </>
                     )}
                 </ModalContent>

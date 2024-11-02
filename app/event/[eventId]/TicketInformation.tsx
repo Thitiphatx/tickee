@@ -7,7 +7,7 @@ import { ModalBody, ModalFooter, ModalHeader } from "@nextui-org/modal";
 // สร้าง PaymentPage component
 
 
-export default function TicketInformation({ currentTab, onBookingClick, seatPerOrder, closing }: { currentTab: number, onBookingClick: (quantity: number, seatData: Seat_Type | null) => void, seatPerOrder: number, closing:()=>void }) {
+export default function TicketInformation({ currentTab, onBookingClick, seatPerOrder }: { currentTab: number, onBookingClick: (quantity: number, seatData: Seat_Type | null) => void, seatPerOrder: number }) {
     console.log("แสดงข้อมูลที่นั่ง seat id: ", currentTab)
 
     const [seatData, setSeatData] = useState<Seat_Type | null>(null);
