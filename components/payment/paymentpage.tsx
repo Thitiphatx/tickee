@@ -30,7 +30,7 @@ export default function Payment({ quantity, seatData, eventname }: { quantity: n
         totalPriceplusfee = (totalPrice - (totalPrice * (seatData.Promotion.pro_discount / 100))) + fee;
     } else if (seatData.Promotion?.pro_type_id === 3) {
         // ถ้าโปรโมชั่นแบบลดเป็นจำนวนเงิน
-        totalPriceplusfee = (totalPrice - seatData.Promotion.pro_discount) + fee;
+        totalPriceplusfee = (totalPrice - seatData.Promotion.pro_discount*quantity) + fee;
     } else {
         // ถ้าไม่มีโปรโมชั่นลด (หรือเป็นการแจกของ)
         totalPriceplusfee = totalPrice + fee;
