@@ -1,11 +1,9 @@
 import { getLastCalculationResult } from '@/utils/server';
-import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
     try {
         const data = await getLastCalculationResult();
-        revalidatePath("/admin")
         if (data) {
             return NextResponse.json(data);
         } else {

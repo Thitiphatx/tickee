@@ -23,6 +23,7 @@ export default function AdminEventCard() {
     const [isOpen2, setOpen2] = useState<boolean>(false);
     const [mapData, setMapData] = useState<EventOutput | null>();
     const [onLoad, setOnLoad] = useState<boolean>(true);
+    const [refresh, setReFresh] = useState<boolean>(true);
     const [page, setPage] = React.useState(1);
     const [lastPage, setLastPage] = React.useState(1);
     const [eventOnPage, setEventOnPage] = useState<EventOutput[] | null>(null);
@@ -49,7 +50,7 @@ export default function AdminEventCard() {
             }
         };
         fetchData();
-    }, [search]);
+    }, [search,refresh]);
 
     const changePage = (input: number) => {
         if (allEvent != null) {
@@ -99,6 +100,7 @@ export default function AdminEventCard() {
         } catch (error) {
             console.error('Error creating user:', error);
         }
+        setReFresh(!refresh)
         onClose()
         onClose2()
     };

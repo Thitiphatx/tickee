@@ -9,7 +9,7 @@ export async function getSelectedEvent(input: string) {
             output = await prisma.event.findMany({
                 // where: {
                 //     event_last_date: {
-                //         lt: currentDate,
+                //         gt: currentDate,
                 //     },
                 // },
                 include: {
@@ -38,7 +38,7 @@ export async function getSelectedEvent(input: string) {
                         contains: input
                     },
                     // event_last_date: {
-                    //     lt: currentDate,
+                    //     gt: currentDate,
                     // },
                 },
                 orderBy: {
