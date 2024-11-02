@@ -4,13 +4,22 @@ import CardSwiper from '@/components/CardSwiper';
 
 export const revalidate = 0
 export default async function Home() {
+    const today = new Date();
     const latest = await prisma.event.findMany({
+        where: {
+            event_last_date: {
+                gt: today, // Filter events where event_last_date is greater than today
+            },
+        },
         take: 10
     })
     const concert = await prisma.event.findMany({
         where: {
             event_type: {
                 et_name: "Concert"
+            },
+            event_last_date: {
+                    gt: today, // Filter events where event_last_date is greater than today
             }
         },
         take: 6,

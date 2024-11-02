@@ -1,6 +1,7 @@
 import Eventpage from "@/components/Eventpage";
 import { prisma } from '@/lib/prisma';
 
+const today = new Date();
 export default async function EventLanding({ params }: { params: { eventId: string }}) {
     const details = await prisma.event.findFirst( {
         include: {
@@ -18,6 +19,9 @@ export default async function EventLanding({ params }: { params: { eventId: stri
         },
         where:  {
             event_id: parseInt(params.eventId),
+            event_last_date: {
+                gt: today, // Filter events where event_last_date is greater than today
+            }
         }
     })
     if (details)

@@ -24,12 +24,12 @@ export default function Payment({ quantity, seatData, eventname, serviceFee }: {
     const totalPrice = seatData.seat_price * quantity
     let totalPriceplusfee;
 
-    if (seatData.Promotion?.pro_type_id === 1) {
+    if (seatData.Promotion?.pro_type_id === 2) {
         // ถ้าโปรโมชั่นแบบลดเป็น %
-        totalPriceplusfee = Math.round(totalPrice - (totalPrice * (seatData.Promotion.pro_discount / 100))) + fee;
-    } else if (seatData.Promotion?.pro_type_id === 2) {
+        totalPriceplusfee = (totalPrice - (totalPrice * (seatData.Promotion.pro_discount / 100))) + fee;
+    } else if (seatData.Promotion?.pro_type_id === 3) {
         // ถ้าโปรโมชั่นแบบลดเป็นจำนวนเงิน
-        totalPriceplusfee = (totalPrice - seatData.Promotion.pro_discount) + fee;
+        totalPriceplusfee = (totalPrice - seatData.Promotion.pro_discount*quantity) + fee;
     } else {
         // ถ้าไม่มีโปรโมชั่นลด (หรือเป็นการแจกของ)
         totalPriceplusfee = totalPrice + fee;
@@ -88,20 +88,20 @@ export default function Payment({ quantity, seatData, eventname, serviceFee }: {
                                         โปรโมชั่น/promotions
                                     </p>
                                     <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                        {seatData.Promotion?.pro_type_id === 1 ? (
+                                        {seatData.Promotion?.pro_type_id === 2 ? (
                                             <>
                                                 <h4 className="font-bold  text-green-900">
                                                     โปรโมชั่น ลด {seatData.Promotion.pro_discount} %
                                                 </h4>
 
                                             </>
-                                        ) : seatData.Promotion?.pro_type_id === 2 ? (
+                                        ) : seatData.Promotion?.pro_type_id === 3 ? (
                                             <>
                                                 <h4 className="font-bold  text-blue-900">
                                                     โปรโมชั่น ลด {seatData.Promotion.pro_discount} บาท
                                                 </h4>
                                             </>
-                                        ) : seatData.Promotion?.pro_type_id === 3 ? (
+                                        ) : seatData.Promotion?.pro_type_id === 1 ? (
                                             <>
                                                 <h4 className="font-bold  text-red-900">
                                                     โปรโมชั่นของที่ระลึก {seatData.Promotion.pro_description} รับได้ที่หน้างาน
@@ -111,13 +111,13 @@ export default function Payment({ quantity, seatData, eventname, serviceFee }: {
                                         ) : null}
                                     </p>
                                 </div>
-                                {seatData.Promotion?.pro_type_id === 1 ? (
+                                {seatData.Promotion?.pro_type_id === 2 ? (
                                     // ถ้าเป็นโปรโมชั่นลด %
                                     <div className="inline-flex items-center text-base font-semibold text-red-900 dark:text-white">
                                         {(totalPrice * (seatData.Promotion.pro_discount / 100)).toFixed(2)} บาท
                                     </div>
-
-                                ) : seatData.Promotion?.pro_type_id === 2 ? (
+                                    
+                                ) : seatData.Promotion?.pro_type_id === 3 ? (
                                     // ถ้าเป็นโปรโมชั่นลดเป็นจำนวนเงิน
                                     <div className="inline-flex items-center text-base font-semibold text-red-700 dark:text-white">
                                         {seatData.Promotion.pro_discount} บาท
