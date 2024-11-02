@@ -173,7 +173,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
     const handleChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!eventlocationProvinceReg.test(e.target.value)) {
             setiseventlocationProvince_Invalid(true);
-            setEvent_PerrorMessage('ต้องการอักษระ 2 ตัวขึ้นไปสำหรับจังหวัดและไม่ใช่ตัวเลข');
+            setEvent_PerrorMessage('ต้องการอักษระ 4 ตัวขึ้นไปสำหรับจังหวัดและไม่ใช่ตัวเลข');
 
         } else {
             setiseventlocationProvince_Invalid(false);

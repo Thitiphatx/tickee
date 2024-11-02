@@ -5,6 +5,7 @@ interface IParams {
   promotionId?: string;
 }
 
+export const revalidate = 0
 export default async function PromotionPage({ params }: { params: IParams }) {
   const prisma = new PrismaClient();
   

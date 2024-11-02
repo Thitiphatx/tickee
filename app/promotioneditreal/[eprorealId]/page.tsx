@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 interface IParams {
   eprorealId?: string;
 }
-
+export const revalidate = 0
 export default async function PromotionPage({ params }: { params: IParams }) {
   const prisma = new PrismaClient();
   
