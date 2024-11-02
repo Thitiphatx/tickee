@@ -116,7 +116,7 @@ export function redirectingByRole(session: Session | null) {
     } else if (session?.user.role == RoleAvailable.Admin) {
         redirect("/admin")
     } else if (session?.user.role == RoleAvailable.Organizer) {
-        redirect("/organizer")
+        redirect("/event-organizer")
     }
 }
 
