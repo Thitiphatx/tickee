@@ -7,11 +7,11 @@ export async function getSelectedEvent(input: string) {
     if (input == "") {
         try {
             output = await prisma.event.findMany({
-                where: {
-                    event_last_date: {
-                        lt: currentDate,
-                    },
-                },
+                // where: {
+                //     event_last_date: {
+                //         gt: currentDate,
+                //     },
+                // },
                 include: {
                     event_type: true,
                     Seat_Type: true
@@ -37,9 +37,9 @@ export async function getSelectedEvent(input: string) {
                     event_name: {
                         contains: input
                     },
-                    event_last_date: {
-                        lt: currentDate,
-                    },
+                    // event_last_date: {
+                    //     gt: currentDate,
+                    // },
                 },
                 orderBy: {
                     event_last_date: "asc"

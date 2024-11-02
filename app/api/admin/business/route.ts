@@ -1,5 +1,4 @@
 import { getBusinessData, updateBusinessData } from '@/utils/function';
-import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -7,7 +6,6 @@ export async function POST(req: NextRequest) {
         const { bannerFiltered, fee, insertEventType, insertPromotionType } = await req.json();
         if (typeof fee == 'number') {
             const output = await updateBusinessData(bannerFiltered, fee, insertEventType, insertPromotionType)
-            await revalidatePath(`/admin`);
         }
         return NextResponse.json({
             message: 'Promotion created successfully',

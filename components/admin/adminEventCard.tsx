@@ -23,6 +23,7 @@ export default function AdminEventCard() {
     const [isOpen2, setOpen2] = useState<boolean>(false);
     const [mapData, setMapData] = useState<EventOutput | null>();
     const [onLoad, setOnLoad] = useState<boolean>(true);
+    const [refresh, setReFresh] = useState<boolean>(true);
     const [page, setPage] = React.useState(1);
     const [lastPage, setLastPage] = React.useState(1);
     const [eventOnPage, setEventOnPage] = useState<EventOutput[] | null>(null);
@@ -49,7 +50,7 @@ export default function AdminEventCard() {
             }
         };
         fetchData();
-    }, [search]);
+    }, [search,refresh]);
 
     const changePage = (input: number) => {
         if (allEvent != null) {
@@ -116,13 +117,14 @@ export default function AdminEventCard() {
         } catch (error) {
             console.error('Error creating user:', error);
         }
+        setReFresh(!refresh)
         onClose()
         onClose2()
     };
 
     return (
         <>
-            <Modal backdrop={"blur"} isOpen={isOpen2} onClose={onClose2} size={"2xl"}>
+            <Modal backdrop={"blur"} isOpen={isOpen2} onClose={onClose2} scrollBehavior={"outside"} size={"2xl"}>
                 <ModalContent>
                     <>
                         <ModalHeader className="flex flex-col gap-1 text-2xl text-center ">Edit</ModalHeader>
@@ -134,12 +136,12 @@ export default function AdminEventCard() {
                                     animate={{ y: 0, opacity: 1 }}
                                 >
                                     <Card className="flex flex-col items-center px-5">
-                                        <CardHeader className="w-full flex justify-center items-center border-2">
-                                            <Image className="" width={"100%"} src={mapData?.event_images} />
+                                        <CardHeader className="w-full flex justify-center items-center">
+                                            <Image className="" width={"350px"} src={mapData?.event_images} />
                                         </CardHeader>
-                                        <CardBody className="flex flex-col justify-between">
+                                        <CardBody className="flex flex-col justify-between px-10">
                                             <div className="space-y-3">
-                                                <h1 className="text-xl font-bold">{mapData?.event_name}</h1>
+                                                <h1 className="text-2xl font-bold">{mapData?.event_name}</h1>
                                                 <div className="flex flex-row">
                                                     <Chip size="sm" className="">{mapData?.event_type.et_name}</Chip>
                                                 </div>
@@ -213,31 +215,33 @@ export default function AdminEventCard() {
                 <>
                     <div className="flex flex-wrap gap-5 w-full h-fit my-10">
                         {eventOnPage.map((event: EventOutput) => (
-                            <Card className="w-72 flex-shrink-0 overflow-hidden p-2" key={event.event_id}>
-                                <span className="absolute right-5 top-5 z-10 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(event)}>
-                                    <DeleteIcon />
-                                </span>
-                                <div onClick={() => eventDetailClick(event)}>
-                                    <Image alt="Card background" className="object-fill w-full z-0" src={event.event_images} height={250} />
-                                    <CardBody className="overflow-visible py-2 gap-3" >
+                            <>
+                                <Card className="relative min-h-96" key={event.event_id}>
+                                    <span className="absolute right-5 top-5 z-30 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(event)}>
+                                        <DeleteIcon />
+                                    </span>
+                                    <Card isPressable onPress={() => eventDetailClick(event)}>
+                                        <Image alt={event.event_name} className="object-cover rounded-xl h-80" src={event.event_images} width={"290px"} />
+                                        <CardBody className="overflow-visible py-5 px-5 gap-2">
                                         <div className="flex w-full justify-around items-center uppercase font-bold">
-                                            <Button color="primary" radius="lg" variant="bordered" className="h-4/5">
-                                                {new Date(event.event_start_date).getDate() + "-"}
-                                                {new Date(event.event_start_date).getMonth() + "-"}
-                                                {new Date(event.event_start_date).getFullYear()}
-                                            </Button>
-                                            <p className="text-center text-xl"> - </p>
-                                            <Button color="primary" radius="lg" className="h-4/5">
-                                                {new Date(event.event_last_date).getDate() + "-"}
-                                                {new Date(event.event_last_date).getMonth() + "-"}
-                                                {new Date(event.event_last_date).getFullYear()}
-                                            </Button>
-                                        </div>
-                                        <p className="text-lg uppercase font-bold">{event.event_name}</p>
-                                        <small className="text-default-500 truncate">{event.event_location}</small>
-                                    </CardBody>
-                                </div>
-                            </Card>
+                                                <Button color="primary" radius="lg" variant="bordered" className="h-4/5">
+                                                    {new Date(event.event_start_date).getDate() + "-"}
+                                                    {new Date(event.event_start_date).getMonth() + "-"}
+                                                    {new Date(event.event_start_date).getFullYear()}
+                                                </Button>
+                                                <p className="text-center text-xl"> - </p>
+                                                <Button color="primary" radius="lg" className="h-4/5">
+                                                    {new Date(event.event_last_date).getDate() + "-"}
+                                                    {new Date(event.event_last_date).getMonth() + "-"}
+                                                    {new Date(event.event_last_date).getFullYear()}
+                                                </Button>
+                                            </div>
+                                            <p className="text-lg uppercase font-bold">{event.event_name}</p>
+                                            <small className="text-default-500 truncate">{`${JSON.parse(event.event_location).address} ${JSON.parse(event.event_location).city}, ${JSON.parse(event.event_location).country}`}</small>
+                                        </CardBody>
+                                    </Card>
+                                </Card>
+                            </>
                         ))}
                     </div>
                     <div className="flex w-full justify-center">
@@ -261,3 +265,4 @@ export default function AdminEventCard() {
 
     )
 };
+
