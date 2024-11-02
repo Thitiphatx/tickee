@@ -216,7 +216,7 @@ export default function AdminEventCard() {
                     <div className="flex flex-wrap gap-5 w-full h-fit my-10">
                         {eventOnPage.map((event: EventOutput) => (
                             <>
-                                <Card className="relative min-h-96" key={event.event_id}>
+                                <Card className="relative min-h-96 w-[290px]" key={event.event_id}>
                                     <span className="absolute right-5 top-5 z-30 text-3xl rounded-3xl p-2 bg-danger cursor-pointer active:opacity-50" onClick={() => deleteClick(event)}>
                                         <DeleteIcon />
                                     </span>
@@ -236,7 +236,7 @@ export default function AdminEventCard() {
                                                     {new Date(event.event_last_date).getFullYear()}
                                                 </Button>
                                             </div>
-                                            <p className="text-lg uppercase font-bold">{event.event_name}</p>
+                                            <p className="text-lg uppercase font-bold w-full overflow-hidden whitespace-nowrap text-ellipsis">{event.event_name}</p>
                                             <small className="text-default-500 truncate">{`${JSON.parse(event.event_location).address} ${JSON.parse(event.event_location).city}, ${JSON.parse(event.event_location).country}`}</small>
                                         </CardBody>
                                     </Card>
