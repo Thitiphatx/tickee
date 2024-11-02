@@ -20,7 +20,7 @@ export default function Graph() {
         const fetchData = async () => {
             setOnLoad(true)
             try {
-                const res = await fetch('/api/cronJob/graph');
+                const res = await fetch('/api/admin/graph');
                 if (!res.ok) {
                     const errorResponse = await res.json();
                     console.warn('API Error:', errorResponse.message || 'Unknown error');

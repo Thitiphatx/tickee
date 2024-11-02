@@ -7,7 +7,7 @@ import { ModalBody, ModalFooter, ModalHeader } from "@nextui-org/modal";
 // สร้าง PaymentPage component
 
 
-export default function TicketInformation({ currentTab, onBookingClick, seatPerOrder }: { currentTab: number, onBookingClick: (quantity: number, seatData: Seat_Type | null) => void , seatPerOrder :  number }) {
+export default function TicketInformation({ currentTab, onBookingClick, seatPerOrder, closing }: { currentTab: number, onBookingClick: (quantity: number, seatData: Seat_Type | null) => void, seatPerOrder: number, closing:()=>void }) {
     console.log("แสดงข้อมูลที่นั่ง seat id: ", currentTab)
 
     const [seatData, setSeatData] = useState<Seat_Type | null>(null);
@@ -71,49 +71,63 @@ export default function TicketInformation({ currentTab, onBookingClick, seatPerO
 
     return (
         <>
-            <ModalHeader className="flex flex-col gap-1">Ticket Information</ModalHeader>
-            <ModalBody>
-                <div className="space-y-4">
-                    <div className="grid grid-cols-2">
-                        <h5 className="text-primary-800">วันเริ่มงาน</h5>
-                        <small>{formattedstartDate}</small>
-                    </div>
-                    <div className="grid grid-cols-2">
-                        <h5 className="text-primary-800">วันจบงาน</h5>
-                        <small>{formattedendDate}</small>
-                    </div>
-                    <div className="grid grid-cols-2">
-                        <h5 className="text-primary-800">โซน</h5>
-                        <small>{seatData?.seat_name}</small>
-                    </div>
-                    <div className="grid grid-cols-2">
-                        <h5 className="text-primary-800">Quantity</h5>
-                        <small>
-                            <div className="flex items-center space-x-4">
-                                <Button size="sm" onClick={decreaseQuantity} isIconOnly>
-                                    -
-                                </Button>
-                                <small>{quantity}</small>
-                                <Button size="sm" onClick={increaseQuantity} isIconOnly>
-                                    +
-                                </Button>
+            {((seatData?.Seat_Dispatch?.sd_max || 0) <= (seatData?.Seat_Dispatch?.sd_current || 0)) ? (
+                <>
+                    <ModalHeader className="flex flex-col gap-1 text-center text-danger">Ticket Soldout</ModalHeader>
+                    <ModalBody>
+                        <div className="flex justify-center items-center py-8">
+                            <p className="uppercase">Unable to Buy</p>
+                        </div>
+                    </ModalBody>
+                </>
+            ) : (
+                <>
+                    <ModalHeader className="flex flex-col gap-1">Ticket Information</ModalHeader>
+                    <ModalBody>
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-2">
+                                <h5 className="text-primary-800">วันเริ่มงาน</h5>
+                                <small>{formattedstartDate}</small>
                             </div>
-                        </small>
-                    </div>
+                            <div className="grid grid-cols-2">
+                                <h5 className="text-primary-800">วันจบงาน</h5>
+                                <small>{formattedendDate}</small>
+                            </div>
+                            <div className="grid grid-cols-2">
+                                <h5 className="text-primary-800">โซน</h5>
+                                <small>{seatData?.seat_name}</small>
+                            </div>
+                            <div className="grid grid-cols-2">
+                                <h5 className="text-primary-800">Quantity</h5>
+                                <small>
+                                    <div className="flex items-center space-x-4">
+                                        <Button size="sm" onClick={decreaseQuantity} isIconOnly>
+                                            -
+                                        </Button>
+                                        <small>{quantity}</small>
+                                        <Button size="sm" onClick={increaseQuantity} isIconOnly>
+                                            +
+                                        </Button>
+                                    </div>
+                                </small>
+                            </div>
 
-                    <div className="grid grid-cols-2">
-                        <h5 className="text-primary-800">ราคาต่อที่</h5>
-                        <small>{unitPrice?.toLocaleString()}</small>
-                    </div>
-                    <div className="grid grid-cols-2">
-                        <h5 className="text-primary-800">ราคารวม</h5>
-                        <small>{(quantity * (unitPrice ?? 0)).toLocaleString()}</small>
-                    </div>
-                </div>
-            </ModalBody>
-            <ModalFooter>
-                <Button color="primary" onClick={() => onBookingClick(quantity, seatData)} >Booking</Button>
-            </ModalFooter>
+                            <div className="grid grid-cols-2">
+                                <h5 className="text-primary-800">ราคาต่อที่</h5>
+                                <small>{unitPrice?.toLocaleString()}</small>
+                            </div>
+                            <div className="grid grid-cols-2">
+                                <h5 className="text-primary-800">ราคารวม</h5>
+                                <small>{(quantity * (unitPrice ?? 0)).toLocaleString()}</small>
+                            </div>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={() => onBookingClick(quantity, seatData)} >Booking</Button>
+                    </ModalFooter>
+                </>
+            )}
+
         </>
 
     );

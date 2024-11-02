@@ -21,6 +21,8 @@ export default function BusinessAdjustment() {
     const [insertPromotionType, setInsertPromotionType] = useState<string[] | null>([]);
     const [onLoad, setOnLoad] = useState<boolean>(true);
     const defaultImage:string = ""
+    const insertREGEX = /[A-z\u0E00-\u0E7F0-9 ]+/g;
+    const [refresh, setReFresh] = useState<boolean>(true);
 
     const deleteClick = (idx: number) => {
         if (banner != null) {
@@ -107,11 +109,11 @@ export default function BusinessAdjustment() {
     };
 
     const handleEventInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNewEvent(e.target.value);
+        setNewEvent((e.target.value.match(insertREGEX)||[]).join(" "));
     };
 
     const handlePromotionInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNewPromotion(e.target.value);
+        setNewPromotion((e.target.value.match(insertREGEX)||[]).join(" "));
     };
 
     const handleImageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,6 +144,9 @@ export default function BusinessAdjustment() {
         } catch (error) {
             console.error('Error Upload banner:', error);
         }
+        setInsertEventType([])
+        setInsertPromotionType([])
+        setReFresh(!refresh)
     };
 
     useEffect(() => {
@@ -160,10 +165,11 @@ export default function BusinessAdjustment() {
             }
         };
         fetchData();
-    }, []);
+    }, [refresh]);
     if (banner == null) {
         console.log("error banner")
     }
+
 
     return (
         <div className='flex flex-col w-full items-center gap-5 py-10'>
