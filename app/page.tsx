@@ -27,9 +27,10 @@ export default async function Home() {
             event_type: true
         }
     })
+    const slideShow = await prisma.admin_Data.findFirst();
     return (
         <div className="space-y-5">
-            <ImageSlider/>
+            <ImageSlider image_item={slideShow?.banner_images ?? []}/>
             <CardSwiper title="Latest Event" items={latest} />
             <CardSwiper title="Concert" items={concert} fullPage="concert" />
         </div>

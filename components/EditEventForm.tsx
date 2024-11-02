@@ -20,6 +20,7 @@ interface EventData {
     event_start_date: Date;
     event_last_date: Date;
     event_location: string;
+    event_seat_per_order:number;
     event_type: {
         et_id: number;
         et_name: string;
@@ -56,6 +57,8 @@ interface EventLocation {
     country: string;
 }
 
+
+
 export default function EditEventForm({ eventData, eventType }: EditEventFormProps) {
     const router = useRouter();
     const { data: session } = useSession();
@@ -63,7 +66,10 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
 
     const [eventimageURL, seteventimageURL] = useState(`${eventData.event_images}`);
     const [event_intro, setevent_intro] = useState(`${eventData.event_intro}`);
+    const [eventMaxbuy, seteventMaxbuy] = useState(eventData.event_seat_per_order);
 
+
+    const [isLoading, setIsLoading] = useState(false); // Add loading state
     ///experiment only
 
     const startDate1 = new Date(eventData.event_start_date); // Assuming eventData.event_start_date is a valid date string
@@ -181,6 +187,8 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
 
 
     const addtodb = async () => {
+
+        setIsLoading(true);
         console.log("name :", event_name)
         console.log("intro :", event_intro)
         console.log("image :", eventimageURL)
@@ -201,7 +209,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
             event_start_date: startDateTimeISO.toISOString(),
             event_last_date: endDateTimeISO.toISOString(),
             event_location: JSON.stringify(event_location),
-            event_seat_per_order: 5,
+            event_seat_per_order: eventMaxbuy,
             producer_id: session?.user.id,
             event_type_id: parseInt(selectedeventTypeValue),
         }
@@ -258,6 +266,9 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
 
         } catch (error) {
             console.error('Error creating eventandseat:', error);
+        }
+        finally {
+            setIsLoading(false); // Hide loading modal and revert button label
         }
     }
 
@@ -465,13 +476,39 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                 ))}
 
             </div>
+
+            <div>
+                <p className="font-bold mb-4 text-sm leading-6 ">
+                    จำนวนการซื้อสูงสุดแต่ละรอบ
+                </p>
+                <Input
+                    type="number"
+                    style={{ width: '400px' }}
+                    placeholder="จำนวนการซื้อสูงสุดแต่ละรอบ (ไม่ใส่ = 5)"
+                    value={eventMaxbuy.toString()}
+                    onChange={(e) => {
+                        const value = parseInt(e.target.value, 10);
+                        seteventMaxbuy(value < 1 ? 1 : value); // Set to 1 if value is below 1
+                    }}
+                />
+            </div>
+
+
+
             <label className="block mb-2 text-sm font-medium leading-6 ">
                 Event description
             </label>
             <TextEditor setContent={setevent_description} contents={eventData?.event_description || ""} maxLength={50000}/>
             <p className="mt-3 text-sm leading-6 text-gray-400">เขียนรายละเอียดเกี่ยวกับตั๋วและโปรโมชั่น</p>
 
-            <Button onClick={addtodb}>Submit</Button>
+            <Button className="bg-sky-500 hover:bg-sky-700 rounded-large text-white font-bold" onClick={addtodb}  > {isLoading ? <div role="status">
+                <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
+                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
+                </svg>
+                <span className="sr-only">Loading...</span>
+            </div>
+             : "Submit"} </Button>
         </div>
     );
 }

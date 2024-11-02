@@ -73,7 +73,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     }, []);
 
     if (showPaymentPage) {
-        return <Payment quantity={quantity} seatData={seatData} eventname={eventDetails.event_name} serviceFee={serviceFee}/>;
+        return <Payment quantity={quantity} seatData={seatData} eventname={eventDetails.event_name} serviceFee={serviceFee} />;
     }
 
     const isSeatAvailable = (seat: Seat_Type) => {
@@ -82,6 +82,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
         const seatLastDate = new Date(seat.seat_due_date).getTime();
         return ((currentDate >= seatCreateDate) && (currentDate <= seatLastDate));
     };
+
 
     return (
         <div className="space-y-5">
@@ -114,25 +115,30 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                         <h2 className="uppercase font-bold">Select Ticket</h2>
                         <Selector setCurrentTab={setCurrentTab} currentTab={currentTab} onTabChange={handleTabChange} >
                             {eventDetails.Seat_Type.filter((seat: Seat_Type) => isSeatAvailable(seat)).map((seat) => (
-                                <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300">
-                                    <CardHeader className='flex flex-col items-start' >
-                                        <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง {(seat.Seat_Dispatch?.sd_max || 0) - (seat.Seat_Dispatch?.sd_current || 0)} ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})</h4>
+                                <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300" >
+                                    <CardHeader className='flex flex-col items-start'  >
+                                        
+                                        {(seat.Seat_Dispatch?.sd_max || 0) - (seat.Seat_Dispatch?.sd_current || 0) <= 0 ? (
+                                            <p className="text-red-500">{seat.seat_name} Sold Out</p>
+                                        ) : <h4 className="font-bold">
+                                        {seat.seat_name} เหลือที่นั่ง {(seat.Seat_Dispatch?.sd_max || 0) - (seat.Seat_Dispatch?.sd_current || 0)} ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})
+                                    </h4>}
 
                                         <div className='flex flex-col'>
-                                            {seat.Promotion?.pro_type?.pt_id === 2 ? (
+                                            {seat.Promotion?.pro_type?.pt_id === 2 && (new Date().getTime() >= new Date(seat.Promotion.pro_start_date).getTime() && new Date().getTime() <= new Date(seat.Promotion.pro_last_date).getTime()) ? (
                                                 <>
                                                     <h4 className="font-bold ml-2 text-warning-500">
                                                         โปรโมชั่น {seat.Promotion.pro_type.pt_name}  ลด {seat.Promotion.pro_discount} %
                                                     </h4>
 
                                                 </>
-                                            ) : seat.Promotion?.pro_type?.pt_id === 3 ? (
+                                            ) : seat.Promotion?.pro_type?.pt_id === 3 && (new Date().getTime() >= new Date(seat.Promotion.pro_start_date).getTime() && new Date().getTime() <= new Date(seat.Promotion.pro_last_date).getTime()) ? (
                                                 <>
                                                     <h4 className="font-bold ml-2 text-blue-900">
                                                         โปรโมชั่น {seat.Promotion.pro_type.pt_name}  ลด {seat.Promotion.pro_discount} บาท
                                                     </h4>
                                                 </>
-                                            ) : seat.Promotion?.pro_type?.pt_id === 1 ? (
+                                            ) : seat.Promotion?.pro_type?.pt_id === 1 && (new Date().getTime() >= new Date(seat.Promotion.pro_start_date).getTime() && new Date().getTime() <= new Date(seat.Promotion.pro_last_date).getTime()) ? (
                                                 <>
                                                     <h4 className="font-bold ml-2 text-red-900">
                                                         โปรโมชั่น {seat.Promotion?.pro_type.pt_name}  แจก {seat.Promotion?.pro_description}
