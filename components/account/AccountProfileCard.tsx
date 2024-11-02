@@ -13,6 +13,34 @@ import { useState } from "react"
 
 export default function AccountProfileCard({ userData }: { userData: User }) {
     const router = useRouter();
+    const [validation, setValidation] = useState(
+        {
+            name: {
+                regex: /^[\wก-๙a-zA-Z]{4,30}$/,
+                errorMsg: "ต้องการอักขระ ภาษาไทย, อังกฤษจำนวน 4-30 ตัว",
+                isError: false,
+            },
+            email: {
+                regex: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                errorMsg: "กรุณากรอก email ให้ถูกต้อง",
+                isError: false
+            },
+            mobile: {
+                regex: /^0\d{9}$/,
+                errorMsg: "กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง 0xxxxxxxxx",
+                isError: false
+            },
+            idcard: {
+                regex: /^[0-9]{14}$/,
+                errorMsg: "กรุณากรอกบัตรประชาชน 14 หลัก",
+                isError: false
+            },
+            result: {
+                errorMsg: "email หรือรหัสผ่านไม่ถูกต้อง",
+                isError: false
+            }
+        }
+    )
     const { data: session, update } = useSession();
     const [data, setData] = useState<User>(userData);
     const [error, setError] = useState<string | null>(null);

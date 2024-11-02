@@ -16,10 +16,8 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { signOut, useSession } from "next-auth/react";
-import Searchbar from "./searchbar";
 import { IconCalendarEventFill, IconDoorOpenFill, IconLogout, IconTicket, IconUser } from "@/styles/icon";
 import { useState, useEffect } from 'react'
-import { Input } from "@nextui-org/input";
 import { Divider } from "@nextui-org/divider";
 
 export const Navbar = () => {
@@ -87,6 +85,7 @@ export const Navbar = () => {
                                         My ticket
                                     </DropdownItem>
                                     <DropdownItem
+                                        style={{display: `${session.user.role == "organizer" ? "" : "none"}`}}
                                         key="event"
                                         href="/event-organizer"
                                         description="จัดการกิจกรรม"
@@ -95,7 +94,9 @@ export const Navbar = () => {
                                         Event
                                     </DropdownItem>
                                     <DropdownItem
+                                        style={{display: `${session.user.role == "admin" ? "" : "none"}`}}
                                         key="backend"
+                                        href="/admin"
                                         description="ระบบหลังบ้าน"
                                         startContent={<IconDoorOpenFill width="1.5rem" height="1.5rem" />}
                                     >
