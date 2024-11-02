@@ -39,7 +39,6 @@ export default function UserTable() {
     const [outputEmail, setOutputEmail] = useState<string>("");
     const [search, setSearch] = useState<string>("");
     const [refresh, setReFresh] = useState<boolean>(true);
-    const [firstLoad, setFirstLoad] = useState<boolean>(true);
     const { data: session, status } = useSession();
     const rowsPerPage = 20;
 

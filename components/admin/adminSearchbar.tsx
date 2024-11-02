@@ -9,9 +9,10 @@ interface SearchFunction {
 
 export default function AdminSearchbar({ searchText, setSearchText }: SearchFunction) {
     const [input, setInput] = useState<string>("");
+    const searchREGEX = /[A-z\u0E00-\u0E7F0-9 ]+/g;
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setSearchText(input)
+        setSearchText((input.match(searchREGEX)||[]).join(" "))
     };
     return (
         <div className="w-full">
@@ -22,7 +23,12 @@ export default function AdminSearchbar({ searchText, setSearchText }: SearchFunc
                 className="size-full rounded-md focus:outline-none py-3 px-5 text-sm"
                 placeholder="Search"
                 defaultValue={searchText}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
+                value={input}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    let temp = (e.target.value.match(searchREGEX)||[]).join(" ")
+                    setInput(temp)
+                    console.log(temp)}
+                }
             />
             </form>
         </div>
