@@ -65,7 +65,7 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
       promotionId: promotionId, // Include the promotion ID here
       seat_type_id: parseInt(formData.seat_type_id),
       pro_description: formData.pro_description,
-      pro_discount: formData.pro_type !== '3' ? parseFloat(formData.pro_discount) : 0,
+      pro_discount: formData.pro_type !== '1' ? parseFloat(formData.pro_discount) : 0,
       pro_start_date: formData.pro_start_date,
       pro_last_date: formData.pro_last_date,
       event_id: parseInt(formData.event_id),
@@ -113,7 +113,7 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
         required
       />
 
-      {formData.pro_type !== '3' && (
+      {formData.pro_type !== '1' && (
         <Input
           name="pro_discount"
           label="Promotion Discount"

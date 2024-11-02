@@ -1,5 +1,4 @@
-import { getSelectedEvent } from "./fetch";
-import { notFound } from "next/navigation";
+
 import AdminEventCard from "@/components/admin/adminEventCard";
 import { getCurrentSession } from "@/utils/getCurrentSession";
 import { RoleAvailable } from "@/types/data_type";

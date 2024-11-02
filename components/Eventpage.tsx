@@ -101,20 +101,20 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                                         <h4 className="font-bold">{seat.seat_name} เหลือที่นั่ง {(seat.Seat_Dispatch?.sd_max||0) - (seat.Seat_Dispatch?.sd_current||0) } ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})</h4>
 
                                         <div className='flex flex-col'>
-                                            {seat.Promotion?.pro_type?.pt_id === 1 ? (
+                                            {seat.Promotion?.pro_type?.pt_id === 2 ? (
                                                 <>
                                                     <h4 className="font-bold ml-2 text-warning-500">
                                                         โปรโมชั่น {seat.Promotion.pro_type.pt_name}  ลด {seat.Promotion.pro_discount} %
                                                     </h4>
 
                                                 </>
-                                            ) : seat.Promotion?.pro_type?.pt_id === 2 ? (
+                                            ) : seat.Promotion?.pro_type?.pt_id === 3 ? (
                                                 <>
                                                     <h4 className="font-bold ml-2 text-blue-900">
                                                         โปรโมชั่น {seat.Promotion.pro_type.pt_name}  ลด {seat.Promotion.pro_discount} บาท
                                                     </h4>
                                                 </>
-                                            ) : seat.Promotion?.pro_type?.pt_id === 3 ? (
+                                            ) : seat.Promotion?.pro_type?.pt_id === 1 ? (
                                                 <>
                                                     <h4 className="font-bold ml-2 text-red-900">
                                                         โปรโมชั่น {seat.Promotion?.pro_type.pt_name}  แจก {seat.Promotion?.pro_description}
