@@ -13,15 +13,14 @@ if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
-export default function Payment({ quantity, seatData, eventname }: { quantity: number, seatData: Seat_Type|null, eventname: String }) {
+export default function Payment({ quantity, seatData, eventname, serviceFee }: { quantity: number, seatData: Seat_Type | null, eventname: String, serviceFee: number }) {
 
-    if(seatData==null){
+    if (seatData == null) {
         return (<>not found</>)
     }
     console.log("จำนวนซื้อทั้งหมด (payment):", quantity)
     console.log("ข้อมูลที่นั่ง (payment):", seatData);
-
-    const fee = 30 * quantity
+    const fee = serviceFee * quantity
     const totalPrice = seatData.seat_price * quantity
     let totalPriceplusfee;
 
@@ -70,14 +69,14 @@ export default function Payment({ quantity, seatData, eventname }: { quantity: n
                             <div className="flex items-center">
                                 <div className="flex-1 min-w-0 ms-4">
                                     <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                        ค่าธรรมเนียมบริการ/Service Fee (30 Baht per ticket)
+                                        ค่าธรรมเนียมบริการ/Service Fee ({serviceFee} Baht per ticket)
                                     </p>
                                     <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                        30  X {quantity}
+                                        {serviceFee}  X {quantity}
                                     </p>
                                 </div>
                                 <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                    {30 * quantity} บาท
+                                    {serviceFee * quantity} บาท
                                 </div>
                             </div>
                         </li>
@@ -114,7 +113,6 @@ export default function Payment({ quantity, seatData, eventname }: { quantity: n
                                 </div>
                                 {seatData.Promotion?.pro_type_id === 2 ? (
                                     // ถ้าเป็นโปรโมชั่นลด %
-                                    
                                     <div className="inline-flex items-center text-base font-semibold text-red-900 dark:text-white">
                                         {(totalPrice * (seatData.Promotion.pro_discount / 100)).toFixed(2)} บาท
                                     </div>
@@ -153,7 +151,7 @@ export default function Payment({ quantity, seatData, eventname }: { quantity: n
                     <Elements stripe={stripePromise}
                         options={{
                             mode: "payment",
-                            amount: (totalPriceplusfee * 100),
+                            amount: totalPriceplusfee * 100,
                             currency: "thb",
                         }}
                     >

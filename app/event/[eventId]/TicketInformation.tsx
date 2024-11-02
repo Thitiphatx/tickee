@@ -112,7 +112,6 @@ export default function TicketInformation({ currentTab, onBookingClick, seatPerO
                 </div>
             </ModalBody>
             <ModalFooter>
-                <Button>Back</Button>
                 <Button color="primary" onClick={() => onBookingClick(quantity, seatData)} >Booking</Button>
             </ModalFooter>
         </>

@@ -7,10 +7,6 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-
-
-
-
 const ImageSlider: React.FC = () => {
 
   const [images,setimages] = useState<string[]>([]);
@@ -18,21 +14,16 @@ const ImageSlider: React.FC = () => {
   useEffect (()=>{
     const fecthbanner = async () => {
       try{
-        const response = await fetch('/api/getBanner');
+        const response = await fetch('/api/webConfigData');
         if (!response.ok) {
           throw new Error('Failed to fetch images');
         }
         const data = await response.json();
-        console.log(data)
-        console.log(data.banner_images)
-
         setimages(data.banner_images);
       }
       catch(error){
         console.error('Error fetching banner images:', error);
       }
-
-
     }
     fecthbanner();
     },[]);

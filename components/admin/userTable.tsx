@@ -38,6 +38,7 @@ export default function UserTable() {
     const [outputName, setOutputName] = useState<string>("");
     const [outputEmail, setOutputEmail] = useState<string>("");
     const [search, setSearch] = useState<string>("");
+    const [refresh, setReFresh] = useState<boolean>(true);
     const { data: session, status } = useSession();
     const rowsPerPage = 20;
 
@@ -60,7 +61,7 @@ export default function UserTable() {
             }
         };
         fetchData();
-    }, [search]);
+    }, [search,refresh]);
 
     const changePage = (input: number) => {
         if (allUser != null) {
@@ -134,6 +135,7 @@ export default function UserTable() {
         } catch (error) {
             console.error('Error creating user:', error);
         }
+        setReFresh(!refresh)
         onClose2()
     };
 
@@ -152,6 +154,7 @@ export default function UserTable() {
         } catch (error) {
             console.error('Error creating user:', error);
         }
+        setReFresh(!refresh)
         onClose()
     };
 

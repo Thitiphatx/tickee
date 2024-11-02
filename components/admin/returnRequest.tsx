@@ -10,7 +10,7 @@ import {
 } from "@nextui-org/table";
 
 import { Receipt, Seat_Dispatch, Seat_Type, User, Event } from "@prisma/client";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@nextui-org/button'
 import { DeleteIcon, EditIcon } from "../icons";
 import { ReceiptStatus } from "@/types/data_type";
@@ -29,7 +29,7 @@ interface ReturnOrder extends Receipt {
 }
 
 
-export default function ReturnRequest({ data }: { data: any[] }) {
+export default function ReturnRequest() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isOpen2, setOpen2] = useState<boolean>(false);
     const [orderID, setOrderID] = useState<number>(0);
@@ -37,19 +37,41 @@ export default function ReturnRequest({ data }: { data: any[] }) {
     const [page, setPage] = React.useState(1);
     const [lastPage, setLastPage] = React.useState(1);
     const [recOnPage, setRecOnPage] = useState<any[] | null>([]);
+    const [allREC, setAllREC] = useState<any[] | null>([]);
+    const [refresh, setReFresh] = useState<boolean>(true);
     const rowsPerPage = 40;
 
+    useEffect(() => {
+        const fetchData = async () => {
+            setOnLoad(true)
+            try {
+                setAllREC(null)
+                const res = await fetch('/api/admin/returning');
+                if (!res.ok) {
+                    const errorResponse = await res.json();
+                    console.log("error client")
+                    throw Error
+                }
+                const output = await res.json();
+                setAllREC(output)
+            } catch (error) {
+                console.error('Error GET user:', error);
+            }
+        };
+        fetchData();
+    }, [refresh]);
+
     const changePage = (input: number) => {
-        if (data != null) {
+        if (allREC != null) {
             const start = (input - 1) * rowsPerPage;
             const end = start + rowsPerPage;
-            setLastPage(Math.ceil(data.length / rowsPerPage));
+            setLastPage(Math.ceil(allREC.length / rowsPerPage));
             setPage(input)
-            setRecOnPage(data.slice(start, end))
+            setRecOnPage(allREC.slice(start, end))
         }
     }
 
-    if (data && onLoad) {
+    if (allREC && onLoad) {
         changePage(1)
         setOnLoad(false)
     }
@@ -89,6 +111,7 @@ export default function ReturnRequest({ data }: { data: any[] }) {
         } catch (error) {
             console.error('Error Accept:', error);
         }
+        setReFresh(!refresh)
         onClose()
     };
 
@@ -108,6 +131,7 @@ export default function ReturnRequest({ data }: { data: any[] }) {
         } catch (error) {
             console.error('Error Accept:', error);
         }
+        setReFresh(!refresh)
         onClose2()
     };
 
@@ -175,7 +199,7 @@ export default function ReturnRequest({ data }: { data: any[] }) {
                 </form>
             </Modal>
 
-            {!onLoad && (
+            {!onLoad && recOnPage != null && (
                 <Table 
                 className="p-8" 
                 selectionMode="single" 
@@ -204,7 +228,7 @@ export default function ReturnRequest({ data }: { data: any[] }) {
                         <TableColumn align="center">STATUS</TableColumn>
                     </TableHeader>
                     <TableBody emptyContent={"No Data for Display."}>
-                        {data.map((item: ReturnOrder) => (
+                        {recOnPage.map((item: ReturnOrder) => (
                             <TableRow key={item.rec_id}>
                                 <TableCell>{item.rec_customer.name}</TableCell>
                                 <TableCell>{item.rec_customer.email}</TableCell>

@@ -166,11 +166,11 @@ export default function BusinessAdjustment() {
     }
 
     return (
-        <div className='flex flex-col items-center py-10'>
+        <div className='flex flex-col w-full items-center gap-5 py-10'>
             {!onLoad && (
-                <>
+                <>                     
+                   <h1 className="font-bold text-inherit uppercase text-3xl">type</h1>
                     <div className="flex flex-col items-center gap-5 w-full">
-                        <h1 className="font-bold text-inherit uppercase text-3xl">type</h1>
                         <div className='flex justify-around w-full'>
                             <div className='flex flex-col gap-3 w-1/3'>
                                 <Table selectionMode="single" color="default" aria-label='Event Type Table'>
@@ -241,13 +241,13 @@ export default function BusinessAdjustment() {
                                 />
                             </div>
                         ))}
-                        <div onClick={insertNewBanner} className='flex justify-center h-1/3 w-3/4 p-5'>
+                        <div onClick={insertNewBanner} className='flex items-center justify-center h-1/3 w-3/4 p-5'>
                             {!display && (
                                 <PlusIcon className='size-52' />
                             )}
 
                             {display && (
-                                <div className='flex flex-col items-center gap-3 size-full'>
+                                <div className='flex flex-col items-center gap-3 h-full w-[700px]'>
                                     <Input onChange={handleImageInputChange} value={newImage} type="text" label="Image URL" />
                                     <Button onClick={updateNewBanner} color='primary' variant='shadow' className="uppercase w-full" radius="full">insert</Button>
                                 </div>
