@@ -302,7 +302,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
     };
 
 
-    const eventnameReg = /^[\wก-๙#\[\]\{\}\\\/: ]{10,100}$/;
+    const eventnameReg = /^[\wก-๙#\[\]\{\}\\\/:\- ]{10,100}$/;
     const [isInvalid, setIsInvalid] = useState(true); // สถานะความถูกต้องของ input
     const [errorMessage, setErrorMessage] = useState('กรุณาใส่ตัวเลขหรืออักษรภาษาไทยอังกฤษ { } [ ] # :และช่องว่างเท่านั้นความยาว 10 ตัวอักษร'); // ข้อความแสดงข้อผิดพลาด
 
