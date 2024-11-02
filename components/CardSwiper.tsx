@@ -2,14 +2,13 @@
 import React from 'react'
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Card, CardBody, CardHeader } from '@nextui-org/card';
+import { Address } from "@/types/data_type"
+import { Card, CardBody} from '@nextui-org/card';
 import { Image } from '@nextui-org/image';
 import { motion } from "framer-motion"
 import { Event } from '@prisma/client';
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Button } from '@nextui-org/button';
 import { Link } from '@nextui-org/link';
-import { Address } from '@/types/data_type';
 
 export default function CardSwiper({ title, items, fullPage }: { title?: string, items: Event[], fullPage?: string }) {
     return (
@@ -46,7 +45,7 @@ export default function CardSwiper({ title, items, fullPage }: { title?: string,
                     grabCursor={true}
                 >
                     {items.map((event, index) => {
-                        // const address: Address = JSON.parse(event.event_location);
+                        const address: Address = JSON.parse(event.event_location);
                         return (
                             <SwiperSlide key={index}>
                                 <a href={`event/${event.event_id}`} key={index}>
@@ -54,8 +53,8 @@ export default function CardSwiper({ title, items, fullPage }: { title?: string,
                                         <Image alt={event.event_name} className="object-cover rounded-xl h-80"  src={event.event_images} width={"320px"} />
                                         <CardBody className="overflow-visible py-2">
                                             <p className="text-tiny uppercase">{event.event_start_date.toLocaleDateString('en-US', { day: 'numeric', month: 'long'})}</p>
-                                            <p className="text-tiny uppercase font-bold">{event.event_name}</p>
-                                            {/* <small className="text-default-500 truncate">{`${address.address} ${address.city}, ${address.country}`}</small> */}
+                                            <p className="text-tiny uppercase font-bold truncate">{event.event_name}</p>
+                                            <small className="text-default-500 truncate">{`${address.address} ${address.city}, ${address.country}`}</small>
                                         </CardBody>
                                     </Card>
                                 </a>

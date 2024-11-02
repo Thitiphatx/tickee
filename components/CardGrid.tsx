@@ -19,7 +19,7 @@ export default function CardGrid({ items }: { items: Event[] }) {
                                     <Image alt={event.event_name} className="object-cover rounded-xl h-80"  src={event.event_images} width={"320px"} />
                                     <CardBody className="overflow-visible py-2">
                                         <p className="text-tiny uppercase">{event.event_start_date.toLocaleDateString('en-US', { day: 'numeric', month: 'long'})}</p>
-                                        <p className="text-tiny uppercase font-bold">{event.event_name}</p>
+                                        <p className="text-tiny uppercase font-bold truncate">{event.event_name}</p>
                                         <small className="text-default-500 truncate">{`${address.address} ${address.city}, ${address.country}`}</small>
                                     </CardBody>
                                 </Card>
