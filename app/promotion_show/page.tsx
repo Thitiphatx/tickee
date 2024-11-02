@@ -73,10 +73,10 @@ export default async function PromotionPage() {
 
   return (
     <div>
-      <h1>Your Events Without Promotions</h1>
+      <h1 className='mb-9 text-l font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-xl dark:text-white'>Your Events Without Promotions</h1>
       <Promotion events={formattedEventsWithSeatsNoPromotion} />
-
-      <h1>Your Events with Promotions (EDIT ZONE)</h1>
+      <hr className="mt-9 w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
+      <h1 className='mt-9 mb-9 text-l font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-xl dark:text-white'>Your Events with Promotions (EDIT ZONE)</h1>
       <Promotion_seat events={formattedEventsWithPromotions} />
     </div>
   );
