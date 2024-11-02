@@ -1,6 +1,5 @@
 "use client"
 
-import { notFound } from "next/navigation";
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, TimeScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import 'chartjs-adapter-date-fns';
@@ -21,7 +20,7 @@ export default function Graph() {
         const fetchData = async () => {
             setOnLoad(true)
             try {
-                const res = await fetch('/api/admin/graph');
+                const res = await fetch('/api/cronJob/graph');
                 if (!res.ok) {
                     const errorResponse = await res.json();
                     console.warn('API Error:', errorResponse.message || 'Unknown error');
