@@ -27,6 +27,8 @@ export default async function Home() {
             event_type: true
         }
     })
+
+    
     return (
         <div className="space-y-5">
             <ImageSlider/>

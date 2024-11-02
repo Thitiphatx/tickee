@@ -43,7 +43,7 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
 
   useEffect(() => {
     // If the promotion type is 'Free Gift' (id: 3), set discount to 0 and disable the input
-    if (formData.pro_type === '3') {
+    if (formData.pro_type === '1') {
       setFormData((prev) => ({ ...prev, pro_discount: '0' }));
     }
   }, [formData.pro_type]);
@@ -64,7 +64,7 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
     const promotionData = {
       seat_type_id: parseInt(formData.seat_type_id),
       pro_description: formData.pro_description,
-      pro_discount: formData.pro_type !== '3' ? parseFloat(formData.pro_discount) : 0, // No discount if promotion type is 'free gift'
+      pro_discount: formData.pro_type !== '1' ? parseFloat(formData.pro_discount) : 0, // No discount if promotion type is 'free gift'
       pro_start_date: formData.pro_start_date,
       pro_last_date: formData.pro_last_date,
       event_id: parseInt(formData.event_id),
@@ -107,7 +107,7 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
       />
 
       {/* Conditional Rendering for Discount Field */}
-      {formData.pro_type !== '3' && ( // Only show if not "free gift"
+      {formData.pro_type !== '1' && ( // Only show if not "free gift"
         <Input
           name="pro_discount"
           label="Promotion Discount"

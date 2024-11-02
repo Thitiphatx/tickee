@@ -7,6 +7,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
+export const revalidate = 0;
+
 const ImageSlider: React.FC = () => {
 
   const [images,setimages] = useState<string[]>([]);
