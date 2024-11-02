@@ -27,7 +27,7 @@ export default async function Home() {
             event_type: true
         }
     })
-    const slideShow = await prisma.admin_Data.findFirst({});
+    const slideShow = await prisma.admin_Data.findFirst();
     return (
         <div className="space-y-5">
             <ImageSlider image_item={slideShow?.banner_images ?? []}/>

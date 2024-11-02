@@ -27,8 +27,8 @@ export default function SignupForm() {
                 isError: false,
             },
             result: {
-                errorMsg: "email หรือรหัสผ่านไม่ถูกต้อง",
-                isError: false
+                errorMsg: "",
+                isError: false,
             }
         }
     )
@@ -44,7 +44,7 @@ export default function SignupForm() {
         e.preventDefault();
         setLoading(true);
 
-        if (data.email == "" || data.name == "" || data.password == "" || data.repass == "") {
+        if (!data.email || !data.name || !data.password || !data.repass) {
             setValidation((prevValidation) => ({
                 ...prevValidation,
                 result: {

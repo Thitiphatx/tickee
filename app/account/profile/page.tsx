@@ -22,8 +22,11 @@ export default async function AccountProfile() {
     }
     userData.password = null;
     return (
-        <div>
+        <div className="space-y-5">
             <AccountProfileCard userData={userData} />
+            {userData.provider == "credentials" && (
+                <AccountChangePassword userData={userData}/>
+            )}
         </div>
     )
 }

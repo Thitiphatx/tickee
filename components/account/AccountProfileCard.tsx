@@ -1,18 +1,21 @@
 "use client"
 
-import { parseAbsoluteToLocal, parseDate } from "@internationalized/date"
+import { parseDate } from "@internationalized/date"
 import { Button } from "@nextui-org/button"
 import { Card, CardBody, CardHeader } from "@nextui-org/card"
 import { DatePicker } from "@nextui-org/date-picker"
 import { Input } from "@nextui-org/input"
 import { Radio, RadioGroup } from "@nextui-org/radio"
+import { Spinner } from "@nextui-org/react"
 import { User } from "@prisma/client"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function AccountProfileCard({ userData }: { userData: User }) {
     const router = useRouter();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [success, setSuccess] = useState<boolean>(false);
     const [validation, setValidation] = useState(
         {
             name: {
@@ -30,6 +33,10 @@ export default function AccountProfileCard({ userData }: { userData: User }) {
                 errorMsg: "กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง 0xxxxxxxxx",
                 isError: false
             },
+            date: {
+                errorMsg: "วันเกิดต้องเป็นอดีตเท่านั้น",
+                isError: false
+            },
             idcard: {
                 regex: /^[0-9]{14}$/,
                 errorMsg: "กรุณากรอกบัตรประชาชน 14 หลัก",
@@ -43,19 +50,41 @@ export default function AccountProfileCard({ userData }: { userData: User }) {
     )
     const { data: session, update } = useSession();
     const [data, setData] = useState<User>(userData);
-    const [error, setError] = useState<string | null>(null);
-    const [password, setPassword] = useState({
-        current: "",
-        new1: "",
-        new2: "",
-    });
-    const [passwordErrors, setPasswordErrors] = useState({
-        current: false,
-        new1: false,
-        new2: false,
-    });
+
+    useEffect(()=> {
+        setSuccess(false);
+    }, [data])
 
     const handleEditProfile = async () => {
+        setLoading(true);
+    
+        // Check for empty required fields (both null and empty string)
+        if (!data.name || !data.email || !data.mobile || !data.idCard) {
+            setValidation((prevValidation) => ({
+                ...prevValidation,
+                result: {
+                    isError: true,
+                    errorMsg: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                },
+            }));
+            setLoading(false);
+            return;
+        }
+    
+        // Additional validation checks if any
+        if (validation.email.isError || validation.idcard.isError || validation.mobile.isError || validation.name.isError || validation.date.isError) {
+            setValidation((prevValidation) => ({
+                ...prevValidation,
+                result: {
+                    isError: true,
+                    errorMsg: "กรุณากรอกข้อมูลให้ถูกต้อง",
+                },
+            }));
+            setLoading(false);
+            return;
+        }
+    
+        // Send data to the server
         const response = await fetch('/api/editprofile', {
             method: 'POST',
             headers: {
@@ -63,133 +92,112 @@ export default function AccountProfileCard({ userData }: { userData: User }) {
             },
             body: JSON.stringify(data),
         });
-
-        if (!response.ok) {
-            throw new Error('Failed to create event');
-        }
+    
         const result = await response.json();
+        if (result.error) {
+            setValidation((prevValidation) => ({
+                ...prevValidation,
+                result: {
+                    isError: true,
+                    errorMsg: result.error,
+                },
+            }));
+        } else {
+            setValidation((prevValidation) => ({
+                ...prevValidation,
+                result: {
+                    isError: false,
+                    errorMsg: "",
+                },
+            }));
+            setSuccess(true);
+        }
+        setLoading(false);
         update();
         router.refresh();
-    }
+    };
 
     const handleDateChange = (value: any) => {
         const bd = new Date(value);
+        const currentDate = new Date();
         setData({ ...data, birthDate: bd })
+        let newValidation = validation
+        if (currentDate.getTime() - bd.getTime() <= 0) {
+            newValidation.date.isError = true
+        } else {
+            newValidation.date.isError = false
+        }
+        setValidation(newValidation)
     }
 
-    const handleChangePassword = async () => {
-        if (!changePasswordValidation()) {
-            return;
-        }
-        const response = await fetch('/api/changepassword', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: data.id,
-                password,
-            }),
-        });
-
-        const result = await response.json();
-        if (result.error) {
-            setError(result.error);
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
+        setData({...data, email: e.target.value})
+        let newValidation = validation
+        if (!validation.email.regex.test(e.target.value)) {
+            newValidation.email.isError = true
         } else {
-            setError(null);
+            newValidation.email.isError = false
         }
-    };
-
-    const changePasswordValidation = () => {
-        const { current, new1, new2 } = password;
-        const newErrors = { current: false, new1: false, new2: false };
-
-        if (!current) {
-            newErrors.current = true;
-            setError("Please enter your current password");
+        setValidation(newValidation)
+    }
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
+        setData({...data, name: e.target.value})
+        let newValidation = validation
+        if (!validation.name.regex.test(e.target.value)) {
+            newValidation.name.isError = true
+        } else {
+            newValidation.name.isError = false
         }
-
-        if (new1 !== new2) {
-            newErrors.new1 = true;
-            newErrors.new2 = true;
-            setError("Password do not match");
+        setValidation(newValidation)
+    }
+    const handleMobileChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
+        setData({...data, mobile: e.target.value})
+        let newValidation = validation
+        if (!validation.mobile.regex.test(e.target.value)) {
+            newValidation.mobile.isError = true
+        } else {
+            newValidation.mobile.isError = false
         }
-
-        if (!new1 || !new2) {
-            newErrors.new1 = true;
-            newErrors.new2 = true;
-            setError("Please enter your new password");
+        setValidation(newValidation)
+    }
+    const handleIdCardChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
+        setData({...data, idCard: e.target.value})
+        let newValidation = validation
+        if (!validation.idcard.regex.test(e.target.value)) {
+            newValidation.idcard.isError = true
+        } else {
+            newValidation.idcard.isError = false
         }
-
-        setPasswordErrors(newErrors);
-        return !newErrors.current && !newErrors.new1 && !newErrors.new2;
+        setValidation(newValidation)
     }
 
     return (
-        <div className="space-y-5">
-            <Card>
-                <CardHeader>
-                    <h2 className="font-bold uppercase">my profile</h2>
-                </CardHeader>
-                <CardBody className="space-y-2">
-                    <Input label="Email" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({ ...data, email: e.target.value })} value={data.email ?? ""} />
-                    <Input label="Name" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({ ...data, name: e.target.value })} value={data.name ?? ""} />
-                    <Input label="Mobile" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({ ...data, mobile: e.target.value })} value={data.mobile ?? ""} />
-                    <DatePicker
-                        label="Birthdate"
-                        onChange={(value) => handleDateChange(value)}
-                        value={parseDate(data.birthDate?.toISOString().split('T')[0] as string)}
-                    />
-                    <Input label="ID card" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({ ...data, idCard: e.target.value })} value={data.idCard ?? ""} required />
-                    <RadioGroup onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({ ...data, role: e.target.value })} orientation="horizontal" label="Role selection (for test)" defaultValue={data.role}>
-                        <Radio value="user">User</Radio>
-                        <Radio value="organizer">Organizer</Radio>
-                        <Radio value="admin">Admin</Radio>
-                    </RadioGroup>
-                    <Button onClick={handleEditProfile} radius="full" color="primary">Save</Button>
-                </CardBody>
-            </Card>
-            {userData.provider == "credentials" && (
-                <Card>
-                    <CardHeader>
-                        <h2 className="font-bold uppercase">change password</h2>
-                    </CardHeader>
-                    <CardBody className="space-y-2">
-                        <Input
-                            isRequired
-                            label="Current password"
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setPassword({ ...password, current: e.target.value });
-                                setPasswordErrors({ ...passwordErrors, current: false }); // Reset error on change
-                            }}
-                            isInvalid={passwordErrors.current}
-                        />
-                        <Input
-                            isRequired
-                            label="New password"
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setPassword({ ...password, new1: e.target.value });
-                                setPasswordErrors({ ...passwordErrors, new1: false }); // Reset error on change
-                            }}
-                            isInvalid={passwordErrors.new1}
-                        />
-                        <Input
-                            isRequired
-                            label="Re-new password"
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setPassword({ ...password, new2: e.target.value });
-                                setPasswordErrors({ ...passwordErrors, new2: false }); // Reset error on change
-                            }}
-                            isInvalid={passwordErrors.new2}
-                        />
-                        <span className="auth-error">{error}</span>
-                        <Button 
-                            isDisabled={passwordErrors.current || passwordErrors.new1 || passwordErrors.new2}
-                            onClick={handleChangePassword} radius="full" color="primary">Save</Button>
-                    </CardBody>
-                </Card>
-            )}
-
-        </div>
+        <Card>
+            <CardHeader>
+                <h2 className="font-bold uppercase">my profile</h2>
+            </CardHeader>
+            <CardBody className="space-y-2">
+                <Input isRequired label="Email" isInvalid={validation.email.isError} errorMessage={validation.email.errorMsg} onChange={handleEmailChange} value={data.email ?? ""} />
+                <Input isRequired label="Name" isInvalid={validation.name.isError} errorMessage={validation.name.errorMsg} onChange={handleNameChange} value={data.name ?? ""} />
+                <Input isRequired label="Mobile" isInvalid={validation.mobile.isError} errorMessage={validation.mobile.errorMsg} maxLength={10} onChange={handleMobileChange} value={data.mobile ?? ""} />
+                <DatePicker
+                    isRequired
+                    isInvalid={validation.date.isError}
+                    errorMessage={validation.date.errorMsg}
+                    label="Birthdate"
+                    onChange={(value) => handleDateChange(value)}
+                    value={parseDate(data.birthDate?.toISOString().split('T')[0] as string)}
+                />
+                <Input isRequired label="ID card" isInvalid={validation.idcard.isError} errorMessage={validation.idcard.errorMsg} onChange={handleIdCardChange} value={data.idCard ?? ""} required />
+                <RadioGroup onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({ ...data, role: e.target.value })} orientation="horizontal" label="Role selection (for test)" defaultValue={data.role}>
+                    <Radio value="user">User</Radio>
+                    <Radio value="organizer">Organizer</Radio>
+                    <Radio value="admin">Admin</Radio>
+                </RadioGroup>
+                {validation.result.isError && <span className="auth-error">{validation.result.errorMsg}</span>}
+                {success && <span className="text-success-500">แก้ไขข้อมูลสำเร็จ</span>}
+                <Button isLoading={loading} spinner={<Spinner color="white" size="sm" />} onClick={handleEditProfile} radius="full" color="primary">Save</Button>
+            </CardBody>
+        </Card>
     )
 }
