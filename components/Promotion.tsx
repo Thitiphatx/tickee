@@ -35,7 +35,7 @@ const Promotion: React.FC<PromotionProps> = ({ events }) => {
             src={detail.event_images}
             width={270}
             className="object-cover rounded-xl"
-            style={{ height: '150px', width: '100%', objectFit: 'cover' }} // Set consistent height for the image
+            style={{ height: '150px', objectFit: 'cover' }} // Set consistent height for the image
           />
           <CardBody className="overflow-visible py-2 flex-1 flex flex-col justify-between"> {/* Ensure card body takes remaining space */}
             <p>{detail?.event_id}</p>

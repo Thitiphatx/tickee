@@ -2,7 +2,7 @@ import Promotion from '@/components/Promotion';
 import Promotion_seat from '@/components/Promotion_seat';
 import { getCurrentSession } from '@/utils/getCurrentSession';
 import { PrismaClient } from '@prisma/client';
-
+export const revalidate = 0
 export default async function PromotionPage() {
   const prisma = new PrismaClient();
   const session = await getCurrentSession(); // Server Session
