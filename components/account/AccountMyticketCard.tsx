@@ -30,7 +30,6 @@ export default function AccountMyticketCard() {
     const [receipts, setReceipts] = useState<ReceiptWithDetails[]>([]);
     const { data: session, status } = useSession();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const test = usePathname();
 
     const options: Intl.DateTimeFormatOptions = {
         year: 'numeric',    // Use 'numeric' instead of a plain string
@@ -55,14 +54,14 @@ export default function AccountMyticketCard() {
     const [ticketinfo, setticketinfo] = useState<number>(0);
 
     const handleLinkClick = (receiptIndex: number) => {
-        console.log(receipts[receiptIndex].rec_date);
+        
         setticketinfo(receiptIndex);
         onOpen();
     };
 
     const removeRecepit1 = (event: any, receipt: any) => {
         event.stopPropagation();
-        console.log("ขอเงินคืน");
+        
         removeReceipt(receipt);
     };
 
@@ -88,7 +87,7 @@ export default function AccountMyticketCard() {
             });
 
             if (response.ok) {
-                console.log('Refund processed successfully.');
+                
 
                 // Remove the receipt from the UI
                 setReceipts(receipts.filter(r => r.rec_id !== receipt.rec_id));
@@ -111,7 +110,7 @@ export default function AccountMyticketCard() {
                 const response = await fetch(`/api/getReceipt?customerid=${session?.user.id}`);
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('ข้อมูลการซื้อของผู้ใช้', data);
+                    
                     setReceipts(data);
                 } else {
                     console.error('Failed to fetch receipts');
@@ -137,7 +136,6 @@ export default function AccountMyticketCard() {
 
     return (
         <div>
-            {test}
             <Tabs>
                 <Tab key="upcomming" title="UPCOMMING EVENTS">
                     <Accordion variant="splitted">

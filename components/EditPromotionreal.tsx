@@ -86,7 +86,7 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
       }
   
       const result = await response.json();
-      console.log('Promotion updated successfully:', result);
+      
       window.location.href = `/editpromotion/${formData.event_id}`;
     } catch (error) {
       console.error('Error updating promotion:', error);

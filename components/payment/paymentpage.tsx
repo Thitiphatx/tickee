@@ -18,8 +18,8 @@ export default function Payment({ quantity, seatData, eventname, serviceFee }: {
     if (seatData == null) {
         return (<>not found</>)
     }
-    console.log("จำนวนซื้อทั้งหมด (payment):", quantity)
-    console.log("ข้อมูลที่นั่ง (payment):", seatData);
+    
+    
     const fee = serviceFee * quantity
     const totalPrice = seatData.seat_price * quantity
     let totalPriceplusfee;

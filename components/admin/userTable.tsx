@@ -142,7 +142,7 @@ export default function UserTable() {
     const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         let user_id: string = mapData?.id || "";
-        console.log(user_id, mapData?.id, "userTable")
+        
         try {
             const res = await fetch('/api/admin/user', {
                 method: 'DELETE',

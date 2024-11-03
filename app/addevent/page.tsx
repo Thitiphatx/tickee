@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 export default async function Addevent() {
     const session = await getCurrentSession(); // Server Session
-    console.log(session)
+    
     if (!session || session.user.role !== "organizer") {
         redirect("/");
     }

@@ -86,7 +86,7 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
       }
 
       const result = await response.json();
-      console.log('Promotion created successfully:', result);
+      
 
       router.push('/promotion_show');
     } catch (error) {

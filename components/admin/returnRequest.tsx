@@ -49,7 +49,7 @@ export default function ReturnRequest() {
                 const res = await fetch('/api/admin/returning');
                 if (!res.ok) {
                     const errorResponse = await res.json();
-                    console.log("error client")
+                    
                     throw Error
                 }
                 const output = await res.json();

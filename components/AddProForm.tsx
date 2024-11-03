@@ -9,7 +9,7 @@ export default function AddProForm() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await prisma.event.findMany();
-      console.log(data)
+      
     }
     fetchData()
   }, [])
