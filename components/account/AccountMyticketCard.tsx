@@ -8,7 +8,9 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure
 import { Tab, Tabs } from "@nextui-org/tabs";
 import { Prisma, Receipt } from "@prisma/client";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import QRCode from "react-qr-code";
 
 type ReceiptWithDetails = Prisma.ReceiptGetPayload<{
     include: {
@@ -28,6 +30,7 @@ export default function AccountMyticketCard() {
     const [receipts, setReceipts] = useState<ReceiptWithDetails[]>([]);
     const { data: session, status } = useSession();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const test = usePathname();
 
     const options: Intl.DateTimeFormatOptions = {
         year: 'numeric',    // Use 'numeric' instead of a plain string
@@ -131,6 +134,7 @@ export default function AccountMyticketCard() {
 
     return (
         <div>
+            {test}
             <Tabs>
                 <Tab key="upcomming" title="UPCOMMING EVENTS">
                     <Accordion variant="splitted">
@@ -153,19 +157,24 @@ export default function AccountMyticketCard() {
                                     </div>
                                 </div>
                             }>
-                                <div>
-                                    <p>{new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()} - {new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()}</p>
+                                    <div>
+                                        <p>{new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()} - {new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()}</p>
 
-                                    <h5 className="text-primary-500 font-bold mr-3">สถานที่จัดงาน :</h5>
-                                    <div className="flex flex-row">
-                                        {/* <p className="">{JSON.parse(receipt.seatType.event_seat.event_location).address}</p> */}
-                                        {/* <p className="">{JSON.parse(receipt.seatType.event_seat.event_location).city}</p> */}
+                                        <h5 className="text-primary-500 font-bold mr-3">สถานที่จัดงาน :</h5>
+                                        <div className="flex flex-row">
+                                            {/* <p className="">{JSON.parse(receipt.seatType.event_seat.event_location).address}</p> */}
+                                            {/* <p className="">{JSON.parse(receipt.seatType.event_seat.event_location).city}</p> */}
+                                        </div>
+                                        <div className="flex flex-row">
+                                            <h5 className="text-primary-500 font-bold mr-3">หมวดหมู่ :</h5>
+                                            <p>{receipt.rec_seat.event_seat.event_type.et_name}</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <QRCode className="mx-auto w-52" value={`https://tickee-omega.vercel.app/checkReceipt/${receipt.rec_id}`}></QRCode>
+                                            <small>ID: {receipt.rec_id}</small>
+                                        </div>
+                                        
                                     </div>
-                                    <div className="flex flex-row">
-                                        <h5 className="text-primary-500 font-bold mr-3">หมวดหมู่ :</h5>
-                                        <p>{receipt.rec_seat.event_seat.event_type.et_name}</p>
-                                    </div>
-                                </div>
                                 <Button onClick={(e)=>removeRecepit1(e, receipt)} className="float-end mb-5" color="danger">ขอคืนเงิน</Button>
                             </AccordionItem>
                         ))}

@@ -45,10 +45,6 @@ export const siteConfig = {
         {
             label: "E-Sport",
             href: "/e-sport",
-        },
-        {
-            label: "Profile",
-            href: "/account/profile",
         }
     ],
     links: {
