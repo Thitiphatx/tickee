@@ -30,7 +30,6 @@ export default function AccountMyticketCard() {
     const [receipts, setReceipts] = useState<ReceiptWithDetails[]>([]);
     const { data: session, status } = useSession();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const test = usePathname();
 
     const options: Intl.DateTimeFormatOptions = {
         year: 'numeric',    // Use 'numeric' instead of a plain string
@@ -134,7 +133,6 @@ export default function AccountMyticketCard() {
 
     return (
         <div>
-            {test}
             <Tabs>
                 <Tab key="upcomming" title="UPCOMMING EVENTS">
                     <Accordion variant="splitted">
