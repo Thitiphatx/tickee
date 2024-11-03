@@ -57,7 +57,7 @@ export default function TicketInformation({ currentTab, onBookingClick, seatPerO
     const unitPrice = seatData?.seat_price;
 
     const increaseQuantity = () => {
-        if (seatData?.Seat_Dispatch?.sd_max !== undefined && quantity < seatData.Seat_Dispatch.sd_max && quantity < seatPerOrder) {
+        if (seatData?.Seat_Dispatch?.sd_max !== undefined && (quantity + seatData.Seat_Dispatch.sd_current) < seatData.Seat_Dispatch.sd_max && quantity < seatPerOrder) {
             setQuantity((prevQuantity) => prevQuantity + 1);
         }
 
