@@ -10,13 +10,13 @@ export default function CardGrid({ items }: { items: Event[] }) {
     if (items.length > 0) {
         return (
             <>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
                 {items.map((event, index) => {
                         const address: Address = JSON.parse(event.event_location);
                         return (
                             <a href={`event/${event.event_id}`} key={index}>
-                                <Card className="min-h-96">
-                                    <Image alt={event.event_name} className="object-cover rounded-xl h-80"  src={event.event_images} width={"320px"} />
+                                <Card className="min-h-9">
+                                    <Image alt={event.event_name} className="object-cover relative h-80 w-full"  src={event.event_images} width={"320px"} />
                                     <CardBody className="overflow-visible py-2">
                                         <p className="text-tiny uppercase">{event.event_start_date.toLocaleDateString('en-US', { day: 'numeric', month: 'long'})}</p>
                                         <p className="text-tiny uppercase font-bold truncate">{event.event_name}</p>

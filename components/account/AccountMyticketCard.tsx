@@ -8,6 +8,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure
 import { Tab, Tabs } from "@nextui-org/tabs";
 import { Prisma, Receipt } from "@prisma/client";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 
@@ -29,6 +30,7 @@ export default function AccountMyticketCard() {
     const [receipts, setReceipts] = useState<ReceiptWithDetails[]>([]);
     const { data: session, status } = useSession();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const test = usePathname();
 
     const options: Intl.DateTimeFormatOptions = {
         year: 'numeric',    // Use 'numeric' instead of a plain string
@@ -132,6 +134,7 @@ export default function AccountMyticketCard() {
 
     return (
         <div>
+            {test}
             <Tabs>
                 <Tab key="upcomming" title="UPCOMMING EVENTS">
                     <Accordion variant="splitted">
@@ -167,7 +170,7 @@ export default function AccountMyticketCard() {
                                             <p>{receipt.rec_seat.event_seat.event_type.et_name}</p>
                                         </div>
                                         <div className="text-center">
-                                            <QRCode className="mx-auto w-52" value={`http://localhost:3000/checkReceipt/${receipt.rec_id}`}></QRCode>
+                                            <QRCode className="mx-auto w-52" value={`https://tickee-omega.vercel.app/checkReceipt/${receipt.rec_id}`}></QRCode>
                                             <small>ID: {receipt.rec_id}</small>
                                         </div>
                                         
