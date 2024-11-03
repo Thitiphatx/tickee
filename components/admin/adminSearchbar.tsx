@@ -15,7 +15,7 @@ export default function AdminSearchbar({ searchText, setSearchText }: SearchFunc
         setSearchText((input.match(searchREGEX)||[]).join(" "))
     };
     return (
-        <div className="w-full">
+        <div className="w-2/3 min-w-72">
             <form onSubmit={handleSubmit} className="w-full">
             <input
                 type="text"

@@ -177,8 +177,8 @@ export default function BusinessAdjustment() {
                 <>                     
                    <h1 className="font-bold text-inherit uppercase text-3xl">type</h1>
                     <div className="flex flex-col items-center gap-5 w-full">
-                        <div className='flex justify-around w-full'>
-                            <div className='flex flex-col gap-3 w-1/3'>
+                        <div className='flex justify-around gap-10 w-full flex-wrap'>
+                            <div className='flex flex-col gap-3 min-w-52 w-1/3'>
                                 <Table selectionMode="single" color="default" aria-label='Event Type Table'>
                                     <TableHeader>
                                         <TableColumn align="center">Event Type</TableColumn>
@@ -203,7 +203,7 @@ export default function BusinessAdjustment() {
                                 <Button onClick={updateNewEvent} color='primary' variant='shadow' className="uppercase w-full" radius="full">insert</Button>
                             </div>
 
-                            <div className='flex flex-col gap-5 w-1/3'>
+                            <div className='flex flex-col gap-5 min-w-52 w-1/3'>
                                 <Table selectionMode="single" color="default" aria-label='Promotion Type Table'>
                                     <TableHeader>
                                         <TableColumn align="center">Promotion Type</TableColumn>
@@ -261,7 +261,7 @@ export default function BusinessAdjustment() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-center gap-5 w-2/5">
+                    <div className="flex flex-col items-center gap-10 min-w-52 w-2/5">
                         <h1 className="font-bold text-inherit uppercase text-3xl">Fee</h1>
                         <Input onChange={handleFeeChange} labelPlacement='outside' size='lg' type="number" value={fee.toString()} label="Fee Charge Per Reservation" endContent={
                             <div className="pointer-events-none flex items-center">

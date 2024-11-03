@@ -207,7 +207,7 @@ export default function AdminEventCard() {
             </Modal>
 
 
-            <div className="flex justify-between items-center w-full px-52 justify-items-center">
+            <div className="flex justify-center items-center min-w-40 w-full justify-items-center">
                 <AdminSearchbar searchText={search} setSearchText={setSearch} />
             </div>
 
