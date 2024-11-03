@@ -20,7 +20,7 @@ export async function searchEventwithTag(input: string) {
             }
         })
     } catch (error) {
-        console.log("searchEventwithTag Error")
+        
         return null
     }
     return output
@@ -42,7 +42,7 @@ export async function searchEventwithName(input: string) {
             }
         })
     } catch (error) {
-        console.log("searchEventwithName Error")
+        
         return null
     }
     return output
@@ -65,7 +65,7 @@ export async function getBusinessData(): Promise<BusinessData | null> {
         promotionType = await prisma.promotion_Type.findMany({})
 
     } catch (error) {
-        console.log("getBusinessData Error")
+        
         return null
     }
 
@@ -105,7 +105,7 @@ export async function updateBusinessData(newImages: string[], newFee: number, ne
 
         return updateData
     } catch (error) {
-        console.log("updateBusinessData Error")
+        
         return null
     }
 }
@@ -157,7 +157,7 @@ export async function autoChangeReceiptStatus() {
         })
         return output
     } catch (error) {
-        console.log("update ReceiptStatus Crontab Error")
+        
         return null
     }
 }
@@ -246,7 +246,7 @@ export async function getReceiptDate() {
         };
         return { data, yearArray }
     } catch (error) {
-        console.log("getReceiptDateToPlot Error\n")
+        
         return null
     }
 }

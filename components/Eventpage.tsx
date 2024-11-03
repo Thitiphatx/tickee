@@ -32,7 +32,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     const [serviceFee, setServiceFee] = useState<number>(0);
 
     const handlePaymentClick = (input: number) => {
-        console.log(eventDetails)
+        
         if (currentTab == 0) {
             setShowAlert(true);
         }

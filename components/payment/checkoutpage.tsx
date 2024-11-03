@@ -36,7 +36,7 @@ export default function Checkoutpage({ amount ,quantity ,seatdata}: { amount: nu
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        console.log("click")
+        
         event.preventDefault();
         setloading(true);
         if (!stripe || !elements) {
@@ -50,7 +50,7 @@ export default function Checkoutpage({ amount ,quantity ,seatdata}: { amount: nu
             return;
         }
         else {
-            console.log('Payment successful!');
+            
             const receiptData = {
                 rec_date: new Date(),
                 rec_quantity: quantity, 
@@ -74,7 +74,7 @@ export default function Checkoutpage({ amount ,quantity ,seatdata}: { amount: nu
             })
             .then((data) => {
                 // การสร้างข้อมูลสำเร็จ
-                console.log("Receipt created:", data);
+                
         
                 // แสดงข้อความยืนยันการชำระเงินที่สำเร็จ
                 alert('Payment successful! Thank you for your purchase.');

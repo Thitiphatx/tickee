@@ -12,7 +12,7 @@ export default async function editpromotion({ params }: { params: IParams }) {
   const eventId = parseInt(params.eproId || '0', 10);
   
   // Log the event ID
-  console.log('Event ID:', eventId);
+  
 
   // Fetch all seat types associated with the given event ID
   const allSeats = await prisma.seat_Type.findMany({
@@ -28,7 +28,7 @@ export default async function editpromotion({ params }: { params: IParams }) {
   });
 
   // Log the fetched seat types
-  console.log('All Seats:', allSeats);
+  
 
   return (
     <div>

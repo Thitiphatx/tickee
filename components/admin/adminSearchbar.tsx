@@ -27,7 +27,7 @@ export default function AdminSearchbar({ searchText, setSearchText }: SearchFunc
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     let temp = (e.target.value.match(searchREGEX)||[]).join(" ")
                     setInput(temp)
-                    console.log(temp)}
+                    
                 }
             />
             </form>

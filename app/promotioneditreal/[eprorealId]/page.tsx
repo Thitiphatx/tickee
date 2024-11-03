@@ -51,7 +51,7 @@ export default async function PromotionPage({ params }: { params: IParams }) {
     id: type.pt_id,
     name: type.pt_name,
   }));
-  // console.log(detailData.seat_types[0].seat_id)
+  // 
 
   return (
     <div>

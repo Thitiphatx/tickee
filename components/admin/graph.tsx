@@ -26,7 +26,7 @@ export default function Graph() {
                     console.warn('API Error:', errorResponse.message || 'Unknown error');
                     setrecdata(null);
                     setYearArray([]);
-                    console.log("error client")
+                    
                     throw Error
                 }
                 const { data, yearArray } = await res.json();
@@ -37,11 +37,11 @@ export default function Graph() {
                     let seperate = JSON.parse(JSON.stringify(data));
                     seperate.datasets = [data.datasets[selectYear]]
                     setInYearData(seperate)
-                    console.log("working set client")
+                    
                 } else {
                     setrecdata(null);
                     setYearArray([]);
-                    console.log("working null client")
+                    
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);

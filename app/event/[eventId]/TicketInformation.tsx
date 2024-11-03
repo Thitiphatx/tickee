@@ -8,7 +8,7 @@ import { ModalBody, ModalFooter, ModalHeader } from "@nextui-org/modal";
 
 
 export default function TicketInformation({ currentTab, onBookingClick, seatPerOrder }: { currentTab: number, onBookingClick: (quantity: number, seatData: Seat_Type | null) => void, seatPerOrder: number }) {
-    console.log("แสดงข้อมูลที่นั่ง seat id: ", currentTab)
+    
 
     const [seatData, setSeatData] = useState<Seat_Type | null>(null);
 
@@ -37,13 +37,13 @@ export default function TicketInformation({ currentTab, onBookingClick, seatPerO
                 const data = await response.json();
 
                 if (data.success) {
-                    console.log("dataที่มาจากการเลือก seat: ", data.data)
+                    
                     setSeatData(data.data)
                 } else {
-                    console.log("Failed to fetch seat data");
+                    
                 }
             } catch (err) {
-                console.log("Error fetching seat data");
+                
             }
         };
 

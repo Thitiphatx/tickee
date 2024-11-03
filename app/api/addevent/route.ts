@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
 
     const body = await req.json();
-    console.log("Incoming data:", body);
+    
     const {
         event_name,
         event_intro,
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 }
 export async function PUT(req: Request) {
     const body = await req.json();
-    console.log("Incoming data for update:", body);
+    
     
     
     const {

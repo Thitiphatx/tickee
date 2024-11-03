@@ -167,7 +167,7 @@ export default function BusinessAdjustment() {
         fetchData();
     }, [refresh]);
     if (banner == null) {
-        console.log("error banner")
+        
     }
 
 

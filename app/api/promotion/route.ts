@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
   const promotionData = await req.json();
   
-  console.log('Incoming Promotion Data:', promotionData); // Log the incoming data
+  
 
   // Extract year, month, and day from the date objects
   const startDate = new Date(
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   const promotionData = await req.json();
 
-  console.log('Incoming Promotion Data:', promotionData); // Log the incoming data
+  
 
   // Extract year, month, and day from the date objects
   const startDate = new Date(

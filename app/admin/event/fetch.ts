@@ -21,7 +21,7 @@ export async function getSelectedEvent(input: string) {
                 },
             })
         } catch (error) {
-            console.log("getSelectedEvent1 Error")
+            
             return null
         }
     }
@@ -46,7 +46,7 @@ export async function getSelectedEvent(input: string) {
                 }
             })
         } catch (error) {
-            console.log("getSelectedEvent2 Error")
+            
             return null
         }
     }
@@ -61,7 +61,7 @@ export async function deleteEvent(id: number) {
             }
         })
     } catch (error) {
-        console.log("deleteEvent error\n", error)
+        
         return null
     }
 }

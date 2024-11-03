@@ -26,7 +26,7 @@ export default function Selector({ children, setCurrentTab, currentTab ,onTabCha
                             key={key} // Use key as key
                             className={`cursor-pointer rounded-xl ring-foreground-900 ${currentTab === Number(key) ? "ring-4" : ""}`}
                             onClick={() => {
-                                console.log('กดเลือก card:', key); // Log the selected key
+                                
                                 handleClick(Number(key)); // Pass the seatId directly to the parent
                             }}
                         >
