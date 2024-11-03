@@ -228,7 +228,7 @@ export default function UserTable() {
 
             {!onLoad && usersData != null && (
                 <>
-                    <div className="flex justify-between items-center w-2/3 gap-5 px-10">
+                    <div className="flex justify-end flex-wrap items-center min-w-56 w-2/3 gap-5">
                         <AdminSearchbar searchText={search} setSearchText={setSearch} />
 
                         <Dropdown placement="bottom-end">

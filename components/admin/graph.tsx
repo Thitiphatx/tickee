@@ -68,14 +68,14 @@ export default function Graph() {
     return (
         <>
             <h1 className="font-bold text-inherit uppercase text-3xl">Graph</h1>
-            <div className="relative h-[450px] w-full px-32">
+            <div className="relative h-[520px] min-w-56 overflow-x-scroll scroll-smooth scrollbar-hide whitespace-nowrap w-full px-32">
                 {(!onLoad && recdata != null) && (
                     <>
-                        <Dropdown placement="bottom-end">
+                        <Dropdown placement="bottom-start" className='text-center'>
                             <DropdownTrigger>
                                 <Button
                                     variant="bordered"
-                                    className="capitalize absolute z-30 top-3 right-36"
+                                    className="capitalize absolute z-30 top-3 left-36"
                                 >
                                     {yearArray[selectYear]}
                                 </Button>
@@ -125,8 +125,8 @@ export default function Graph() {
                     </>
                 )}
                 {!(!onLoad && recdata != null) && (
-                    <div className="flex justify-center items-center size-full border-1 border-default">
-                        <p className="text-3xl text-default">No Data For Display</p>
+                    <div className="flex flex-wrap justify-center items-center min-w-56 size-full border-1 border-default">
+                        <p className="text-3xl text-default text-ellipsis overflow-hidden">No Data For Display</p>
                     </div>
                 )}
             </div>
