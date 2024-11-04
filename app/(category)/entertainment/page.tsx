@@ -12,7 +12,7 @@ export default async function Entertainment({ searchParams }: { searchParams: { 
     const today = new Date();
     const session = await getCurrentSession();
 
-    if (session?.user.role != RoleAvailable.User && session) {
+    if (session?.user.role == RoleAvailable.Admin && session) {
         redirectingByRole(session)
     }
     

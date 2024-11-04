@@ -11,7 +11,8 @@ export default async function Sport({ searchParams }: { searchParams: { page?: s
     const currentPage = parseInt(searchParams.page || '1', 10);
     const session = await getCurrentSession();
     const today = new Date();
-    if (session?.user.role != RoleAvailable.User && session) {
+    
+    if (session?.user.role == RoleAvailable.Admin && session) {
         redirectingByRole(session)
     }
 

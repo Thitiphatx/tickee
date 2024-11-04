@@ -9,7 +9,7 @@ export const revalidate = 0
 export default async function Home() {
     const session = await getCurrentSession();
 
-    if (session?.user.role != RoleAvailable.User && session) {
+    if (session?.user.role == RoleAvailable.Admin && session) {
         redirectingByRole(session)
         return
     }

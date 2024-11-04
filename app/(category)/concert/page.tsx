@@ -11,7 +11,7 @@ export default async function Concert({ searchParams }: { searchParams: { page?:
     const session = await getCurrentSession();
     const currentPage = parseInt(searchParams.page || '1', 10);
 
-    if (session?.user.role != RoleAvailable.User && session) {
+    if (session?.user.role == RoleAvailable.Admin && session) {
         redirectingByRole(session)
     }
     const today = new Date();
