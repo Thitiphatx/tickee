@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { Input, Textarea, Button, DatePicker, DateValue } from '@nextui-org/react';
+import { now, parseAbsoluteToLocal } from "@internationalized/date";
 import { useRouter } from 'next/navigation'; // Import useRouter
 
 interface SeatType {
@@ -12,7 +13,15 @@ interface SeatType {
 interface Event {
   event_id: number;
   event_name: string;
-  seat_types: SeatType[];
+  pro_desc: string; // Make optional
+  pro_disc?: number; // Make optional
+  start: string;
+  end: string;
+  seat_types: {
+    seat_id: number;
+    seat_name: string;
+    seat_price: number;
+  }[];
 }
 
 interface PromotionType {
@@ -30,29 +39,39 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
   const router = useRouter();
   const initialPromotionType = promotionTypes.length > 0 ? promotionTypes[0].id.toString() : '';
 
+  const initialStartDate = events[0].start // Use null if undefined
+  const initialEndDate = events[0].end // Use null if undefined
+
+
   const [formData, setFormData] = useState({
-    seat_type_id: '', // Initialize seat_type_id here
-    pro_description: '',
-    pro_discount: '',
-    pro_start_date: null as DateValue | null,
-    pro_last_date: null as DateValue | null,
-    event_id: events[0]?.event_id.toString() || '',
-    pro_type: promotionTypes[0]?.id.toString() || '', // Default to the first promotion type
+    seat_type_id: '',
+    pro_description: events[0]?.pro_desc || '',
+    pro_discount: Number(events[0]?.pro_disc) || 0,
+    pro_start_date: parseAbsoluteToLocal(initialStartDate),
+    pro_last_date: parseAbsoluteToLocal(initialEndDate),
+    event_id: events[0]?.event_id?.toString() || '',
+    pro_type: promotionTypes[0]?.id?.toString() || '',
   });
 
 
   useEffect(() => {
     // If the promotion type is 'Free Gift' (id: 3), set discount to 0 and disable the input
     if (formData.pro_type === '3') {
-      setFormData((prev) => ({ ...prev, pro_discount: '0' }));
+      setFormData((prev) => ({ ...prev, pro_discount: 0 }));
     }
   }, [formData.pro_type]);
+
+
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'pro_discount' ? parseFloat(value) : value, // Convert to number if it's pro_discount
+    }));
+  };
+
   
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
   const handleDateChange = (name: 'pro_start_date' | 'pro_last_date') => (value: DateValue) => {
     setFormData({ ...formData, [name]: value });
@@ -60,18 +79,18 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const promotionData = {
       promotionId: promotionId, // Include the promotion ID here
       seat_type_id: parseInt(formData.seat_type_id),
       pro_description: formData.pro_description,
-      pro_discount: formData.pro_type !== '1' ? parseFloat(formData.pro_discount) : 0,
+      pro_discount: formData.pro_discount,
       pro_start_date: formData.pro_start_date,
       pro_last_date: formData.pro_last_date,
       event_id: parseInt(formData.event_id),
       pro_type: parseInt(formData.pro_type),
     };
-  
+
     try {
       const response = await fetch(`/api/promotion`, {
         method: 'PUT',
@@ -80,13 +99,13 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
         },
         body: JSON.stringify(promotionData),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to update promotion');
       }
-  
+
       const result = await response.json();
-      
+      console.log('Promotion updated successfully:', result);
       window.location.href = `/editpromotion/${formData.event_id}`;
     } catch (error) {
       console.error('Error updating promotion:', error);
@@ -118,7 +137,7 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
           name="pro_discount"
           label="Promotion Discount"
           type="number"
-          value={formData.pro_discount}
+          value={formData.pro_discount.toString()} // Convert number to string
           onChange={handleChange}
           required
         />
@@ -142,13 +161,16 @@ const EditPromotionreal: React.FC<PromotionFormProps> = ({ events, promotionType
       <DatePicker
         name="pro_start_date"
         label="Promotion Start Date"
+        value={formData.pro_start_date} // Ensure it can be null
         onChange={handleDateChange('pro_start_date')}
       />
       <DatePicker
         name="pro_last_date"
         label="Promotion Last Date"
+        value={formData.pro_last_date} // Ensure it can be null
         onChange={handleDateChange('pro_last_date')}
       />
+
 
       <select
         name="seat_type_id"
