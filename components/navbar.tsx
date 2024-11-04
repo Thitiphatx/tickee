@@ -38,13 +38,16 @@ export const Navbar = () => {
                         <p className="font-bold text-inherit uppercase first-letter:text-primary-500 text-2xl">Tickee</p>
                     </NextLink>
                 </NavbarBrand>
-                <ul className="hidden sm:flex gap-4 justify-start ml-2">
-                    {siteConfig.navItems.map((item) => (
-                        <NavbarItem key={item.href}>
-                            <NextLink color="foreground" href={item.href}>{item.label}</NextLink>
-                        </NavbarItem>
-                    ))}
-                </ul>
+                {session?.user.role !== "admin" && 
+                    <ul className="hidden sm:flex gap-4 justify-start ml-2">
+                        {siteConfig.navItems.map((item) => (
+                            <NavbarItem key={item.href}>
+                                <NextLink color="foreground" href={item.href}>{item.label}</NextLink>
+                            </NavbarItem>
+                        ))}
+                    </ul>
+                }
+                
             </NavbarContent>
 
             <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
@@ -138,13 +141,13 @@ export const Navbar = () => {
 
             <NavbarMenu>
                 <div className="mx-4 mt-2 flex flex-col gap-2">
-                    {siteConfig.navMenuItems.map((item, index) => (
+                    {session?.user.role !== "admin" && (siteConfig.navMenuItems.map((item, index) => (
                         <NavbarMenuItem key={`${item}-${index}`}>
                             <Link color={"foreground"} href={item.href} size="lg">
                                 {item.label}
                             </Link>
                         </NavbarMenuItem>
-                    ))}
+                    )))}
                     <Divider />
                     <NavbarMenuItem>
                         <div className="mt-2 flex flex-col gap-2">
