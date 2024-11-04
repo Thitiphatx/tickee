@@ -1,12 +1,18 @@
 import { prisma } from "@/prisma/seed";
 import { IconCheckCircleFill, IconCloseCircle } from "@/styles/icon";
+import { getCurrentSession } from "@/utils/getCurrentSession";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
 interface ReceiptParams extends Record<string, unknown> {
   receiptId: string;
 }
 
 export default async function CheckReceipt({ params }: { params: ReceiptParams }) {
-  // Ensure params has 'receiptId' property before trying to parse it as an integer
+  const session = await getCurrentSession();
+  if (!session || session?.user.role == "user") {
+    redirect("/")
+  }
   if (!('receiptId' in params)) {
       throw new Error("Missing required param 'receiptId'");
   }

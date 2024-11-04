@@ -1,5 +1,6 @@
 "use client";
 
+import { Address } from "@/types/data_type";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
@@ -136,7 +137,9 @@ export default function AccountMyticketCard() {
             <Tabs>
                 <Tab key="upcomming" title="UPCOMMING EVENTS">
                     <Accordion variant="splitted">
-                        {upcomingEvents.map((receipt, index) => (
+                        {upcomingEvents.map((receipt, index) => {
+                            const address: Address = JSON.parse(receipt.rec_seat.event_seat.event_location);
+                            return (
                             <AccordionItem key={index} aria-label="Accordion 1" startContent={
                                 <div className="grid sm:grid-cols-1 lg:grid-cols-2">
                                     <Image className="object-cover w-full h-24" src={receipt.rec_seat.event_seat.event_images} alt="" />
@@ -158,10 +161,10 @@ export default function AccountMyticketCard() {
                                     <div>
                                         <p>{new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()} - {new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()}</p>
 
-                                        <h5 className="text-primary-500 font-bold mr-3">สถานที่จัดงาน :</h5>
+                                        
                                         <div className="flex flex-row">
-                                            {/* <p className="">{JSON.parse(receipt.seatType.event_seat.event_location).address}</p> */}
-                                            {/* <p className="">{JSON.parse(receipt.seatType.event_seat.event_location).city}</p> */}
+                                            <h5 className="text-primary-500 font-bold mr-3">สถานที่จัดงาน :</h5>
+                                            <span className="">{address.address} {address.city}</span>
                                         </div>
                                         <div className="flex flex-row">
                                             <h5 className="text-primary-500 font-bold mr-3">หมวดหมู่ :</h5>
@@ -175,7 +178,7 @@ export default function AccountMyticketCard() {
                                     </div>
                                 <Button onClick={(e)=>removeRecepit1(e, receipt)} className="float-end mb-5" color="danger">ขอคืนเงิน</Button>
                             </AccordionItem>
-                        ))}
+                        )})}
                     </Accordion>
                 </Tab>
                 <Tab key="past" title="PAST EVENTS">
