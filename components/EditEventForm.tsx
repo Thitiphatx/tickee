@@ -75,14 +75,14 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
     const startDate1 = new Date(eventData.event_start_date); // Assuming eventData.event_start_date is a valid date string
     const aew = startDate1.setDate(startDate1.getDate() + 1); // Subtract 1 day
     const formattedStartDate1 = startDate1.toISOString().slice(0, 10);
-    console.log("First of all ", formattedStartDate1);
+    
     const defaultTime = "T00:45[Asia/Bangkok]";
     const defaultTime2 = "T11:15[Asia/Bangkok]";
 
     const endDate1 = new Date(eventData.event_last_date); // Assuming eventData.event_start_date is a valid date string
     const aew2 = endDate1.setDate(endDate1.getDate()); // Subtract 1 day
     const formattedEndDate1 = endDate1.toISOString().slice(0, 10);
-    console.log("Second of all of all ", formattedEndDate1);
+    
 
 
 
@@ -189,15 +189,15 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
     const addtodb = async () => {
 
         setIsLoading(true);
-        console.log("name :", event_name)
-        console.log("intro :", event_intro)
-        console.log("image :", eventimageURL)
-        console.log("location :", event_location)
-        console.log("seat :", seat)
-        console.log("des:", event_description)
+        
+        
+        
+        
+        
+        
         const startDateTimeISO = dateRange.start.toDate();
         const endDateTimeISO = dateRange.end.toDate();
-        console.log(startDateTimeISO)
+        
 
 
         const data = {
@@ -229,7 +229,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
             }
 
             const result = await response.json();
-            console.log('event created successfully:', result);
+            
 
 
             const eventId = result.event_id;
@@ -259,7 +259,7 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
                     }
 
                     const result = await seatResponse.json();
-                    console.log('seat created successfully:', result);
+                    
                 })
             );
             router.push("/event-organizer")
@@ -278,24 +278,24 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
     const startDate = new Date(eventData.event_start_date); // Assuming eventData.event_start_date is a valid date string
     startDate.setDate(startDate.getDate() + 1); // Subtract 1 day
     const formattedStartDate = startDate.toISOString().slice(0, 10);
-    console.log(formattedStartDate);
+    
 
     const endDate = new Date(eventData.event_last_date); // Assuming eventData.start is a valid date string
     endDate.setDate(endDate.getDate() + 1)
     const formattedLastDate = endDate.toISOString().slice(0, 10);
-    console.log(formattedLastDate);
+    
 
     const formattedSeats2 = eventData.Seat_Type.map((seat, index) => {
         // Create a date object for the event start date
         const startDate1 = new Date(eventData.Seat_Type[index].seat_create_date); // Assuming eventData.event_start_date is a valid date string
         startDate1.setDate(startDate1.getDate() +1); // Subtract 1 day
         const formattedStartDate1 = startDate1.toISOString().slice(0, 10);
-        console.log(formattedStartDate1);
+        
 
         const endDate1 = new Date(eventData.Seat_Type[index].seat_due_date); // Assuming eventData.start is a valid date string
         endDate1.setDate(endDate1.getDate() +1)
         const formattedLastDate1 = endDate1.toISOString().slice(0, 10);
-        console.log(formattedLastDate1);
+        
 
 
         return {
@@ -328,9 +328,9 @@ export default function EditEventForm({ eventData, eventType }: EditEventFormPro
     };
 
     // Log the new array to see the result
-    console.log(formattedSeats2);
+    
 
-    // console.log(eventData.Seat_Type[0])
+    // 
     return (
         <div className="space-y-8">
             <Select

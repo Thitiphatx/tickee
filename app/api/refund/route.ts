@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
   try {
     const receiptData = await req.json();
-    console.log('Incoming Receipt Data for Refund:', receiptData);
+    
 
     // Update the receipt status to 3 (as refunded or canceled)
     const updatedReceipt = await prisma.receipt.update({

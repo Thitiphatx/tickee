@@ -20,7 +20,7 @@ export async function getReturningOrder() {
         })
         return output
     } catch (error) {
-        console.log("get Returning Order Error")
+        
         return null
     }
 }
@@ -40,7 +40,7 @@ export async function setReturningStatus(newStatus: number, id: number) {
             });
 
             if (!rec) {
-                console.log("No Table1 row found with the given id.");
+                
                 return;
             }
 
@@ -63,7 +63,7 @@ export async function setReturningStatus(newStatus: number, id: number) {
                 });
 
                 if (!dispatch) {
-                    console.log("No dispatch data.");
+                    
                     return
                 }
 
@@ -90,7 +90,7 @@ export async function setReturningStatus(newStatus: number, id: number) {
         }
 
     } catch (error) {
-        console.log("set Returning status Error")
+        
         return null
     }
 }

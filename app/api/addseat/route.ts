@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
     const body = await req.json();
-    console.log("Incoming data:", body);
+    
     const {
         seat_name,
         seat_price,
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
 }
 export async function PUT(req: Request) {
     const body = await req.json();
-    console.log("Incoming data for update:", body);
+    
 
     const {
         seat_id,           // Used to identify the seat to update
@@ -55,7 +55,7 @@ export async function PUT(req: Request) {
         event_seat_id,
         sd_max             // For updating the Seat_Dispatch record
     } = body;
-    console.log("Incoming Seat", body);
+    
 
     if (!seat_id) {
         console.error("Error: seat_id is undefined.");
@@ -63,7 +63,7 @@ export async function PUT(req: Request) {
     }
 
     try {
-        console.log("Updating seat with ID:", seat_id); 
+        
         const updatedSeat = await prisma.seat_Type.update({
             where: {
                 seat_id: seat_id, // Identify the seat to update

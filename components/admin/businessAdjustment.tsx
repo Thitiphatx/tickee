@@ -21,6 +21,8 @@ export default function BusinessAdjustment() {
     const [insertPromotionType, setInsertPromotionType] = useState<string[] | null>([]);
     const [onLoad, setOnLoad] = useState<boolean>(true);
     const defaultImage:string = ""
+    const insertREGEX = /[A-z\u0E00-\u0E7F0-9 ]+/g;
+    const [refresh, setReFresh] = useState<boolean>(true);
 
     const deleteClick = (idx: number) => {
         if (banner != null) {
@@ -107,11 +109,11 @@ export default function BusinessAdjustment() {
     };
 
     const handleEventInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNewEvent(e.target.value);
+        setNewEvent((e.target.value.match(insertREGEX)||[]).join(" "));
     };
 
     const handlePromotionInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNewPromotion(e.target.value);
+        setNewPromotion((e.target.value.match(insertREGEX)||[]).join(" "));
     };
 
     const handleImageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,6 +144,9 @@ export default function BusinessAdjustment() {
         } catch (error) {
             console.error('Error Upload banner:', error);
         }
+        setInsertEventType([])
+        setInsertPromotionType([])
+        setReFresh(!refresh)
     };
 
     useEffect(() => {
@@ -160,10 +165,11 @@ export default function BusinessAdjustment() {
             }
         };
         fetchData();
-    }, []);
+    }, [refresh]);
     if (banner == null) {
-        console.log("error banner")
+        
     }
+
 
     return (
         <div className='flex flex-col w-full items-center gap-5 py-10'>
@@ -171,8 +177,8 @@ export default function BusinessAdjustment() {
                 <>                     
                    <h1 className="font-bold text-inherit uppercase text-3xl">type</h1>
                     <div className="flex flex-col items-center gap-5 w-full">
-                        <div className='flex justify-around w-full'>
-                            <div className='flex flex-col gap-3 w-1/3'>
+                        <div className='flex justify-around gap-10 w-full flex-wrap'>
+                            <div className='flex flex-col gap-3 min-w-52 w-1/3'>
                                 <Table selectionMode="single" color="default" aria-label='Event Type Table'>
                                     <TableHeader>
                                         <TableColumn align="center">Event Type</TableColumn>
@@ -197,7 +203,7 @@ export default function BusinessAdjustment() {
                                 <Button onClick={updateNewEvent} color='primary' variant='shadow' className="uppercase w-full" radius="full">insert</Button>
                             </div>
 
-                            <div className='flex flex-col gap-5 w-1/3'>
+                            <div className='flex flex-col gap-5 min-w-52 w-1/3'>
                                 <Table selectionMode="single" color="default" aria-label='Promotion Type Table'>
                                     <TableHeader>
                                         <TableColumn align="center">Promotion Type</TableColumn>
@@ -255,7 +261,7 @@ export default function BusinessAdjustment() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-center gap-5 w-2/5">
+                    <div className="flex flex-col items-center gap-10 min-w-52 w-2/5">
                         <h1 className="font-bold text-inherit uppercase text-3xl">Fee</h1>
                         <Input onChange={handleFeeChange} labelPlacement='outside' size='lg' type="number" value={fee.toString()} label="Fee Charge Per Reservation" endContent={
                             <div className="pointer-events-none flex items-center">

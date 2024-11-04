@@ -318,3 +318,27 @@ export function IconTicket(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function IconCheckCircleFill(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      fill="currentColor"
+      viewBox="0 0 16 16"
+      {...props}
+    >
+      <path d="M16 8A8 8 0 110 8a8 8 0 0116 0zm-3.97-3.03a.75.75 0 00-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 00-1.06 1.06L6.97 11.03a.75.75 0 001.079-.02l3.992-4.99a.75.75 0 00-.01-1.05z" />
+    </svg>
+  );
+}
+
+export function IconCloseCircle(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 1024 1024"
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z" />
+    </svg>
+  );
+}

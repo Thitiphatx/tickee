@@ -39,7 +39,6 @@ export default function UserTable() {
     const [outputEmail, setOutputEmail] = useState<string>("");
     const [search, setSearch] = useState<string>("");
     const [refresh, setReFresh] = useState<boolean>(true);
-    const [firstLoad, setFirstLoad] = useState<boolean>(true);
     const { data: session, status } = useSession();
     const rowsPerPage = 20;
 
@@ -143,7 +142,7 @@ export default function UserTable() {
     const handleDelete = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         let user_id: string = mapData?.id || "";
-        console.log(user_id, mapData?.id, "userTable")
+        
         try {
             const res = await fetch('/api/admin/user', {
                 method: 'DELETE',
@@ -229,7 +228,7 @@ export default function UserTable() {
 
             {!onLoad && usersData != null && (
                 <>
-                    <div className="flex justify-between items-center w-2/3 gap-5 px-10">
+                    <div className="flex justify-end flex-wrap items-center min-w-56 w-2/3 gap-5">
                         <AdminSearchbar searchText={search} setSearchText={setSearch} />
 
                         <Dropdown placement="bottom-end">

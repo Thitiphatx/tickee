@@ -53,12 +53,10 @@ export default async function PromotionPage({ params }: { params: IParams }) {
     id: type.pt_id,
     name: type.pt_name,
   }));
-  console.log(params.promotionId)
+  
 
   return (
     <div>
-      <h1>Promotion Management for {eventData.event_name}</h1>
-      {/* Pass both the event data and promotion types to EditPromotion */}
       <EditPromotion events={[eventData]} promotionTypes={promotionTypeOptions} />
     </div>
   );

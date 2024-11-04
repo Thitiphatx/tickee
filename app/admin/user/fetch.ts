@@ -11,7 +11,7 @@ export async function getSelectedUser(input: string) {
                 }
             })
         } catch (error) {
-            console.log("getSelectedUser1 Error")
+            
             return null
         }
     }
@@ -37,7 +37,7 @@ export async function getSelectedUser(input: string) {
                 }
             })
         } catch (error) {
-            console.log("getSelectedUser2 Error")
+            
             return null
         }
     }
@@ -53,7 +53,7 @@ export async function deleteUser(uid: string) {
             }
         })
     } catch (error) {
-        console.log("deleteUser error")
+        
         return null
     }
 }
@@ -71,7 +71,7 @@ export async function editUser(id: string, email: string, name: string, role: st
             },
         })
     } catch (error) {
-        console.log("editUser error")
+        
         return null
     }
 }

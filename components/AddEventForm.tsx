@@ -206,24 +206,24 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
     };
     const handleDateChange = (range: any) => {
         // อัปเดตสถานะเมื่อมีการเลือกวันที่ใหม่
-        console.log('eventdurationselected', range)
+        
         setDateRange(range);
     };
 
     const addtodb = async () => {
         setIsLoading(true);
 
-        console.log("name :", event_name)
-        console.log("intro :", event_intro)
-        console.log("image :", eventimageURL)
-        console.log("location :", event_location)
-        console.log("seat :", seat)
-        console.log("des:", event_description)
+        
+        
+        
+        
+        
+        
         const startDateTimeISO = dateRange.start.toDate().toISOString();
         const endDateTimeISO = dateRange.end.toDate().toISOString();
 
-        console.log('eventstart', startDateTimeISO)
-        console.log('eventend', endDateTimeISO)
+        
+        
 
 
         const data = {
@@ -253,7 +253,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
             }
 
             const result = await response.json();
-            console.log('event created successfully:', result);
+            
 
 
             const eventId = result.event_id; //11
@@ -281,7 +281,7 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                     }
 
                     const result = await seatResponse.json();
-                    console.log('seat created successfully:', result);
+                    
                 })
             );
             router.push("/event-organizer");
@@ -520,9 +520,9 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                                     onChange={(date) => {
                                         const newSeats = [...seat];
                                         newSeats[index].start_sellseat = date.toDate().toISOString(); // แปลง ZonedDateTime เป็น Date
-                                        console.log(date.toDate())
+                                        
                                         setseat(newSeats);
-                                        console.log(seat)
+                                        
                                     }}
                                 />
 
@@ -538,9 +538,9 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                                     onChange={(date) => {
                                         const newSeats = [...seat];
                                         newSeats[index].end_sellseat = date.toDate().toISOString(); // แปลง ZonedDateTime เป็น Date
-                                        console.log(date.toDate())
+                                        
                                         setseat(newSeats);
-                                        console.log(seat)
+                                        
                                     }}
                                 />
                             </div>

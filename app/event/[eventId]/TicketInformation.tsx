@@ -7,8 +7,8 @@ import { ModalBody, ModalFooter, ModalHeader } from "@nextui-org/modal";
 // สร้าง PaymentPage component
 
 
-export default function TicketInformation({ currentTab, onBookingClick, seatPerOrder }: { currentTab: number, onBookingClick: (quantity: number, seatData: Seat_Type | null) => void , seatPerOrder :  number }) {
-    console.log("แสดงข้อมูลที่นั่ง seat id: ", currentTab)
+export default function TicketInformation({ currentTab, onBookingClick, seatPerOrder }: { currentTab: number, onBookingClick: (quantity: number, seatData: Seat_Type | null) => void, seatPerOrder: number }) {
+    
 
     const [seatData, setSeatData] = useState<Seat_Type | null>(null);
 
@@ -37,13 +37,13 @@ export default function TicketInformation({ currentTab, onBookingClick, seatPerO
                 const data = await response.json();
 
                 if (data.success) {
-                    console.log("dataที่มาจากการเลือก seat: ", data.data)
+                    
                     setSeatData(data.data)
                 } else {
-                    console.log("Failed to fetch seat data");
+                    
                 }
             } catch (err) {
-                console.log("Error fetching seat data");
+                
             }
         };
 
@@ -57,7 +57,7 @@ export default function TicketInformation({ currentTab, onBookingClick, seatPerO
     const unitPrice = seatData?.seat_price;
 
     const increaseQuantity = () => {
-        if (seatData?.Seat_Dispatch?.sd_max !== undefined && quantity < seatData.Seat_Dispatch.sd_max && quantity < seatPerOrder) {
+        if (seatData?.Seat_Dispatch?.sd_max !== undefined && (quantity + seatData.Seat_Dispatch.sd_current) < seatData.Seat_Dispatch.sd_max && quantity < seatPerOrder) {
             setQuantity((prevQuantity) => prevQuantity + 1);
         }
 
@@ -71,49 +71,63 @@ export default function TicketInformation({ currentTab, onBookingClick, seatPerO
 
     return (
         <>
-            <ModalHeader className="flex flex-col gap-1">Ticket Information</ModalHeader>
-            <ModalBody>
-                <div className="space-y-4">
-                    <div className="grid grid-cols-2">
-                        <h5 className="text-primary-800">วันเริ่มงาน</h5>
-                        <small>{formattedstartDate}</small>
-                    </div>
-                    <div className="grid grid-cols-2">
-                        <h5 className="text-primary-800">วันจบงาน</h5>
-                        <small>{formattedendDate}</small>
-                    </div>
-                    <div className="grid grid-cols-2">
-                        <h5 className="text-primary-800">โซน</h5>
-                        <small>{seatData?.seat_name}</small>
-                    </div>
-                    <div className="grid grid-cols-2">
-                        <h5 className="text-primary-800">Quantity</h5>
-                        <small>
-                            <div className="flex items-center space-x-4">
-                                <Button size="sm" onClick={decreaseQuantity} isIconOnly>
-                                    -
-                                </Button>
-                                <small>{quantity}</small>
-                                <Button size="sm" onClick={increaseQuantity} isIconOnly>
-                                    +
-                                </Button>
+            {((seatData?.Seat_Dispatch?.sd_max || 0) <= (seatData?.Seat_Dispatch?.sd_current || 0)) ? (
+                <>
+                    <ModalHeader className="flex flex-col gap-1 text-center text-danger">Ticket Soldout</ModalHeader>
+                    <ModalBody>
+                        <div className="flex justify-center items-center py-8">
+                            <p className="uppercase">Unable to Buy</p>
+                        </div>
+                    </ModalBody>
+                </>
+            ) : (
+                <>
+                    <ModalHeader className="flex flex-col gap-1">Ticket Information</ModalHeader>
+                    <ModalBody>
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-2">
+                                <h5 className="text-primary-800">วันเริ่มงาน</h5>
+                                <small>{formattedstartDate}</small>
                             </div>
-                        </small>
-                    </div>
+                            <div className="grid grid-cols-2">
+                                <h5 className="text-primary-800">วันจบงาน</h5>
+                                <small>{formattedendDate}</small>
+                            </div>
+                            <div className="grid grid-cols-2">
+                                <h5 className="text-primary-800">โซน</h5>
+                                <small>{seatData?.seat_name}</small>
+                            </div>
+                            <div className="grid grid-cols-2">
+                                <h5 className="text-primary-800">Quantity</h5>
+                                <small>
+                                    <div className="flex items-center space-x-4">
+                                        <Button size="sm" onClick={decreaseQuantity} isIconOnly>
+                                            -
+                                        </Button>
+                                        <small>{quantity}</small>
+                                        <Button size="sm" onClick={increaseQuantity} isIconOnly>
+                                            +
+                                        </Button>
+                                    </div>
+                                </small>
+                            </div>
 
-                    <div className="grid grid-cols-2">
-                        <h5 className="text-primary-800">ราคาต่อที่</h5>
-                        <small>{unitPrice?.toLocaleString()}</small>
-                    </div>
-                    <div className="grid grid-cols-2">
-                        <h5 className="text-primary-800">ราคารวม</h5>
-                        <small>{(quantity * (unitPrice ?? 0)).toLocaleString()}</small>
-                    </div>
-                </div>
-            </ModalBody>
-            <ModalFooter>
-                <Button color="primary" onClick={() => onBookingClick(quantity, seatData)} >Booking</Button>
-            </ModalFooter>
+                            <div className="grid grid-cols-2">
+                                <h5 className="text-primary-800">ราคาต่อที่</h5>
+                                <small>{unitPrice?.toLocaleString()}</small>
+                            </div>
+                            <div className="grid grid-cols-2">
+                                <h5 className="text-primary-800">ราคารวม</h5>
+                                <small>{(quantity * (unitPrice ?? 0)).toLocaleString()}</small>
+                            </div>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={() => onBookingClick(quantity, seatData)} >Booking</Button>
+                    </ModalFooter>
+                </>
+            )}
+
         </>
 
     );

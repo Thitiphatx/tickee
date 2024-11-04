@@ -38,7 +38,7 @@ export const Navbar = () => {
                         <p className="font-bold text-inherit uppercase first-letter:text-primary-500 text-2xl">Tickee</p>
                     </NextLink>
                 </NavbarBrand>
-                <ul className="hidden lg:flex gap-4 justify-start ml-2">
+                <ul className="hidden sm:flex gap-4 justify-start ml-2">
                     {siteConfig.navItems.map((item) => (
                         <NavbarItem key={item.href}>
                             <NextLink color="foreground" href={item.href}>{item.label}</NextLink>
@@ -51,7 +51,7 @@ export const Navbar = () => {
                 <NavbarItem>
                     <ThemeSwitch />
                 </NavbarItem>
-                <NavbarItem className="hidden md:flex space-x-5">
+                <NavbarItem className="hidden sm:flex space-x-5">
                     {loading ? (
                         // Loading indicator while session is being fetched
                         <div className="animate-pulse">
@@ -129,8 +129,10 @@ export const Navbar = () => {
                 </NavbarItem>
             </NavbarContent>
 
-            <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-                <ThemeSwitch />
+            <NavbarContent className="flex space-x-5 sm:hidden" justify="end">
+                <NavbarItem>
+                    <ThemeSwitch />
+                </NavbarItem>
                 <NavbarMenuToggle />
             </NavbarContent>
 
@@ -145,9 +147,31 @@ export const Navbar = () => {
                     ))}
                     <Divider />
                     <NavbarMenuItem>
-                        <Link color={"danger"} size="lg" onClick={() => signOut()}>
-                            Logout
-                        </Link>
+                        <div className="mt-2 flex flex-col gap-2">
+                            {session ? (
+                                <>
+                                <NavbarMenuItem>
+                                    <Link href="/account/profile" color={"foreground"} size="lg">Profile</Link>
+                                </NavbarMenuItem>
+                                <NavbarMenuItem>
+                                    <Link href="/account/myticket" color={"foreground"} size="lg"></Link>My ticket
+                                </NavbarMenuItem>
+                                <NavbarMenuItem style={{display: `${session.user.role == "organizer" ? "" : "none"}`}}>
+                                    <Link href="/event-organizer" color={"foreground"} size="lg">Event</Link>
+                                </NavbarMenuItem>
+                                <NavbarMenuItem style={{display: `${session.user.role == "admin" ? "" : "none"}`}}>
+                                    <Link href="/admin" color={"foreground"} size="lg">Backend</Link>
+                                </NavbarMenuItem>
+                                <Link color={"danger"} size="lg" onClick={() => signOut()}>
+                                    SignOut
+                                </Link>
+                                    </>
+                                ) : (
+                                    <Link href="/signin" color={"danger"} size="lg">
+                                    SignIn
+                                </Link>
+                            )}
+                        </div>
                     </NavbarMenuItem>
                 </div>
             </NavbarMenu>

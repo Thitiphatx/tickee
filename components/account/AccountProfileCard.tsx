@@ -38,8 +38,8 @@ export default function AccountProfileCard({ userData }: { userData: User }) {
                 isError: false
             },
             idcard: {
-                regex: /^[0-9]{14}$/,
-                errorMsg: "กรุณากรอกบัตรประชาชน 14 หลัก",
+                regex: /^[0-9]{13}$/,
+                errorMsg: "กรุณากรอกบัตรประชาชน 13 หลัก",
                 isError: false
             },
             result: {
@@ -188,7 +188,7 @@ export default function AccountProfileCard({ userData }: { userData: User }) {
                     onChange={(value) => handleDateChange(value)}
                     value={parseDate(data.birthDate?.toISOString().split('T')[0] as string)}
                 />
-                <Input isRequired label="ID card" isInvalid={validation.idcard.isError} errorMessage={validation.idcard.errorMsg} onChange={handleIdCardChange} value={data.idCard ?? ""} required />
+                <Input maxLength={13} isRequired label="ID card" isInvalid={validation.idcard.isError} errorMessage={validation.idcard.errorMsg} onChange={handleIdCardChange} value={data.idCard ?? ""} required />
                 <RadioGroup onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({ ...data, role: e.target.value })} orientation="horizontal" label="Role selection (for test)" defaultValue={data.role}>
                     <Radio value="user">User</Radio>
                     <Radio value="organizer">Organizer</Radio>

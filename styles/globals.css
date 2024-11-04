@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    margin: 0;
+}
 
 .swiper {
     width: 100%;
@@ -68,7 +71,6 @@ input[type="number"] {
     padding: 10px;
     @apply rounded-xl bg-foreground-100;
 
-    /* List styles */
     ul {
         list-style: circle;
     }
@@ -88,7 +90,6 @@ input[type="number"] {
         }
     }
 
-    /* Heading styles */
     h1,
     h2,
     h3,

@@ -1,5 +1,6 @@
 
 import RefundTable from "@/components/account/AccountRefund";
+import { IconFaceSadTear } from "@/components/icons";
 import { prisma } from "@/prisma/seed";
 import { getCurrentSession } from "@/utils/getCurrentSession";
 import { redirect } from "next/navigation";
@@ -22,23 +23,18 @@ export default async function AccountProfile() {
             rec_seat: true, // Include other relevant relations if needed
         }
     });
-
-
-    // Fetch user data (optional, based on your needs)
-    const userData = await prisma.user.findUnique({
-        where: {
-            id: session.user.id, // Fetch user by session ID
-        },
-    });
-
-    // For security, you might want to nullify sensitive information like the password
-    if (userData) {
-        userData.password = null;
+    
+    if (userReceiptsWithStatus3.length > 0) {
+        return (
+            <div>
+                <RefundTable receipts={userReceiptsWithStatus3} />
+            </div>
+        );
     }
-
     return (
-        <div>
-            <RefundTable receipts={userReceiptsWithStatus3} />
+        <div className="w-full min-h-1.5 flex flex-col justify-center items-center">
+            <IconFaceSadTear width="5rem" height="5rem" />
+            <h5 className="text-center mt-5">No refunded receipts found.</h5>
         </div>
-    );
+    )
 }
