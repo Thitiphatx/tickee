@@ -48,10 +48,6 @@ export async function GET(request: Request) {
         const userReceipts = await prisma.receipt.findMany({
             where: { 
                 rec_customer_id: customerId,
-                OR: [
-                    { rec_status: ReceiptStatus.Expired },
-                    { rec_status: ReceiptStatus.UnableToReturn },
-                  ]
             },
             include: {
                 rec_seat: {

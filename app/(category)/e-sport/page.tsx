@@ -12,7 +12,7 @@ export default async function Esport({ searchParams }: { searchParams: { page?: 
     const session = await getCurrentSession();
     const today = new Date();
     
-    if (session?.user.role != RoleAvailable.User && session) {
+    if (session?.user.role == RoleAvailable.Admin && session) {
         redirectingByRole(session)
     }
 
