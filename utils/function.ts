@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { BusinessData, ReceiptStatus, RoleAvailable, SignInData, SignUpData } from "../types/data_type";
+import { ReceiptStatus, RoleAvailable } from "../types/data_type";
 import { Admin_Data, Event_Type, Promotion_Type } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { Session } from "next-auth";
@@ -55,53 +55,33 @@ export async function fetchEvent() {
 }
 
 
-export async function getBusinessData(): Promise<BusinessData | null> {
-    let admin: Admin_Data | null, eventType: Event_Type[], promotionType: Promotion_Type[];
+export async function getBusinessData() {
+    let admin: Admin_Data | null
     try {
         admin = await prisma.admin_Data.findFirst({})
-
-        eventType = await prisma.event_Type.findMany({})
-
-        promotionType = await prisma.promotion_Type.findMany({})
 
     } catch (error) {
         
         return null
     }
 
-    return {
-        admin,
-        eventType,
-        promotionType
-    };
+    return admin
 }
 
-export async function updateBusinessData(newImages: string[], newFee: number, newEvent: string[], newPromotion: string[]) {
+export async function updateBusinessData(newImages: string[], newFee: number) {
     let output;
     try {
         output = await getBusinessData()
 
         let updateData = await prisma.admin_Data.update({
             where: {
-                ad_id: output?.admin?.ad_id
+                ad_id: output?.ad_id
             },
             data: {
                 banner_images: newImages,
                 fee: newFee
             }
         })
-
-        let insertEvent = await prisma.event_Type.createMany({
-            data: newEvent.map((eventINS: string) => (
-                { et_name: eventINS }
-            )),
-        });
-
-        let insertPromotion = await prisma.promotion_Type.createMany({
-            data: newPromotion.map((promotionINS: string) => (
-                { pt_name: promotionINS }
-            )),
-        });
 
         return updateData
     } catch (error) {

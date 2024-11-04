@@ -1,14 +1,24 @@
 import { prisma } from '@/prisma/seed';
 import ImageSlider from '../components/slider'
 import CardSwiper from '@/components/CardSwiper';
+import { RoleAvailable } from '@/types/data_type';
+import { redirectingByRole } from '@/utils/function';
+import { getCurrentSession } from '@/utils/getCurrentSession';
 
 export const revalidate = 0
 export default async function Home() {
+    const session = await getCurrentSession();
+
+    if (session?.user.role != RoleAvailable.User && session) {
+        redirectingByRole(session)
+        return
+    }
+
     const today = new Date();
     const latest = await prisma.event.findMany({
         where: {
             event_last_date: {
-                gt: today, // Filter events where event_last_date is greater than today
+                gt: today,
             },
         },
         take: 10

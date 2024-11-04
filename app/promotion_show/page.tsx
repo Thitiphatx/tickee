@@ -1,13 +1,19 @@
 import Promotion from '@/components/Promotion';
 import Promotion_seat from '@/components/Promotion_seat';
+import { RoleAvailable } from '@/types/data_type';
+import { redirectingByRole } from '@/utils/function';
 import { getCurrentSession } from '@/utils/getCurrentSession';
 import { Divider } from '@nextui-org/divider';
 import { PrismaClient } from '@prisma/client';
 export const revalidate = 0
 export default async function PromotionPage() {
     const prisma = new PrismaClient();
-    const session = await getCurrentSession(); // Server Session
+    const session = await getCurrentSession();
 
+    if (!session || session?.user.role != RoleAvailable.Organizer) {
+        redirectingByRole(session)
+        return
+    }
     const userId = session?.user?.id;
 
     // Fetch all events created by the current user

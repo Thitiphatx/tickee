@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
     try {
-        const { bannerFiltered, fee, insertEventType, insertPromotionType } = await req.json();
+        const { bannerFiltered, fee } = await req.json();
         if (typeof fee == 'number') {
-            const output = await updateBusinessData(bannerFiltered, fee, insertEventType, insertPromotionType)
+            const output = await updateBusinessData(bannerFiltered, fee)
         }
         return NextResponse.json({
             message: 'Promotion created successfully',

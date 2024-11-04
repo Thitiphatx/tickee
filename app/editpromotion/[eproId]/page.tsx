@@ -1,11 +1,20 @@
 import Link from 'next/link';
 import { PrismaClient } from '@prisma/client';
+import { RoleAvailable } from '@/types/data_type';
+import { redirectingByRole } from '@/utils/function';
+import { getCurrentSession } from '@/utils/getCurrentSession';
 
 interface IParams {
   eproId?: string; // Event ID to edit promotions
 }
 
 export default async function editpromotion({ params }: { params: IParams }) {
+  const session = await getCurrentSession();
+
+  if (session?.user.role != RoleAvailable.Organizer || !session) {
+      redirectingByRole(session)
+  }
+
   const prisma = new PrismaClient();
 
   // Ensure eproId is a valid number
