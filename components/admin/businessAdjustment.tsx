@@ -4,9 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '@nextui-org/button'
 import { DeleteIcon, PlusIcon } from "../icons";
 import { Input } from "@nextui-org/input";
-import { Event_Type, Promotion_Type } from '@prisma/client';
-import { BusinessData } from '@/types/data_type';
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/table';
+import { Admin_Data } from '@prisma/client';
 
 export default function BusinessAdjustment() {
     const [display, setDisplay] = useState(false);
@@ -15,10 +13,10 @@ export default function BusinessAdjustment() {
     const [newEvent, setNewEvent] = useState<string>("");
     const [newPromotion, setNewPromotion] = useState<string>("");
     const [fee, setFee] = useState<number>(0);
-    const [eventType, setEventType] = useState<Event_Type[]>([]);
-    const [insertEventType, setInsertEventType] = useState<string[] | null>([]);
-    const [promotionType, setPromotionType] = useState<Promotion_Type[]>([]);
-    const [insertPromotionType, setInsertPromotionType] = useState<string[] | null>([]);
+    // const [eventType, setEventType] = useState<Event_Type[]>([]);
+    // const [insertEventType, setInsertEventType] = useState<string[] | null>([]);
+    // const [promotionType, setPromotionType] = useState<Promotion_Type[]>([]);
+    // const [insertPromotionType, setInsertPromotionType] = useState<string[] | null>([]);
     const [onLoad, setOnLoad] = useState<boolean>(true);
     const defaultImage:string = ""
     const insertREGEX = /[A-z\u0E00-\u0E7F0-9 ]+/g;
@@ -68,41 +66,41 @@ export default function BusinessAdjustment() {
         });
     };
 
-    const updateNewEvent = () => {
-        if (insertEventType != null) {
-            const newArray = [...insertEventType]
-            newArray.push(newEvent)
-            setInsertEventType(newArray)
-            setNewEvent("")
-        }
-    };
+    // const updateNewEvent = () => {
+    //     if (insertEventType != null) {
+    //         const newArray = [...insertEventType]
+    //         newArray.push(newEvent)
+    //         setInsertEventType(newArray)
+    //         setNewEvent("")
+    //     }
+    // };
 
-    const updateNewPromotion = () => {
-        if (insertPromotionType != null) {
-            const newArray = [...insertPromotionType]
-            newArray.push(newPromotion)
-            setInsertPromotionType(newArray)
-            setNewPromotion("")
-        }
-    };
+    // const updateNewPromotion = () => {
+    //     if (insertPromotionType != null) {
+    //         const newArray = [...insertPromotionType]
+    //         newArray.push(newPromotion)
+    //         setInsertPromotionType(newArray)
+    //         setNewPromotion("")
+    //     }
+    // };
 
-    const removeNewEventInsert = (index: number, event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        if (insertEventType != null) {
-            const newArray = [...insertEventType]
-            newArray.splice(index, 1)
-            setInsertEventType(newArray)
-        }
-    };
+    // const removeNewEventInsert = (index: number, event: React.MouseEvent<HTMLButtonElement>) => {
+    //     event.preventDefault();
+    //     if (insertEventType != null) {
+    //         const newArray = [...insertEventType]
+    //         newArray.splice(index, 1)
+    //         setInsertEventType(newArray)
+    //     }
+    // };
 
-    const removeNewPromotionInsert = (index: number, event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        if (insertPromotionType != null) {
-            const newArray = [...insertPromotionType]
-            newArray.splice(index, 1)
-            setInsertPromotionType(newArray)
-        }
-    };
+    // const removeNewPromotionInsert = (index: number, event: React.MouseEvent<HTMLButtonElement>) => {
+    //     event.preventDefault();
+    //     if (insertPromotionType != null) {
+    //         const newArray = [...insertPromotionType]
+    //         newArray.splice(index, 1)
+    //         setInsertPromotionType(newArray)
+    //     }
+    // };
 
     const handleFeeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFee(Number(e.target.value));
@@ -138,14 +136,14 @@ export default function BusinessAdjustment() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ bannerFiltered, fee, insertEventType, insertPromotionType }),
+                    body: JSON.stringify({ bannerFiltered, fee }),
                 });
             // }
         } catch (error) {
             console.error('Error Upload banner:', error);
         }
-        setInsertEventType([])
-        setInsertPromotionType([])
+        // setInsertEventType([])
+        // setInsertPromotionType([])
         setReFresh(!refresh)
     };
 
@@ -154,11 +152,11 @@ export default function BusinessAdjustment() {
             try {
                 setOnLoad(true)
                 const res = await fetch('/api/admin/business');
-                const data: BusinessData = await res.json();
-                setBanner(data.admin?.banner_images || null);
-                setFee(data.admin?.fee || 0)
-                setEventType(data.eventType)
-                setPromotionType(data.promotionType)
+                const data: Admin_Data = await res.json();
+                setBanner(data.banner_images || null);
+                setFee(data.fee || 0)
+                // setEventType(data.eventType)
+                // setPromotionType(data.promotionType)
                 setOnLoad(false)
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -175,7 +173,7 @@ export default function BusinessAdjustment() {
         <div className='flex flex-col w-full items-center gap-5 py-10'>
             {!onLoad && (
                 <>                     
-                   <h1 className="font-bold text-inherit uppercase text-3xl">type</h1>
+                   {/* <h1 className="font-bold text-inherit uppercase text-3xl">type</h1>
                     <div className="flex flex-col items-center gap-5 w-full">
                         <div className='flex justify-around gap-10 w-full flex-wrap'>
                             <div className='flex flex-col gap-3 min-w-52 w-1/3'>
@@ -228,7 +226,7 @@ export default function BusinessAdjustment() {
                                 <Button onClick={updateNewPromotion} color='primary' variant='shadow' className="uppercase w-full" radius="full">insert</Button>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     <h1 className="font-bold text-inherit uppercase text-3xl">Banners</h1>
                     <div className="flex flex-col items-center gap-2 w-full my-10 p-10 bg-opacity-20 bg-gray-600 rounded-2xl">

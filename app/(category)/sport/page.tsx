@@ -3,13 +3,25 @@ import CardGrid from "@/components/CardGrid";
 import PaginationComp from "@/components/PaginationComp";
 import { PAGE_SIZE } from "@/config/site";
 import { prisma } from "@/prisma/seed";
+import { RoleAvailable } from "@/types/data_type";
+import { redirectingByRole } from "@/utils/function";
+import { getCurrentSession } from "@/utils/getCurrentSession";
 
 export default async function Sport({ searchParams }: { searchParams: { page?: string } }) {
     const currentPage = parseInt(searchParams.page || '1', 10);
+    const session = await getCurrentSession();
+    const today = new Date();
+    if (session?.user.role != RoleAvailable.User && session) {
+        redirectingByRole(session)
+    }
+
     const totalEvents = await prisma.event.count({
         where: {
             event_type: {
                 et_name: "Sport",
+            },
+            event_last_date: {
+                gt: today,
             },
         },
     });
@@ -22,6 +34,9 @@ export default async function Sport({ searchParams }: { searchParams: { page?: s
         where: {
             event_type: {
                 et_name: "Sport",
+            },
+            event_last_date: {
+                gt: today,
             },
         },
         orderBy: {

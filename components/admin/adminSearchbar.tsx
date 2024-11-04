@@ -28,8 +28,7 @@ export default function AdminSearchbar({ searchText, setSearchText }: SearchFunc
                     let temp = (e.target.value.match(searchREGEX)||[]).join(" ")
                     setInput(temp)
                     
-                }
-            }
+                }}
             />
             </form>
         </div>

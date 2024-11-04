@@ -51,12 +51,6 @@ export interface Seat_Type {
     Promotion?:Promotion;
 }
 
-export interface BusinessData {
-    admin: Admin_Data | null;
-    eventType: Event_Type[];
-    promotionType: Promotion_Type[];
-}
-
 export enum RoleAvailable  {
     User = 'user',
     Organizer = 'organizer',
