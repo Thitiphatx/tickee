@@ -24,7 +24,8 @@ export default async function EventLanding({ params }: { params: { eventId: stri
             }
         }
     })
-    if (details)
+
+    if (details) 
     return(
         <div>
             <Eventpage eventDetails={details}/>
