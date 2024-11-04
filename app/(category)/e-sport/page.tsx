@@ -53,7 +53,7 @@ export default async function Esport({ searchParams }: { searchParams: { page?: 
 
     return (
         <div>
-            <h1 className="font-bold text-3xl mb-10">Esport</h1>
+            <h1 className="font-bold text-3xl mb-10">E-Sport</h1>
             <CardGrid items={data} />
             {currentPage <= totalPages && (
                 <PaginationComp page={currentPage} totalPages={totalPages} />

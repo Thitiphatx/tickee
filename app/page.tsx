@@ -29,7 +29,52 @@ export default async function Home() {
                 et_name: "Concert"
             },
             event_last_date: {
-                    gt: today, // Filter events where event_last_date is greater than today
+                    gt: today,
+            }
+        },
+        take: 6,
+        include: {
+            event_type: true
+        }
+    })
+
+    const enter = await prisma.event.findMany({
+        where: {
+            event_type: {
+                et_name: "Entertainment"
+            },
+            event_last_date: {
+                    gt: today,
+            }
+        },
+        take: 6,
+        include: {
+            event_type: true
+        }
+    })
+
+    const sport = await prisma.event.findMany({
+        where: {
+            event_type: {
+                et_name: "Sport"
+            },
+            event_last_date: {
+                    gt: today,
+            }
+        },
+        take: 6,
+        include: {
+            event_type: true
+        }
+    })
+
+    const esport = await prisma.event.findMany({
+        where: {
+            event_type: {
+                et_name: "Esport"
+            },
+            event_last_date: {
+                    gt: today,
             }
         },
         take: 6,
@@ -43,6 +88,9 @@ export default async function Home() {
             <ImageSlider image_item={slideShow?.banner_images ?? []}/>
             <CardSwiper title="Latest Event" items={latest} />
             <CardSwiper title="Concert" items={concert} fullPage="concert" />
+            <CardSwiper title="Entertainment" items={enter} fullPage="entertainment" />
+            <CardSwiper title="Sport" items={sport} fullPage="sport" />
+            <CardSwiper title="E-Sport" items={esport} fullPage="e-sport" />
         </div>
     );
 }
