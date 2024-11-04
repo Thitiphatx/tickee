@@ -189,11 +189,11 @@ export default function AccountProfileCard({ userData }: { userData: User }) {
                     value={parseDate(data.birthDate?.toISOString().split('T')[0] as string)}
                 />
                 <Input maxLength={13} isRequired label="ID card" isInvalid={validation.idcard.isError} errorMessage={validation.idcard.errorMsg} onChange={handleIdCardChange} value={data.idCard ?? ""} required />
-                <RadioGroup onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({ ...data, role: e.target.value })} orientation="horizontal" label="Role selection (for test)" defaultValue={data.role}>
+                {/* <RadioGroup onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({ ...data, role: e.target.value })} orientation="horizontal" label="Role selection (for test)" defaultValue={data.role}>
                     <Radio value="user">User</Radio>
                     <Radio value="organizer">Organizer</Radio>
                     <Radio value="admin">Admin</Radio>
-                </RadioGroup>
+                </RadioGroup> */}
                 {validation.result.isError && <span className="auth-error">{validation.result.errorMsg}</span>}
                 {success && <span className="text-success-500">แก้ไขข้อมูลสำเร็จ</span>}
                 <Button isLoading={loading} spinner={<Spinner color="white" size="sm" />} onClick={handleEditProfile} radius="full" color="primary">Save</Button>
