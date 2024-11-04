@@ -162,7 +162,7 @@ export default function AccountMyticketCard() {
                                 </div>
                             }>
                                 <div>
-                                    <p>{new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()} - {new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()}</p>
+                                    <p>{new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()} - {new Date(receipt.rec_seat.event_seat.event_last_date).toDateString()}</p>
 
                                         
                                         <div className="flex flex-row">
@@ -206,7 +206,7 @@ export default function AccountMyticketCard() {
                                 </div>
                             }>
                                 <div>
-                                    <p>{new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()} - {new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()}</p>
+                                    <p>{new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()} - {new Date(receipt.rec_seat.event_seat.event_last_date).toDateString()}</p>
 
                                     <h5 className="text-primary-500 font-bold mr-3">สถานที่จัดงาน :</h5>
                                     <div className="flex flex-row">

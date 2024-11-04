@@ -1,15 +1,22 @@
 import Link from 'next/link';
-import { PrismaClient } from '@prisma/client';
 import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card';
 import { Divider } from '@nextui-org/divider';
 import { Button } from '@nextui-org/button';
+import { RoleAvailable } from '@/types/data_type';
+import { redirectingByRole } from '@/utils/function';
+import { getCurrentSession } from '@/utils/getCurrentSession';
+import { prisma } from '@/prisma/seed';
 
 interface IParams {
     eproId?: string; // Event ID to edit promotions
 }
 
 export default async function editpromotion({ params }: { params: IParams }) {
-    const prisma = new PrismaClient();
+  const session = await getCurrentSession();
+
+  if (session?.user.role != RoleAvailable.Organizer || !session) {
+      redirectingByRole(session)
+  }
 
     // Ensure eproId is a valid number
     const eventId = parseInt(params.eproId || '0', 10);

@@ -2,12 +2,21 @@
 import EditEventForm from '@/components/EditEventForm';
 import React, { useState, useEffect } from 'react';
 import { PrismaClient } from '@prisma/client';
+import { RoleAvailable } from '@/types/data_type';
+import { redirectingByRole } from '@/utils/function';
+import { getCurrentSession } from '@/utils/getCurrentSession';
 
 interface IParams {
     eventId?: string; // Event ID to edit promotions
 }
 
 export default async function editevent({ params }: { params: IParams }) {
+    const session = await getCurrentSession();
+
+    if (session?.user.role != RoleAvailable.Organizer || !session) {
+        redirectingByRole(session)
+    }
+    
     const prisma = new PrismaClient();
     let eventData, eventType;
 
