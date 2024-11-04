@@ -330,7 +330,6 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
     const [invalidseatMax, setInvalidseatMax] = useState<boolean[]>([true]);
     const [seatMaxErrorMessages, setSeatMaxErrorMessages] = useState<string[]>(['ต้องเป็นตัวเลขเท่านั้น']);
 
-
     const [isFormValid, setIsFormValid] = useState<boolean | string>(false);
     const [isLoading, setIsLoading] = useState(false); // Add loading state
 
@@ -545,8 +544,6 @@ export default function AddEventForm({ eventType }: { eventType: Event_Type[] })
                                     }}
                                 />
                             </div>
-
-
 
                         </div>
 
