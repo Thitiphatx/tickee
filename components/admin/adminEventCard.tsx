@@ -99,16 +99,13 @@ export default function AdminEventCard() {
             });
 
             if (res.ok) {
-                // กรอง event ที่ถูกลบออกจาก allEvent
                 const updatedEvents = allEvent?.filter(event => event.event_id !== id) || [];
                 setAllEvent(updatedEvents);
                 
-                // อัปเดต eventOnPage ตามหน้าแสดงผลปัจจุบัน
                 const start = (page - 1) * rowsPerPage;
                 const end = start + rowsPerPage;
                 setEventOnPage(updatedEvents.slice(start, end));
                 
-                // ถ้าหลังจากลบแล้วหน้าแสดงผลเกินจำนวนอีเวนต์ที่เหลือ ให้กลับไปหน้าแรก
                 if (page > Math.ceil(updatedEvents.length / rowsPerPage)) {
                     setPage(1);
                     setEventOnPage(updatedEvents.slice(0, rowsPerPage));

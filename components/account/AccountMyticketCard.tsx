@@ -51,7 +51,7 @@ export default function AccountMyticketCard() {
         hour12: true,       // boolean
         timeZone: 'Asia/Bangkok' // or any valid timezone string
     };
-    
+
     const [ticketinfo, setticketinfo] = useState<number>(0);
 
     const handleLinkClick = (receiptIndex: number) => {
@@ -105,7 +105,7 @@ export default function AccountMyticketCard() {
 
     };
 
-    useEffect(()=> {
+    useEffect(() => {
         const fetchReceipts = async () => {
             try {
                 const response = await fetch(`/api/getReceipt?customerid=${session?.user.id}`);
@@ -126,11 +126,14 @@ export default function AccountMyticketCard() {
     }, [status])
     // แบ่งข้อมูลเป็น upcoming และ past events
     const now = new Date();
-    const upcomingEvents = receipts.filter(receipt => 
+    const upcomingEvents = receipts.filter(receipt =>
         new Date(receipt.rec_seat.event_seat.event_last_date) > now && // Check if the event is upcoming
         receipt.rec_status === 0 // Check if rec_status is 0
     );
     const pastEvents = receipts.filter(receipt => new Date(receipt.rec_seat.event_seat.event_last_date) <= now);
+
+    const thirtyDaysFromNow = new Date();
+    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
 
     return (
         <div>
@@ -154,12 +157,12 @@ export default function AccountMyticketCard() {
                                             <p>{receipt.rec_quantity} ใบ</p>
                                         </div>
 
-                                        
+
                                     </div>
                                 </div>
                             }>
-                                    <div>
-                                        <p>{new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()} - {new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()}</p>
+                                <div>
+                                    <p>{new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()} - {new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()}</p>
 
                                         
                                         <div className="flex flex-row">
@@ -182,7 +185,7 @@ export default function AccountMyticketCard() {
                     </Accordion>
                 </Tab>
                 <Tab key="past" title="PAST EVENTS">
-                <Accordion variant="splitted">
+                    <Accordion variant="splitted">
                         {pastEvents.map((receipt, index) => (
                             <AccordionItem key={index} aria-label="Accordion 1" startContent={
                                 <div className="grid sm:grid-cols-1 lg:grid-cols-2">
@@ -198,7 +201,7 @@ export default function AccountMyticketCard() {
                                             <p>{receipt.rec_quantity} ใบ</p>
                                         </div>
 
-                                        
+
                                     </div>
                                 </div>
                             }>
