@@ -29,6 +29,7 @@ export default function AdminSearchbar({ searchText, setSearchText }: SearchFunc
                     setInput(temp)
                     
                 }
+            }
             />
             </form>
         </div>
