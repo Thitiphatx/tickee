@@ -61,10 +61,15 @@ export default async function PromotionPage({ params }: { params: IParams }) {
     name: type.pt_name,
   }));
   // 
+  console.log(detailData.seat_types[0].seat_id)
+
+
+  console.log(promotionTypeOptions)
 
   return (
     <div>
-      <h1>{params.eprorealId}</h1>
+      {/* <h1>{params.eprorealId}</h1> */}
+      
       <EditPromotionreal events={[detailData]} promotionTypes={promotionTypeOptions} promotionId={detail?.Promotion?.pro_id}/>
     </div>
   );

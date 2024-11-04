@@ -55,14 +55,14 @@ export default function AccountMyticketCard() {
     const [ticketinfo, setticketinfo] = useState<number>(0);
 
     const handleLinkClick = (receiptIndex: number) => {
-        
+
         setticketinfo(receiptIndex);
         onOpen();
     };
 
     const removeRecepit1 = (event: any, receipt: any) => {
         event.stopPropagation();
-        
+
         removeReceipt(receipt);
     };
 
@@ -88,7 +88,7 @@ export default function AccountMyticketCard() {
             });
 
             if (response.ok) {
-                
+
 
                 // Remove the receipt from the UI
                 setReceipts(receipts.filter(r => r.rec_id !== receipt.rec_id));
@@ -111,7 +111,7 @@ export default function AccountMyticketCard() {
                 const response = await fetch(`/api/getReceipt?customerid=${session?.user.id}`);
                 if (response.ok) {
                     const data = await response.json();
-                    
+
                     setReceipts(data);
                 } else {
                     console.error('Failed to fetch receipts');
@@ -143,28 +143,28 @@ export default function AccountMyticketCard() {
                         {upcomingEvents.map((receipt, index) => {
                             const address: Address = JSON.parse(receipt.rec_seat.event_seat.event_location);
                             return (
-                            <AccordionItem key={index} aria-label="Accordion 1" startContent={
-                                <div className="grid sm:grid-cols-1 lg:grid-cols-2">
-                                    <Image className="object-cover w-full h-24" src={receipt.rec_seat.event_seat.event_images} alt="" />
-                                    <div className="w-full text-left">
-                                        <h1>{receipt.rec_seat.event_seat.event_name}</h1>
-                                        <div className="flex flex-row">
-                                            <h5 className="text-primary-500 font-bold mr-3">ประเภทบัตร/Zone :</h5>
-                                            <p>{receipt.rec_seat.seat_name}</p>
-                                        </div>
-                                        <div className="flex flex-row">
-                                            <h5 className="text-primary-500 font-bold mr-3">จำนวน :</h5>
-                                            <p>{receipt.rec_quantity} ใบ</p>
-                                        </div>
+                                <AccordionItem key={index} aria-label="Accordion 1" startContent={
+                                    <div className="grid sm:grid-cols-1 lg:grid-cols-2">
+                                        <Image className="object-cover w-full h-24" src={receipt.rec_seat.event_seat.event_images} alt="" />
+                                        <div className="w-full text-left">
+                                            <h1>{receipt.rec_seat.event_seat.event_name}</h1>
+                                            <div className="flex flex-row">
+                                                <h5 className="text-primary-500 font-bold mr-3">ประเภทบัตร/Zone :</h5>
+                                                <p>{receipt.rec_seat.seat_name}</p>
+                                            </div>
+                                            <div className="flex flex-row">
+                                                <h5 className="text-primary-500 font-bold mr-3">จำนวน :</h5>
+                                                <p>{receipt.rec_quantity} ใบ</p>
+                                            </div>
 
 
+                                        </div>
                                     </div>
-                                </div>
-                            }>
-                                <div>
-                                    <p>{new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()} - {new Date(receipt.rec_seat.event_seat.event_last_date).toDateString()}</p>
+                                }>
+                                    <div>
+                                        <p>{new Date(receipt.rec_seat.event_seat.event_start_date).toDateString()} - {new Date(receipt.rec_seat.event_seat.event_last_date).toDateString()}</p>
 
-                                        
+
                                         <div className="flex flex-row">
                                             <h5 className="text-primary-500 font-bold mr-3">สถานที่จัดงาน :</h5>
                                             <span className="">{address.address} {address.city}</span>
@@ -177,11 +177,16 @@ export default function AccountMyticketCard() {
                                             <QRCode className="mx-auto w-52" value={`https://tickee-omega.vercel.app/checkReceipt/${receipt.rec_id}`}></QRCode>
                                             <small>ID: {receipt.rec_id}</small>
                                         </div>
-                                        
+
                                     </div>
-                                <Button onClick={(e)=>removeRecepit1(e, receipt)} className="float-end mb-5" color="danger">ขอคืนเงิน</Button>
-                            </AccordionItem>
-                        )})}
+                                    {(new Date(receipt.rec_seat.event_seat.event_start_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) > 30 && (
+                                        <Button onClick={(e) => removeRecepit1(e, receipt)} className="float-end mb-5" color="danger">
+                                            ขอคืนเงิน
+                                        </Button>
+                                    )}
+                                </AccordionItem>
+                            )
+                        })}
                     </Accordion>
                 </Tab>
                 <Tab key="past" title="PAST EVENTS">

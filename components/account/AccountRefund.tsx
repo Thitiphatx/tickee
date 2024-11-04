@@ -18,26 +18,26 @@ const RefundTable = ({ receipts }: any) => {
 
     return (
         <div className="overflow-x-auto">
-                <Table aria-label="Example table with dynamic content">
-                    <TableHeader>
-                        <TableColumn>Id</TableColumn>
-                        <TableColumn>Date</TableColumn>
-                        <TableColumn>Quantity</TableColumn>
-                        <TableColumn>Seat Type</TableColumn>
-                        <TableColumn>Status</TableColumn>
-                    </TableHeader>
-                    <TableBody>
-                        {receipts.map((receipt: any) => (
-                            <TableRow key={receipt.rec_id}>
-                                <TableCell>{receipt.rec_id}</TableCell>
-                                <TableCell>{new Date(receipt.rec_date).toLocaleDateString()}</TableCell>
-                                <TableCell>{receipt.rec_quantity}</TableCell>
-                                <TableCell>{receipt.rec_seat.seat_name}</TableCell>
-                                <TableCell>{getStatusMessage(receipt.rec_status)}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+            <Table aria-label="Example table with dynamic content">
+                <TableHeader>
+                    <TableColumn>Id</TableColumn>
+                    <TableColumn>Date</TableColumn>
+                    <TableColumn>Quantity</TableColumn>
+                    <TableColumn>Seat Type</TableColumn>
+                    <TableColumn>Status</TableColumn>
+                </TableHeader>
+                <TableBody>
+                    {receipts.map((receipt: any) => (
+                        <TableRow key={receipt.rec_id}>
+                            <TableCell>{receipt.rec_id}</TableCell>
+                            <TableCell>{new Date(receipt.rec_date).toLocaleDateString("th-TH-u-ca-buddhist", { year: 'numeric', month: '2-digit', day: '2-digit' })}</TableCell>
+                            <TableCell>{receipt.rec_quantity}</TableCell>
+                            <TableCell>{receipt.rec_seat.seat_name}</TableCell>
+                            <TableCell>{getStatusMessage(receipt.rec_status)}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
         </div>
     );
 };

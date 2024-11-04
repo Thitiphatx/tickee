@@ -12,11 +12,11 @@ interface IParams {
 }
 
 export default async function editpromotion({ params }: { params: IParams }) {
-  const session = await getCurrentSession();
+    const session = await getCurrentSession();
 
-  if (session?.user.role != RoleAvailable.Organizer || !session) {
-      redirectingByRole(session)
-  }
+    if (session?.user.role != RoleAvailable.Organizer || !session) {
+        redirectingByRole(session)
+    }
 
     // Ensure eproId is a valid number
     const eventId = parseInt(params.eproId || '0', 10);
@@ -27,14 +27,18 @@ export default async function editpromotion({ params }: { params: IParams }) {
     // Fetch all seat types associated with the given event ID
     const allSeats = await prisma.seat_Type.findMany({
         where: {
-            event_seat_id: eventId, // Use the correct field to filter
+            event_seat_id: eventId, // Filter by the specific event ID
             NOT: {
-                Promotion: null
+                Promotion: null // Exclude seats without promotions
             }
         },
         include: {
-            Promotion: true, // Include promotion details if needed
-        },
+            Promotion: { // Include promotions associated with the seat types
+                include: {
+                    pro_type: true, // Include promotion type details
+                }
+            }
+        }
     });
 
     // Log the fetched seat types
@@ -60,11 +64,18 @@ export default async function editpromotion({ params }: { params: IParams }) {
                                 <CardBody>
                                     {seat.Promotion && (
                                         <div className="mt-2">
-                                            <p className="font-bold">Promotion:</p>
-                                            <p>รายละเอียด: <small>{seat.Promotion.pro_description}</small></p>
-                                            <p>ลดราคา: <small>{seat.Promotion.pro_discount}%</small></p>
-                                            <p>เริ่มวันที่: <small>{new Date(seat.Promotion.pro_start_date).toLocaleString()}</small></p>
-                                            <p>ถึงวันที่: <small>{new Date(seat.Promotion.pro_last_date).toLocaleString()}</small></p>
+                                            <p className="font-semibold">Promotion:</p>
+                                            <p>Promotion type: {seat.Promotion.pro_type.pt_name}</p>
+                                            <p>Description: {seat.Promotion.pro_description}</p>
+
+                                            {seat.Promotion.pro_type_id === 2 ? ( // Check if promotion type is percentage
+                                                <p>Discount: {seat.Promotion.pro_discount}%</p>
+                                            ) : seat.Promotion.pro_type_id === 3 ? ( // Check if promotion type is fixed amount
+                                                <p>Discount: {seat.Promotion.pro_discount} บาท</p>
+                                            ) : null}
+
+                                            <p>Start Date: {new Date(seat.Promotion.pro_start_date).toLocaleString()}</p>
+                                            <p>End Date: {new Date(seat.Promotion.pro_last_date).toLocaleString()}</p>
                                         </div>
                                     )}
                                 </CardBody>
