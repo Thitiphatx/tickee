@@ -1,4 +1,7 @@
 import EditPromotionreal from '@/components/EditPromotionreal';
+import { RoleAvailable } from '@/types/data_type';
+import { redirectingByRole } from '@/utils/function';
+import { getCurrentSession } from '@/utils/getCurrentSession';
 import { PrismaClient } from '@prisma/client';
 
 interface IParams {
@@ -7,6 +10,12 @@ interface IParams {
 export const revalidate = 0
 export default async function PromotionPage({ params }: { params: IParams }) {
   const prisma = new PrismaClient();
+  const session = await getCurrentSession();
+
+  if (!session || session?.user.role != RoleAvailable.Organizer) {
+      redirectingByRole(session)
+      return
+  }
   
   const detail = await prisma.seat_Type.findUnique({
     include: {
