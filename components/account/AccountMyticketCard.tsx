@@ -1,6 +1,6 @@
 "use client";
 
-import { Address } from "@/types/data_type";
+import { Address, ReceiptStatus } from "@/types/data_type";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { Button } from "@nextui-org/button";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
@@ -127,8 +127,8 @@ export default function AccountMyticketCard() {
     // แบ่งข้อมูลเป็น upcoming และ past events
     const now = new Date();
     const upcomingEvents = receipts.filter(receipt =>
-        new Date(receipt.rec_seat.event_seat.event_last_date) > now && // Check if the event is upcoming
-        receipt.rec_status === 0 // Check if rec_status is 0
+        (new Date(receipt.rec_seat.event_seat.event_last_date) > now) &&
+        (receipt.rec_status == ReceiptStatus.Success || receipt.rec_status == ReceiptStatus.UnableToReturn)
     );
     const pastEvents = receipts.filter(receipt => new Date(receipt.rec_seat.event_seat.event_last_date) <= now);
 
