@@ -1,8 +1,18 @@
 import Eventpage from "@/components/Eventpage";
 import { prisma } from '@/lib/prisma';
+import { RoleAvailable } from "@/types/data_type";
+import { redirectingByRole } from "@/utils/function";
+import { getCurrentSession } from "@/utils/getCurrentSession";
 
 const today = new Date();
 export default async function EventLanding({ params }: { params: { eventId: string }}) {
+
+    const session = await getCurrentSession();
+
+    if (session?.user.role == RoleAvailable.Admin || !session) {
+        redirectingByRole(session)
+    }
+    
     const details = await prisma.event.findFirst( {
         include: {
             event_type: true,
