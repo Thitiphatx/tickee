@@ -9,7 +9,7 @@ export default async function EventLanding({ params }: { params: { eventId: stri
 
     const session = await getCurrentSession();
 
-    if (session?.user.role == RoleAvailable.Admin || !session) {
+    if (session?.user.role == RoleAvailable.Admin) {
         redirectingByRole(session)
     }
     
