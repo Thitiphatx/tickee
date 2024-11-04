@@ -24,15 +24,36 @@ export default function Payment({ quantity, seatData, eventname, serviceFee }: {
     const totalPrice = seatData.seat_price * quantity
     let totalPriceplusfee;
 
-    if (seatData.Promotion?.pro_type_id === 2) {
-        // ถ้าโปรโมชั่นแบบลดเป็น %
-        totalPriceplusfee = (totalPrice - (totalPrice * (seatData.Promotion.pro_discount / 100))) + fee;
-    } else if (seatData.Promotion?.pro_type_id === 3) {
-        // ถ้าโปรโมชั่นแบบลดเป็นจำนวนเงิน
-        totalPriceplusfee = (totalPrice - seatData.Promotion.pro_discount*quantity) + fee;
+    const datepromotion = seatData.Promotion?.pro_last_date
+    const startdatepromotion = seatData.Promotion?.pro_start_date
+    const today = new Date();
+    console.log(datepromotion)
+    console.log(today)
+    if (datepromotion && startdatepromotion) {
+        const promoDate = new Date(datepromotion);
+        promoDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+
+
+        if ((new Date().getTime() >= new Date(startdatepromotion).getTime() && new Date().getTime() <= new Date(datepromotion).getTime())) {
+
+            if (seatData.Promotion?.pro_type_id === 2) {
+
+                totalPriceplusfee = (totalPrice - (totalPrice * (seatData.Promotion.pro_discount / 100))) + fee;
+            } else if (seatData.Promotion?.pro_type_id === 3) {
+
+                totalPriceplusfee = (totalPrice - quantity * seatData.Promotion.pro_discount) + fee;
+            } else {
+
+                totalPriceplusfee = totalPrice + fee;
+            }
+        } else {
+
+            totalPriceplusfee = totalPrice + fee; 
+        }
     } else {
-        // ถ้าไม่มีโปรโมชั่นลด (หรือเป็นการแจกของ)
-        totalPriceplusfee = totalPrice + fee;
+        console.log("Promotion end date is not set.");
+        totalPriceplusfee = totalPrice + fee; 
     }
     return (
 
@@ -88,35 +109,45 @@ export default function Payment({ quantity, seatData, eventname, serviceFee }: {
                                         โปรโมชั่น/promotions
                                     </p>
                                     <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                        {seatData.Promotion?.pro_type_id === 2 ? (
-                                            <>
-                                                <h4 className="font-bold  text-green-900">
-                                                    โปรโมชั่น ลด {seatData.Promotion.pro_discount} %
+                                        {datepromotion ? ( // Check if datepromotion is defined
+                                            startdatepromotion && (new Date().getTime() >= new Date(startdatepromotion).getTime() && new Date().getTime() <= new Date(datepromotion).getTime()) ? ( // Check if today is before or on promoDate
+                                                // If the promo date is valid
+                                                <>
+                                                    {seatData.Promotion?.pro_type_id === 2 ? (
+                                                        <h4 className="font-bold text-green-900">
+                                                            โปรโมชั่น ลด {seatData.Promotion.pro_discount} %
+                                                        </h4>
+                                                    ) : seatData.Promotion?.pro_type_id === 3 ? (
+                                                        <h4 className="font-bold text-blue-900">
+                                                            โปรโมชั่น ลด {seatData.Promotion.pro_discount} บาท
+                                                        </h4>
+                                                    ) : seatData.Promotion?.pro_type_id === 1 ? (
+                                                        <h4 className="font-bold text-red-900">
+                                                            โปรโมชั่นของที่ระลึก {seatData.Promotion.pro_description} รับได้ที่หน้างาน
+                                                        </h4>
+                                                    ) : null}
+                                                </>
+                                            ) : ( // If today is after promoDate
+                                                <h4 className="font-bold text-red-900">
+                                                    ไม่มีโปรโมชั่น
                                                 </h4>
-
-                                            </>
-                                        ) : seatData.Promotion?.pro_type_id === 3 ? (
-                                            <>
-                                                <h4 className="font-bold  text-blue-900">
-                                                    โปรโมชั่น ลด {seatData.Promotion.pro_discount} บาท
-                                                </h4>
-                                            </>
-                                        ) : seatData.Promotion?.pro_type_id === 1 ? (
-                                            <>
-                                                <h4 className="font-bold  text-red-900">
-                                                    โปรโมชั่นของที่ระลึก {seatData.Promotion.pro_description} รับได้ที่หน้างาน
-                                                </h4>
-
-                                            </>
-                                        ) : null}
+                                            )
+                                        ) : ( // If datepromotion is not defined
+                                            <h4 className="font-bold text-red-900">
+                                                ไม่มีโปรโมชั่น 
+                                            </h4>
+                                        )}
                                     </p>
                                 </div>
-                                {seatData.Promotion?.pro_type_id === 2 ? (
+                                {datepromotion && startdatepromotion && (new Date().getTime() < new Date(startdatepromotion).getTime() || new Date().getTime() > new Date(datepromotion).getTime()) ? ( // Check if datepromotion has passed
+                                    <div className="inline-flex items-center text-base font-semibold text-red-900 dark:text-white">
+                                        <p>ไม่มีโปรโมชั่น</p> {/* Message for expired promotion */}
+                                    </div>
+                                ) : seatData.Promotion?.pro_type_id === 2 ? (
                                     // ถ้าเป็นโปรโมชั่นลด %
                                     <div className="inline-flex items-center text-base font-semibold text-red-900 dark:text-white">
                                         {(totalPrice * (seatData.Promotion.pro_discount / 100)).toFixed(2)} บาท
                                     </div>
-                                    
                                 ) : seatData.Promotion?.pro_type_id === 3 ? (
                                     // ถ้าเป็นโปรโมชั่นลดเป็นจำนวนเงิน
                                     <div className="inline-flex items-center text-base font-semibold text-red-700 dark:text-white">
