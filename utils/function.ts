@@ -137,7 +137,6 @@ export async function autoChangeReceiptStatus() {
         })
         return output
     } catch (error) {
-        
         return null
     }
 }

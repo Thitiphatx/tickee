@@ -71,7 +71,7 @@ export default function TicketInformation({ currentTab, onBookingClick, seatPerO
 
     return (
         <>
-            {((seatData?.Seat_Dispatch?.sd_max || 0) <= (seatData?.Seat_Dispatch?.sd_current || 0)) ? (
+            { seatData && ((seatData?.Seat_Dispatch?.sd_max || 0) <= (seatData?.Seat_Dispatch?.sd_current || 0)) && (
                 <>
                     <ModalHeader className="flex flex-col gap-1 text-center text-danger">Ticket Soldout</ModalHeader>
                     <ModalBody>
@@ -80,7 +80,8 @@ export default function TicketInformation({ currentTab, onBookingClick, seatPerO
                         </div>
                     </ModalBody>
                 </>
-            ) : (
+            )}  
+            { seatData && ((seatData?.Seat_Dispatch?.sd_max || 0) > (seatData?.Seat_Dispatch?.sd_current || 0)) && (
                 <>
                     <ModalHeader className="flex flex-col gap-1">Ticket Information</ModalHeader>
                     <ModalBody>

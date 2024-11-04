@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { prisma } from '@/prisma/seed';
+import { ReceiptStatus } from '@/types/data_type';
 
 export async function GET(request: Request) {
     const url = new URL(request.url);
@@ -45,7 +46,13 @@ export async function GET(request: Request) {
         //     })
         // );
         const userReceipts = await prisma.receipt.findMany({
-            where: { rec_customer_id: customerId },
+            where: { 
+                rec_customer_id: customerId,
+                OR: [
+                    { rec_status: ReceiptStatus.Expired },
+                    { rec_status: ReceiptStatus.UnableToReturn },
+                  ]
+            },
             include: {
                 rec_seat: {
                     include: {
