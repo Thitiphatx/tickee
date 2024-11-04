@@ -122,19 +122,20 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
         )}
 
         {/* Promotion Type Dropdown */}
-        <Select
+        <label>Select Promotion Type</label>
+        <select
           name="pro_type"
-          label="Select Promotion Type"
           value={formData.pro_type}
           onChange={handleChange}
+          className="p-3 rounded-xl bg-foreground-100 border-none"
           required
         >
           {promotionTypes.map((type) => (
-            <SelectItem key={type.id} value={type.id}>
+            <option key={type.id} value={type.id}>
               {type.name}
-            </SelectItem>
+            </option>
           ))}
-        </Select>
+        </select>
 
         {/* Date Pickers */}
         <DatePicker
@@ -149,19 +150,20 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
         />
 
         {/* Seat Type Dropdown */}
-        <Select
+        <label>Select Seat Type</label>
+        <select
           name="seat_type_id"
-          label="Select Seat Type"
           value={formData.seat_type_id}
           onChange={handleChange}
+          className="p-3 rounded-xl bg-foreground-100 border-none"
           required
         >
           {seatTypes.map((seat) => (
-            <SelectItem key={seat.seat_id} value={seat.seat_id}>
+            <option key={seat.seat_id} value={seat.seat_id}>
               {seat.seat_name} - ${seat.seat_price}
-            </SelectItem>
+            </option>
           ))}
-        </Select>
+        </select>
 
         <Button type="submit" color="primary">Submit</Button>
       </form>
