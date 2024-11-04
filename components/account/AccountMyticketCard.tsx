@@ -139,15 +139,15 @@ export default function AccountMyticketCard() {
         <div>
             <Tabs>
                 <Tab key="upcomming" title="UPCOMMING EVENTS">
-                    <Accordion variant="splitted">
+                    <Accordion  variant="splitted">
                         {upcomingEvents.map((receipt, index) => {
                             const address: Address = JSON.parse(receipt.rec_seat.event_seat.event_location);
                             return (
                                 <AccordionItem key={index} aria-label="Accordion 1" startContent={
-                                    <div className="grid sm:grid-cols-1 lg:grid-cols-2">
-                                        <Image className="object-cover w-full h-24" src={receipt.rec_seat.event_seat.event_images} alt="" />
+                                    <div className="flex flex-col md:flex-row gap-5 min-w-fit text-wrap">
+                                        <Image className="object-cover w-44 h-48" src={receipt.rec_seat.event_seat.event_images} alt="" />
                                         <div className="w-full text-left">
-                                            <h1>{receipt.rec_seat.event_seat.event_name}</h1>
+                                            <h1 className="max-w-72 text-wrap ">{receipt.rec_seat.event_seat.event_name}</h1>
                                             <div className="flex flex-row">
                                                 <h5 className="text-primary-500 font-bold mr-3">ประเภทบัตร/Zone :</h5>
                                                 <p>{receipt.rec_seat.seat_name}</p>
