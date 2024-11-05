@@ -83,6 +83,7 @@ export default function AccountChangePassword({ userData }: { userData: User }) 
                 <Input
                     isRequired
                     label="Current password"
+                    type="password"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setPassword({ ...password, current: e.target.value });
                         setPasswordErrors({ ...passwordErrors, current: false }); // Reset error on change

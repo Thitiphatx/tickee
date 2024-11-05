@@ -34,7 +34,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
     const [serviceFee, setServiceFee] = useState<number>(0);
 
     const handlePaymentClick = (input: number) => {
-        
+
         if (currentTab == 0) {
             setShowAlert(true);
         }
@@ -74,7 +74,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
         fecthData();
     }, []);
 
-    useEffect(()=> {
+    useEffect(() => {
         if (status == "loading") {
             setLoading(true);
         } else {
@@ -118,59 +118,25 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                         <div className="flex flex-row">
                             <Chip size="sm" color='primary'>{eventDetails.event_type.et_name}</Chip>
                         </div>
+                        <div className="flex w-full justify-around items-center uppercase font-bold">
+                            <Button color="primary" radius="lg" variant="bordered" className="h-4/5">
+                                {new Date(eventDetails.event_start_date).getDate() + "-"}
+                                {new Date(eventDetails.event_start_date).getMonth() + "-"}
+                                {new Date(eventDetails.event_start_date).getFullYear()}
+                            </Button>
+                            <p className="text-center text-xl"> - </p>
+                            <Button color="primary" radius="lg" className="h-4/5">
+                                {new Date(eventDetails.event_last_date).getDate() + "-"}
+                                {new Date(eventDetails.event_last_date).getMonth() + "-"}
+                                {new Date(eventDetails.event_last_date).getFullYear()}
+                            </Button>
+                        </div>
                         <div className='p-2' dangerouslySetInnerHTML={{ __html: eventDetails.event_intro }} />
                     </div>
                     <Skeleton className="rounded-xl" isLoaded={!loading}>
-                    {session?.user.role == "organizer" ?
-                        <div className="space-y-2">
-                            {eventDetails.Seat_Type.map((seat) => (
-                                <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300" >
-                                        <CardHeader className='flex flex-col items-start'  >
-
-                                            {(seat.Seat_Dispatch?.sd_max || 0) - (seat.Seat_Dispatch?.sd_current || 0) <= 0 ? (
-                                                <p className="text-red-500">{seat.seat_name} Sold Out</p>
-                                            ) : <h4 className="font-bold">
-                                                {seat.seat_name} เหลือที่นั่ง {(seat.Seat_Dispatch?.sd_max || 0) - (seat.Seat_Dispatch?.sd_current || 0)} ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})
-                                            </h4>}
-
-                                            <div className='flex flex-col'>
-                                                {seat.Promotion?.pro_type?.pt_id === 2 && (new Date().getTime() >= new Date(seat.Promotion.pro_start_date).getTime() && new Date().getTime() <= new Date(seat.Promotion.pro_last_date).getTime()) ? (
-                                                    <>
-                                                        <h4 className="font-bold ml-2 text-warning-500">
-                                                            โปรโมชั่น {seat.Promotion.pro_type.pt_name}  ลด {seat.Promotion.pro_discount} %
-                                                        </h4>
-
-                                                    </>
-                                                ) : seat.Promotion?.pro_type?.pt_id === 3 && (new Date().getTime() >= new Date(seat.Promotion.pro_start_date).getTime() && new Date().getTime() <= new Date(seat.Promotion.pro_last_date).getTime()) ? (
-                                                    <>
-                                                        <h4 className="font-bold ml-2 text-blue-900">
-                                                            โปรโมชั่น {seat.Promotion.pro_type.pt_name}  ลด {seat.Promotion.pro_discount} บาท
-                                                        </h4>
-                                                    </>
-                                                ) : seat.Promotion?.pro_type?.pt_id === 1 && (new Date().getTime() >= new Date(seat.Promotion.pro_start_date).getTime() && new Date().getTime() <= new Date(seat.Promotion.pro_last_date).getTime()) ? (
-                                                    <>
-                                                        <h4 className="font-bold ml-2 text-red-900">
-                                                            โปรโมชั่น {seat.Promotion?.pro_type.pt_name}  แจก {seat.Promotion?.pro_description}
-                                                        </h4>
-
-                                                    </>
-                                                ) : null}
-                                            </div>
-
-                                        </CardHeader>
-                                        <CardBody className="flex flex-row justify-between items-center">
-                                            <div>
-
-                                                <p>฿ {seat.seat_price}</p>
-                                            </div>
-                                        </CardBody>
-                                </Card>
-                            ))}
-                        </div> :
-                        <div>
-                            <h2 className="uppercase font-bold">Select Ticket</h2>
-                            <Selector setCurrentTab={setCurrentTab} currentTab={currentTab} onTabChange={handleTabChange} >
-                                {eventDetails.Seat_Type.filter((seat: Seat_Type) => isSeatAvailable(seat)).map((seat) => (
+                        {session?.user.role == "organizer" ?
+                            <div className="space-y-2">
+                                {eventDetails.Seat_Type.map((seat) => (
                                     <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300" >
                                         <CardHeader className='flex flex-col items-start'  >
 
@@ -213,12 +179,59 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                                         </CardBody>
                                     </Card>
                                 ))}
+                            </div> :
+                            <div>
+                                <h2 className="uppercase font-bold">Select Ticket</h2>
+                                <Selector setCurrentTab={setCurrentTab} currentTab={currentTab} onTabChange={handleTabChange} >
+                                    {eventDetails.Seat_Type.filter((seat: Seat_Type) => isSeatAvailable(seat)).map((seat) => (
+                                        <Card key={seat.seat_id} className="w-full cursor-pointer ring-2 ring-foreground-300" >
+                                            <CardHeader className='flex flex-col items-start'  >
 
-                            </Selector>
+                                                {(seat.Seat_Dispatch?.sd_max || 0) - (seat.Seat_Dispatch?.sd_current || 0) <= 0 ? (
+                                                    <p className="text-red-500">{seat.seat_name} Sold Out</p>
+                                                ) : <h4 className="font-bold">
+                                                    {seat.seat_name} เหลือที่นั่ง {(seat.Seat_Dispatch?.sd_max || 0) - (seat.Seat_Dispatch?.sd_current || 0)} ({seat.Seat_Dispatch?.sd_current}/{seat.Seat_Dispatch?.sd_max})
+                                                </h4>}
 
-                            {session?.user.role == "user" && <Button radius="full" color="primary" size="lg" className="w-full" onClick={() => handlePaymentClick(eventDetails.event_seat_per_order)} >Buy</Button>}
-                        </div>
-                    }
+                                                <div className='flex flex-col'>
+                                                    {seat.Promotion?.pro_type?.pt_id === 2 && (new Date().getTime() >= new Date(seat.Promotion.pro_start_date).getTime() && new Date().getTime() <= new Date(seat.Promotion.pro_last_date).getTime()) ? (
+                                                        <>
+                                                            <h4 className="font-bold ml-2 text-warning-500">
+                                                                โปรโมชั่น {seat.Promotion.pro_type.pt_name}  ลด {seat.Promotion.pro_discount} %
+                                                            </h4>
+
+                                                        </>
+                                                    ) : seat.Promotion?.pro_type?.pt_id === 3 && (new Date().getTime() >= new Date(seat.Promotion.pro_start_date).getTime() && new Date().getTime() <= new Date(seat.Promotion.pro_last_date).getTime()) ? (
+                                                        <>
+                                                            <h4 className="font-bold ml-2 text-blue-900">
+                                                                โปรโมชั่น {seat.Promotion.pro_type.pt_name}  ลด {seat.Promotion.pro_discount} บาท
+                                                            </h4>
+                                                        </>
+                                                    ) : seat.Promotion?.pro_type?.pt_id === 1 && (new Date().getTime() >= new Date(seat.Promotion.pro_start_date).getTime() && new Date().getTime() <= new Date(seat.Promotion.pro_last_date).getTime()) ? (
+                                                        <>
+                                                            <h4 className="font-bold ml-2 text-red-900">
+                                                                โปรโมชั่น {seat.Promotion?.pro_type.pt_name}  แจก {seat.Promotion?.pro_description}
+                                                            </h4>
+
+                                                        </>
+                                                    ) : null}
+                                                </div>
+
+                                            </CardHeader>
+                                            <CardBody className="flex flex-row justify-between items-center">
+                                                <div>
+
+                                                    <p>฿ {seat.seat_price}</p>
+                                                </div>
+                                            </CardBody>
+                                        </Card>
+                                    ))}
+
+                                </Selector>
+
+                                {session?.user.role == "user" && <Button radius="full" color="primary" size="lg" className="w-full" onClick={() => handlePaymentClick(eventDetails.event_seat_per_order)} >Buy</Button>}
+                            </div>
+                        }
                     </Skeleton>
                     {showAlert && (
                         <Card role="alert" isPressable onPress={() => setShowAlert(false)} className="ring-1 ring-warning-500 w-full">
@@ -239,7 +252,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick} seatPerOrder={seatPerOrder}/>
+                            <TicketInformation currentTab={currentTab} onBookingClick={handleBookingClick} seatPerOrder={seatPerOrder} />
                         </>
                     )}
                 </ModalContent>

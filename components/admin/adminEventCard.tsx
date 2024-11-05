@@ -50,7 +50,7 @@ export default function AdminEventCard() {
             }
         };
         fetchData();
-    }, [search,refresh]);
+    }, [search, refresh]);
 
     const changePage = (input: number) => {
         if (allEvent != null) {
@@ -101,11 +101,11 @@ export default function AdminEventCard() {
             if (res.ok) {
                 const updatedEvents = allEvent?.filter(event => event.event_id !== id) || [];
                 setAllEvent(updatedEvents);
-                
+
                 const start = (page - 1) * rowsPerPage;
                 const end = start + rowsPerPage;
                 setEventOnPage(updatedEvents.slice(start, end));
-                
+
                 if (page > Math.ceil(updatedEvents.length / rowsPerPage)) {
                     setPage(1);
                     setEventOnPage(updatedEvents.slice(0, rowsPerPage));
@@ -220,7 +220,7 @@ export default function AdminEventCard() {
                                     <Card isPressable onPress={() => eventDetailClick(event)}>
                                         <Image alt={event.event_name} className="object-cover rounded-xl h-80" src={event.event_images} width={"290px"} />
                                         <CardBody className="overflow-visible py-5 px-5 gap-2">
-                                        <div className="flex w-full justify-around items-center uppercase font-bold">
+                                            <div className="flex w-full justify-around items-center uppercase font-bold">
                                                 <Button color="primary" radius="lg" variant="bordered" className="h-4/5">
                                                     {new Date(event.event_start_date).getDate() + "-"}
                                                     {new Date(event.event_start_date).getMonth() + "-"}
