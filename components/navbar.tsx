@@ -157,7 +157,7 @@ export const Navbar = () => {
                                     <Link href="/account/profile" color={"foreground"} size="lg">Profile</Link>
                                 </NavbarMenuItem>
                                 <NavbarMenuItem>
-                                    <Link href="/account/myticket" color={"foreground"} size="lg"></Link>My ticket
+                                    <Link href="/account/myticket" color={"foreground"} size="lg">My ticket</Link>
                                 </NavbarMenuItem>
                                 <NavbarMenuItem style={{display: `${session.user.role == "organizer" ? "" : "none"}`}}>
                                     <Link href="/event-organizer" color={"foreground"} size="lg">Event</Link>
