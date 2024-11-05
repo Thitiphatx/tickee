@@ -1,4 +1,5 @@
 "use client"
+import { ReceiptStatus } from "@/types/data_type";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 import React from 'react';
 
@@ -27,7 +28,7 @@ const RefundTable = ({ receipts }: any) => {
                     <TableColumn>Status</TableColumn>
                 </TableHeader>
                 <TableBody>
-                    {receipts.map((receipt: any) => (
+                    {receipts.filter((rec: any) => (rec.rec_status != ReceiptStatus.Expired) || (rec.rec_status != ReceiptStatus.Success)).map((receipt: any) => (
                         <TableRow key={receipt.rec_id}>
                             <TableCell>{receipt.rec_id}</TableCell>
                             <TableCell>{new Date(receipt.rec_date).toLocaleDateString("th-TH-u-ca-buddhist", { year: 'numeric', month: '2-digit', day: '2-digit' })}</TableCell>
