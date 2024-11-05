@@ -118,7 +118,7 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                         <div className="flex flex-row">
                             <Chip size="sm" color='primary'>{eventDetails.event_type.et_name}</Chip>
                         </div>
-                        <div className="flex justify-around items-center uppercase font-bold">
+                        <div className="flex flex-row justify-around items-center uppercase font-bold">
                             <Button color="warning" radius="lg" variant="flat" className="h-4/5">
                                 {new Date(eventDetails.event_start_date).getDate() + "-"}
                                 {new Date(eventDetails.event_start_date).getMonth() + "-"}
