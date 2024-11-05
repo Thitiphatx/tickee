@@ -119,13 +119,13 @@ export default function Eventpage({ eventDetails }: { eventDetails: EventLanding
                             <Chip size="sm" color='primary'>{eventDetails.event_type.et_name}</Chip>
                         </div>
                         <div className="flex justify-around items-center uppercase font-bold">
-                            <Button color="primary" radius="lg" variant="bordered" className="h-4/5">
+                            <Button color="warning" radius="lg" variant="flat" className="h-4/5">
                                 {new Date(eventDetails.event_start_date).getDate() + "-"}
                                 {new Date(eventDetails.event_start_date).getMonth() + "-"}
                                 {new Date(eventDetails.event_start_date).getFullYear()}
                             </Button>
                             <p className="text-center text-xl"> - </p>
-                            <Button color="primary" radius="lg" className="h-4/5">
+                            <Button color="warning" radius="lg" className="h-4/5">
                                 {new Date(eventDetails.event_last_date).getDate() + "-"}
                                 {new Date(eventDetails.event_last_date).getMonth() + "-"}
                                 {new Date(eventDetails.event_last_date).getFullYear()}
