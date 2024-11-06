@@ -30,7 +30,7 @@ interface PromotionFormProps {
 const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes }) => {
   const router = useRouter()
   const [formData, setFormData] = useState({
-    seat_type_id: '',
+    seat_type_id: events[0].seat_types[0].seat_id.toString(),
     pro_description: '',
     pro_discount: '',
     pro_start_date: null as DateValue | null,
@@ -39,7 +39,7 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
     pro_type: promotionTypes[0]?.id.toString() || '', // Default to the first promotion type
   });
 
-  // Filter seat types to only include those without promotions
+
   const seatTypes = events[0]?.seat_types.filter(seat => !seat.Promotion) || [];
 
   useEffect(() => {
@@ -52,6 +52,7 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    console.log(value)
   };
 
   const handleDateChange = (name: 'pro_start_date' | 'pro_last_date') => (value: DateValue) => {
@@ -93,6 +94,7 @@ const EditPromotion: React.FC<PromotionFormProps> = ({ events, promotionTypes })
       console.error('Error creating promotion:', error);
     }
   };
+
 
   return (
     <>

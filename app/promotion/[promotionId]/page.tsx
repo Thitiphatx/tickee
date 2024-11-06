@@ -63,7 +63,6 @@ export default async function PromotionPage({ params }: { params: IParams }) {
     name: type.pt_name,
   }));
   
-
   return (
     <div>
       <EditPromotion events={[eventData]} promotionTypes={promotionTypeOptions} />
